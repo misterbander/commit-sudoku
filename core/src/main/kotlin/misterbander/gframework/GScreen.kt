@@ -21,6 +21,8 @@ import misterbander.gframework.scene2d.GObject
  * defined for you. All you need to do is to override the `show()` method and place your initialization code in there.
  * This could include setting up Tiled maps, creating [GObject]s and/or build your UI.
  *
+ * The camera and the viewport can be overridden to use your own camera and/or viewport.
+ *
  * `GScreen`s provide convenient methods to spawn `GObject`s.
  *
  * `GScreen`s may also optionally include a `Box2D` world.
@@ -28,9 +30,9 @@ import misterbander.gframework.scene2d.GObject
  */
 abstract class GScreen<T : GFramework>(protected val game: T) : KtxScreen, KtxInputAdapter, ContactListener
 {
-	/** Main camera for this GScreen. Defaults to an OrthographicCamera. */
+	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
 	protected open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
-	/** Viewport to project camera contents. Defaults to ExtendViewport. */
+	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
 	protected open val viewport: Viewport by lazy { ExtendViewport(1000F, 600F, camera) }
 	protected val stage by lazy { Stage(viewport, game.batch) }
 	
@@ -88,9 +90,14 @@ abstract class GScreen<T : GFramework>(protected val game: T) : KtxScreen, KtxIn
 		scheduledRemovalGObjects.clear()
 	}
 	
+	/**
+	 * Clears the screen and paints it black. Gets called every frame.
+	 *
+	 * You can override this to change the background color.
+	 */
 	open fun clearScreen()
 	{
-		Gdx.gl.glClearColor(1F, 0F, 0F, 1F)
+		Gdx.gl.glClearColor(0F, 0F, 0F, 1F)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 	}
 	
