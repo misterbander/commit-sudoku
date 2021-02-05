@@ -9,15 +9,15 @@ import ktx.assets.getValue
 import ktx.assets.load
 import ktx.freetype.generateFont
 import ktx.style.add
+import ktx.style.color
 import ktx.style.label
 import ktx.style.skin
 import misterbander.gframework.GFramework
 
 class CommitSudoku : GFramework()
 {
-	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
-	
 	// Fonts
+	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
 	val segoeui by lazy {
 		generator.generateFont {
 			size = 16; minFilter = Texture.TextureFilter.Linear; magFilter = Texture.TextureFilter.Linear
@@ -25,31 +25,29 @@ class CommitSudoku : GFramework()
 	}
 	val segoeui2 by lazy {
 		generator.generateFont {
-			size = 36; minFilter = Texture.TextureFilter.Linear; magFilter = Texture.TextureFilter.Linear
+			size = 32; minFilter = Texture.TextureFilter.Linear; magFilter = Texture.TextureFilter.Linear
 		}
 	}
 	
 	// Skins
 	private val lightSkin by lazy {
 		skin {
-			label("infolabel") {
-				font = segoeui
-				fontColor = Color.BLACK
-			}
+			label("infolabel") { font = segoeui; fontColor = Color.BLACK }
 			add(Color.BLACK, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
 			add(Color.WHITE, "backgroundcolor")
+			color("nongivencolor", 0F, 0.858824F, 0.082353F)
+			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 		}
 	}
 	private val darkSkin by lazy {
 		skin {
-			label("infolabel") {
-				font = segoeui
-				fontColor = Color.WHITE
-			}
+			label("infolabel") { font = segoeui; fontColor = Color.WHITE }
 			add(Color.WHITE, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
-			add(Color(0.15F, 0.15F, 0.15F, 1F), "backgroundcolor")
+			color("backgroundcolor", 0.15F, 0.15F, 0.15F, 1F)
+			color("nongivencolor", 0F, 0.858824F, 0.082353F)
+			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 		}
 	}
 	lateinit var skin: Skin
@@ -57,13 +55,19 @@ class CommitSudoku : GFramework()
 	override fun create()
 	{
 		assetManager.finishLoading()
-		print("Finished loading assets!")
+		println("Finished loading assets!")
 		skin = lightSkin
 		
-		print(Gdx.graphics.height)
+		println("Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}")
 		
 		addScreen(CommitSudokuScreen(this))
 		setScreen<CommitSudokuScreen>()
+	}
+	
+	override fun resize(width: Int, height: Int)
+	{
+		super.resize(width, height)
+		println("Resizing to = ${width}x${height}")
 	}
 	
 	override fun dispose()
