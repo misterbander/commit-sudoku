@@ -64,7 +64,7 @@ abstract class GScreen<T : GFramework>(protected val game: T) : KtxScreen, KtxIn
 	
 	override fun resize(width: Int, height: Int)
 	{
-		viewport.update(width, height)
+		viewport.update(width, height, true)
 	}
 	
 	override fun render(delta: Float)
