@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -27,8 +28,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
  */
 abstract class GFramework : KtxGame<KtxScreen>(clearScreen = false)
 {
-	val batch by lazy { SpriteBatch() }
-//	val polygonBatch by lazy { PolygonSpriteBatch() }
+	val batch by lazy { PolygonSpriteBatch() }
 	val shapeRenderer by lazy { ShapeRenderer() }
 	val shapeDrawer by lazy {
 		val pixmap = Pixmap(1, 1, Pixmap.Format.RGBA8888)
