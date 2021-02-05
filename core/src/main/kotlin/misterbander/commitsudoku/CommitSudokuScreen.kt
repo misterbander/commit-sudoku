@@ -3,11 +3,10 @@ package misterbander.commitsudoku
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import ktx.graphics.use
+import ktx.actors.plusAssign
 import ktx.scene2d.actor
 import ktx.scene2d.label
 import ktx.scene2d.scene2d
@@ -39,19 +38,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override fun show()
 	{
 		super.show()
-		stage.addActor(table)
-	}
-	
-	override fun render(delta: Float)
-	{
-		super.render(delta)
-		game.shapeRenderer.use(ShapeRenderer.ShapeType.Line) {
-			it.line(32F, 32F, 100F, 100F)
-		}
-		game.batch.use {
-			game.shapeDrawer.setColor(Color.RED)
-			game.shapeDrawer.circle(32F, 32F, 200F)
-		}
+		stage += table
+		grid.addListener(grid.ClickListener())
 	}
 	
 	override fun clearScreen()
