@@ -1,18 +1,14 @@
 package misterbander.commitsudoku.scene2d
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Timer
-import ktx.actors.KtxInputListener
-import ktx.async.interval
+import ktx.collections.GdxArray
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudoku
+import misterbander.commitsudoku.scene2d.actions.ActionController
 import misterbander.gframework.getTextSize
 import kotlin.math.floor
 
@@ -25,7 +21,10 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 	private val gridSize: Float
 		get() = 9*cellSize
 	
-	private var mainSelectedCell: Cell? = null
+	var mainSelectedCell: Cell? = null
+		private set
+	
+	val actionController = ActionController()
 	
 	init
 	{
@@ -85,6 +84,18 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 		cells.forEach { it.forEach { cell -> cell.isSelected = false } }
 	}
 	
+	fun getSelectedCells(): GdxArray<Cell>
+	{
+		val selectedCells: GdxArray<Cell> = GdxArray()
+		cells.forEach {
+			it.forEach { cell ->
+				if (cell.isSelected)
+					selectedCells.add(cell)
+			}
+		}
+		return selectedCells
+	}
+	
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
 		val shapeDrawer = game.shapeDrawer
@@ -104,9 +115,9 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 	 * @property i 0 based horizontal index of the cell
 	 * @property j 0 based vertical index of the cell
 	 */
-	inner class Cell(private val i: Int, private val j: Int)
+	inner class Cell(val i: Int, val j: Int)
 	{
-		var value = (1..9).random()
+		var digit = (1..9).random()
 		var color: Color = Color.CLEAR
 		var isGiven = false
 		var isCorrect = false
@@ -136,83 +147,16 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 				shapeDrawer.setColor(game.skin.getColor("selectedcolor"))
 				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
 			}
-			game.segoeui2.apply {
-				// Draw the value
-				val valueStr = value.toString()
-				color = if (isGiven) game.skin["primarycolor"] else game.skin["nongivencolor"]
-				val textSize = getTextSize(this, valueStr)
-				draw(batch, valueStr, x, y + (cellSize + textSize.y)/2, cellSize, Align.center, false)
-			}
-		}
-	}
-	
-	inner class ClickListener : com.badlogic.gdx.scenes.scene2d.utils.ClickListener(-1)
-	{
-		override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
-		{
-			super.touchDown(event, x, y, pointer, button)
-			if (pointer == 0)
-				unselect()
-			select(x, y)
-			return true
-		}
-		
-		override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
-		{
-			super.touchDragged(event, x, y, pointer)
-			select(x, y)
-		}
-	}
-	
-	inner class KeyListener : KtxInputListener()
-	{
-		var job: Timer.Task? = null
-		
-		override fun keyDown(event: InputEvent, keycode: Int): Boolean
-		{
-			job?.cancel()
-			job = null
-			when (keycode)
+			// Draw the digit
+			if (digit != 0)
 			{
-				Input.Keys.LEFT ->
-				{
-					navigate(left = 1)
-					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(left = 1) }
-				}
-				Input.Keys.RIGHT ->
-				{
-					navigate(right = 1)
-					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(right = 1) }
-				}
-				Input.Keys.UP ->
-				{
-					navigate(up = 1)
-					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(up = 1) }
-				}
-				Input.Keys.DOWN ->
-				{
-					navigate(down = 1)
-					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(down = 1) }
+				game.segoeui2.apply {
+					val valueStr = digit.toString()
+					color = if (isGiven) game.skin["primarycolor"] else game.skin["nongivencolor"]
+					val textSize = getTextSize(this, valueStr)
+					draw(batch, valueStr, x, y + (cellSize + textSize.y)/2, cellSize, Align.center, false)
 				}
 			}
-			return true
-		}
-		
-		override fun keyUp(event: InputEvent, keycode: Int): Boolean
-		{
-			job?.cancel()
-			job = null
-			return true
-		}
-		
-		private fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0)
-		{
-			if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) and !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
-				unselect()
-			if (mainSelectedCell == null)
-				select(cells[0][8])
-			else
-				select(mainSelectedCell!!.getCell(right - left, up - down))
 		}
 	}
 }

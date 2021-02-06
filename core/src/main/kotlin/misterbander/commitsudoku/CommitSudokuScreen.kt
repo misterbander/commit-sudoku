@@ -13,6 +13,8 @@ import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.scene2d.SudokuGridClickListener
+import misterbander.commitsudoku.scene2d.SudokuGridKeyListener
 import misterbander.gframework.GScreen
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
@@ -39,8 +41,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		super.show()
 		stage += table
-		grid.addListener(grid.ClickListener())
-		grid.addListener(grid.KeyListener())
+		grid.addListener(SudokuGridClickListener(grid))
+		grid.addListener(SudokuGridKeyListener(grid))
 		stage.keyboardFocus = grid
 	}
 	
