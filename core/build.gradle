@@ -24,4 +24,5 @@ dependencies {
 	api "io.github.libktx:ktx-actors:$ktxActorsVersion"
 
 	implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoreVersion")
 }

@@ -1,11 +1,16 @@
 package misterbander.commitsudoku.scene2d
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Timer
+import ktx.actors.KtxInputListener
+import ktx.async.interval
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudoku
 import misterbander.gframework.getTextSize
@@ -65,12 +70,14 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 	{
 		val selectedI = floor(x/cellSize).toInt()
 		val selectedJ = floor(y/cellSize).toInt()
-		println("x = $x, y = $y, i = $selectedI, j = $selectedJ")
 		if (selectedI in 0..8 && selectedJ in 0..8)
-		{
-			mainSelectedCell = cells[selectedI][selectedJ]
-			cells[selectedI][selectedJ].isSelected = true
-		}
+			select(cells[selectedI][selectedJ])
+	}
+	
+	fun select(cell: Cell)
+	{
+		mainSelectedCell = cell
+		cell.isSelected = true
 	}
 	
 	fun unselect()
@@ -100,7 +107,7 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 	inner class Cell(private val i: Int, private val j: Int)
 	{
 		var value = (1..9).random()
-		var color = Color.CLEAR
+		var color: Color = Color.CLEAR
 		var isGiven = false
 		var isCorrect = false
 		var isSelected = false
@@ -113,6 +120,13 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 		
 		private val y: Float
 			get() = jToY(j)
+		
+		fun getCell(iOffset: Int, jOffset: Int): Cell
+		{
+			val i2 = (i + iOffset + 9)%9
+			val j2 = (j + jOffset + 9)%9
+			return cells[i2][j2]
+		}
 		
 		fun draw(batch: Batch)
 		{
@@ -137,7 +151,6 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 		override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
 		{
 			super.touchDown(event, x, y, pointer, button)
-			println("pointer = $pointer, button = $button")
 			if (pointer == 0)
 				unselect()
 			select(x, y)
@@ -148,6 +161,58 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 		{
 			super.touchDragged(event, x, y, pointer)
 			select(x, y)
+		}
+	}
+	
+	inner class KeyListener : KtxInputListener()
+	{
+		var job: Timer.Task? = null
+		
+		override fun keyDown(event: InputEvent, keycode: Int): Boolean
+		{
+			job?.cancel()
+			job = null
+			when (keycode)
+			{
+				Input.Keys.LEFT ->
+				{
+					navigate(left = 1)
+					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(left = 1) }
+				}
+				Input.Keys.RIGHT ->
+				{
+					navigate(right = 1)
+					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(right = 1) }
+				}
+				Input.Keys.UP ->
+				{
+					navigate(up = 1)
+					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(up = 1) }
+				}
+				Input.Keys.DOWN ->
+				{
+					navigate(down = 1)
+					job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(down = 1) }
+				}
+			}
+			return true
+		}
+		
+		override fun keyUp(event: InputEvent, keycode: Int): Boolean
+		{
+			job?.cancel()
+			job = null
+			return true
+		}
+		
+		private fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0)
+		{
+			if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) and !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
+				unselect()
+			if (mainSelectedCell == null)
+				select(cells[0][8])
+			else
+				select(mainSelectedCell!!.getCell(right - left, up - down))
 		}
 	}
 }
