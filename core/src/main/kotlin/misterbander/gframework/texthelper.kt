@@ -1,8 +1,10 @@
 package misterbander.gframework
 
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Align
 import ktx.math.vec2
 
 private val glyph = GlyphLayout()
@@ -48,4 +50,10 @@ fun wrapText(font: BitmapFont, text: String, targetWidth: Int): String
 		isFirstWord = false
 	}
 	return builder.toString()
+}
+
+fun BitmapFont.drawCenter(batch: Batch, str: CharSequence, x: Float, y: Float)
+{
+	val textSize = getTextSize(this, str.toString())
+	draw(batch, str, x - textSize.x/2, y + textSize.y/2, textSize.x, Align.center, false)
 }
