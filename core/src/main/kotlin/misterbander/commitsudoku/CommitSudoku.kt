@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.assets.getValue
 import ktx.assets.load
+import ktx.async.KtxAsync
 import ktx.freetype.generateFont
 import ktx.style.add
 import ktx.style.color
@@ -54,6 +55,8 @@ class CommitSudoku : GFramework()
 	
 	override fun create()
 	{
+		KtxAsync.initiate()
+		
 		assetManager.finishLoading()
 		println("Finished loading assets!")
 		skin = lightSkin

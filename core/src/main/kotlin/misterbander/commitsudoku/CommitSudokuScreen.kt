@@ -40,6 +40,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		super.show()
 		stage += table
 		grid.addListener(grid.ClickListener())
+		grid.addListener(grid.KeyListener())
+		stage.keyboardFocus = grid
 	}
 	
 	override fun clearScreen()
