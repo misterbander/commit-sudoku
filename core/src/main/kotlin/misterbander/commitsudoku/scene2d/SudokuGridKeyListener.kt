@@ -9,6 +9,7 @@ import ktx.actors.plusAssign
 import ktx.async.interval
 import ktx.collections.GdxArray
 import misterbander.commitsudoku.scene2d.actions.ModifyCellAction
+import misterbander.commitsudoku.scene2d.actions.ModifyColorAction
 import misterbander.commitsudoku.scene2d.actions.ModifyDigitAction
 import misterbander.commitsudoku.scene2d.actions.ModifyMarkAction
 
@@ -80,14 +81,19 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 		
 		if (digit == 0)
 		{
-			// Clear cell except color
-			selectedCells.forEach { cell ->
-				modifyCellActions.apply {
-					add(ModifyDigitAction(cell, to = 0))
-					for (i in 1..9)
-					{
-						add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
-						add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+			if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT))
+				selectedCells.forEach { cell -> modifyCellActions.apply { add(ModifyColorAction(cell, to = 0)) } }
+			else
+			{
+				// Clear cell except color
+				selectedCells.forEach { cell ->
+					modifyCellActions.apply {
+						add(ModifyDigitAction(cell, to = 0))
+						for (i in 1..9)
+						{
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+						}
 					}
 				}
 			}
@@ -101,8 +107,8 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))
 					Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) or Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) ->
 						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit))
-//					Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT) ->
-//						modifyCellActions.add(ModifyDigitAction(cell, ModifyDigitAction.Type.COLOR, from = ))
+					Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT) ->
+						modifyCellActions.add(ModifyColorAction(cell, to = digit))
 					else -> modifyCellActions.add(ModifyDigitAction(cell, to = digit))
 				}
 			}
