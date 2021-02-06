@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.utils.Align
 import ktx.collections.GdxArray
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudoku
 import misterbander.commitsudoku.scene2d.actions.ActionController
-import misterbander.gframework.getTextSize
+import misterbander.gframework.drawCenter
 import kotlin.math.floor
+
 
 class SudokuGrid(private val game: CommitSudoku) : Actor()
 {
@@ -117,7 +117,7 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 	 */
 	inner class Cell(val i: Int, val j: Int)
 	{
-		var digit = (1..9).random()
+		var digit = 0
 		var color: Color = Color.CLEAR
 		var isGiven = false
 		var isCorrect = false
@@ -147,14 +147,53 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 				shapeDrawer.setColor(game.skin.getColor("selectedcolor"))
 				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
 			}
-			// Draw the digit
-			if (digit != 0)
+			
+			if (digit != 0) // Draw digits
 			{
 				game.segoeui2.apply {
-					val valueStr = digit.toString()
 					color = if (isGiven) game.skin["primarycolor"] else game.skin["nongivencolor"]
-					val textSize = getTextSize(this, valueStr)
-					draw(batch, valueStr, x, y + (cellSize + textSize.y)/2, cellSize, Align.center, false)
+					drawCenter(batch, digit.toString(), x + cellSize/2, y + cellSize/2)
+				}
+			}
+			else // Draw marks
+			{
+				game.segoeui.apply {
+					color = game.skin["markcolor"]
+					// Corner marks
+					var markCount = 0
+					if (hasCornerTextDecoration)
+						markCount++
+					for (k in 0..8)
+					{
+						if (cornerMarks[k])
+						{
+							var drawX: Float = iToX(i)
+							var drawY: Float = jToY(j + 1)
+							when (markCount)
+							{
+								1 -> { drawX += 5*cellSize/6; drawY -= cellSize/6 }
+								2 -> { drawX += cellSize/6; drawY -= 5*cellSize/6 }
+								3 -> { drawX += 5*cellSize/6; drawY -= 5*cellSize/6 }
+								4 -> { drawX += cellSize/2; drawY -= cellSize/6 }
+								5 -> { drawX += cellSize/6; drawY -= cellSize/2 }
+								6 -> { drawX += 5*cellSize/6; drawY -= cellSize/2 }
+								7 -> { drawX += cellSize/2; drawY -= 5*cellSize/6 }
+								else -> { drawX += cellSize/6; drawY -= cellSize/6 }
+							}
+							val cornerMarkStr = (k + 1).toString()
+							drawCenter(batch, cornerMarkStr, drawX, drawY)
+							markCount++
+						}
+					}
+					
+					// Center marks
+					val centerMarkBuilder = StringBuilder()
+					for (k in 0..8)
+					{
+						if (centerMarks[k])
+							centerMarkBuilder.append(k + 1)
+					}
+					drawCenter(batch, centerMarkBuilder.toString(), iToX(i) + cellSize/2, jToY(j) + cellSize/2)
 				}
 			}
 		}

@@ -38,6 +38,7 @@ class CommitSudoku : GFramework()
 			add(Color.GRAY, "secondarycolor")
 			add(Color.WHITE, "backgroundcolor")
 			color("nongivencolor", 0F, 0.858824F, 0.082353F)
+			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 		}
 	}
@@ -48,6 +49,7 @@ class CommitSudoku : GFramework()
 			add(Color.GRAY, "secondarycolor")
 			color("backgroundcolor", 0.15F, 0.15F, 0.15F, 1F)
 			color("nongivencolor", 0F, 0.858824F, 0.082353F)
+			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 		}
 	}
