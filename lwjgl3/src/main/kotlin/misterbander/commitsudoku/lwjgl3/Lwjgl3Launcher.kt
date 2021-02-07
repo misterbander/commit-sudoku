@@ -22,7 +22,7 @@ object Lwjgl3Launcher
 		get()
 		{
 			val configuration = Lwjgl3ApplicationConfiguration()
-			configuration.setTitle("CommitSudoku")
+			configuration.setTitle("Commit Sudoku")
 			configuration.setWindowedMode(1280, 720)
 			configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
 			configuration.setBackBufferConfig(8, 8, 8,8, 16, 0, 4)

@@ -1,22 +1,27 @@
 package misterbander.commitsudoku.scene2d
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.style.get
-import misterbander.commitsudoku.CommitSudoku
-import misterbander.commitsudoku.scene2d.actions.ActionController
+import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.commitsudoku.scene2d.actions.*
 import misterbander.gframework.drawCenter
 import kotlin.math.floor
 
 
-class SudokuGrid(private val game: CommitSudoku) : Actor()
+class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
 {
+	private val game = screen.game
+	
 	val cells = Array(9) { i -> Array(9) { j -> Cell(i, j) } }
-	private val cellSize: Float
+	val cellSize: Float
 		get() = 64F
 	
 	private val gridSize: Float
@@ -85,7 +90,7 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 		cells.forEach { it.forEach { cell -> cell.isSelected = false } }
 	}
 	
-	fun getSelectedCells(): GdxArray<Cell>
+	private fun getSelectedCells(): GdxArray<Cell>
 	{
 		val selectedCells: GdxArray<Cell> = GdxArray()
 		cells.forEach {
@@ -95,6 +100,53 @@ class SudokuGrid(private val game: CommitSudoku) : Actor()
 			}
 		}
 		return selectedCells
+	}
+	
+	fun typedDigit(digit: Int)
+	{
+		val selectedCells = getSelectedCells()
+		val modifyCellActions: GdxArray<ModifyCellAction> = GdxArray()
+		
+		if (digit == 0)
+		{
+			if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT))
+				selectedCells.forEach { cell -> modifyCellActions.apply { add(ModifyColorAction(cell, to = 0)) } }
+			else
+			{
+				// Clear cell except color
+				selectedCells.forEach { cell ->
+					modifyCellActions.apply {
+						add(ModifyDigitAction(cell, to = 0))
+						for (i in 1..9)
+						{
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			selectedCells.forEach { cell ->
+				when
+				{
+					Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT) ->
+						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))
+					Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) or Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) ->
+						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit))
+					Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT) ->
+						modifyCellActions.add(ModifyColorAction(cell, to = digit))
+					screen.inputMode == CommitSudokuScreen.InputMode.CORNER_MARK ->
+						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))
+					screen.inputMode == CommitSudokuScreen.InputMode.CENTER_MARK ->
+						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit))
+					else -> modifyCellActions.add(ModifyDigitAction(cell, to = digit))
+				}
+			}
+		}
+		modifyCellActions.forEach { this += it }
+		actionController.actionHistory.add(modifyCellActions)
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
