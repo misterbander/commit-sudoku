@@ -18,8 +18,8 @@ abstract class GObject<T : GFramework>(val screen: GScreen<T>) : Group()
 	var body: Body? = null
 	
 	/**
-	 * Called when this GObject is spawned to the world and added to the stage. You can set up your
-	 * Box2D bodies and fixtures here.
+	 * Called when this `GObject` is spawned to the world and added to the stage. You can set up your
+	 * `Box2D` bodies and fixtures here.
 	 */
 	open fun onSpawn() {}
 	
@@ -34,7 +34,7 @@ abstract class GObject<T : GFramework>(val screen: GScreen<T>) : Group()
 	}
 	
 	/**
-	 * Marks this GObject to be destroyed. It will be removed at the end of world time step.
+	 * Marks this `GObject` to be destroyed. It will be removed at the end of world time step.
 	 */
 	fun destroy()
 	{
