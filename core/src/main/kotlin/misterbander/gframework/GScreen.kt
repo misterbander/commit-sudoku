@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import ktx.actors.plusAssign
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.collections.GdxSet
@@ -53,7 +54,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, KtxInputAdapter
 	 */
 	fun spawnGObject(gObject: GObject<T>)
 	{
-		stage.addActor(gObject)
+		stage += gObject
 		gObject.onSpawn()
 	}
 	
