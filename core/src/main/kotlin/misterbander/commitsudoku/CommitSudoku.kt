@@ -25,12 +25,18 @@ class CommitSudoku : GFramework()
 	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
 	val segoeui by lazy {
 		generator.generateFont {
-			size = 16; minFilter = Texture.TextureFilter.Linear; magFilter = Texture.TextureFilter.Linear
+			size = 16
+			padBottom = 2 // Added to ensure font doesn't get clipped at the bottom
+			minFilter = Texture.TextureFilter.Linear
+			magFilter = Texture.TextureFilter.Linear
 		}
 	}
 	val segoeui2 by lazy {
 		generator.generateFont {
-			size = 32; minFilter = Texture.TextureFilter.Linear; magFilter = Texture.TextureFilter.Linear
+			size = 32
+			padBottom = 2 // Added to ensure font doesn't get clipped at the bottom
+			minFilter = Texture.TextureFilter.Linear
+			magFilter = Texture.TextureFilter.Linear
 		}
 	}
 	
