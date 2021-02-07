@@ -3,6 +3,7 @@ package misterbander.commitsudoku
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.assets.getValue
@@ -11,14 +12,15 @@ import ktx.async.KtxAsync
 import ktx.collections.GdxMap
 import ktx.collections.gdxMapOf
 import ktx.freetype.generateFont
-import ktx.style.add
-import ktx.style.color
-import ktx.style.label
-import ktx.style.skin
+import ktx.style.*
 import misterbander.gframework.GFramework
 
 class CommitSudoku : GFramework()
 {
+	// Assets
+	
+	private val guiAtlas by assetManager.load<TextureAtlas>("sprites/gui.atlas")
+	
 	// Fonts
 	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
 	val segoeui by lazy {
@@ -46,7 +48,6 @@ class CommitSudoku : GFramework()
 	)
 	private val lightSkin by lazy {
 		skin {
-			label("infolabel") { font = segoeui; fontColor = Color.BLACK }
 			add(Color.BLACK, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
 			add(Color.WHITE, "backgroundcolor")
@@ -54,11 +55,29 @@ class CommitSudoku : GFramework()
 			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 			add(highlightColors, "highlightcolors")
+			addRegions(guiAtlas)
+			label("infolabelstyle") { font = segoeui; fontColor = Color.BLACK }
+			textButton("textbuttonstylebase") {
+				up = this@skin["button"]
+				over = this@skin["buttonover"]
+				down = this@skin["buttondown"]
+				fontColor = Color.BLACK
+				checked = down
+			}
+			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui; }
+			textButton("textbuttonstyle2", "textbuttonstylebase") { font = segoeui2; }
+			imageButton("imagebuttonstylebase") {
+				up = this@skin["button"]
+				over = this@skin["buttonover"]
+				down = this@skin["buttondown"]
+			}
+			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
+			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["undo"] }
+			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["redo"] }
 		}
 	}
 	private val darkSkin by lazy {
 		skin {
-			label("infolabel") { font = segoeui; fontColor = Color.WHITE }
 			add(Color.WHITE, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
 			color("backgroundcolor", 0.15F, 0.15F, 0.15F, 1F)
@@ -66,6 +85,25 @@ class CommitSudoku : GFramework()
 			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 			add(highlightColors, "highlightcolors")
+			addRegions(guiAtlas)
+			label("infolabelstyle") { font = segoeui; fontColor = Color.WHITE }
+			textButton("textbuttonstylebase") {
+				up = this@skin["darkbutton"]
+				over = this@skin["darkbuttonover"]
+				down = this@skin["darkbuttondown"]
+				fontColor = Color.WHITE
+				checked = down
+			}
+			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui }
+			textButton("textbuttonstyle2", "textbuttonstylebase") { font = segoeui2 }
+			imageButton("imagebuttonstylebase") {
+				up = this@skin["darkbutton"]
+				over = this@skin["darkbuttonover"]
+				down = this@skin["darkbuttondown"]
+			}
+			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
+			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkundo"] }
+			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkredo"] }
 		}
 	}
 	lateinit var skin: Skin

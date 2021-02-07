@@ -28,13 +28,13 @@ import misterbander.gframework.scene2d.GObject
  * `GScreen`s may also optionally include a `Box2D` world.
  * @property game parent GFramework instance
  */
-abstract class GScreen<T : GFramework>(protected val game: T) : KtxScreen, KtxInputAdapter, ContactListener
+abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, KtxInputAdapter, ContactListener
 {
 	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
-	protected open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
+	open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
 	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
-	protected open val viewport: Viewport by lazy { ExtendViewport(1000F, 600F, camera) }
-	protected val stage by lazy { Stage(viewport, game.batch) }
+	open val viewport: Viewport by lazy { ExtendViewport(1000F, 600F, camera) }
+	val stage by lazy { Stage(viewport, game.batch) }
 	
 	open val world: World? = null
 	open val mpp = 0.25F
