@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Cell
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
@@ -21,7 +22,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
 	private val buttonSize = 80F
-	private val timerLabel: Label = scene2d { label("0 : 00", "infolabelstyle", game.skin) }
+	
+	private val timerLabel: Label by lazy { scene2d { label("0 : 00", "infolabelstyle", game.skin) } }
 	private val digitKeypad: Table by lazy {
 		scene2d {
 			table {
@@ -115,9 +117,19 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				imageButton("deletebuttonstyle", game.skin) {
 					onClick { grid.typedDigit(0, true) }
 				}
-				imageButton("undobuttonstyle", game.skin)
-				imageButton("redobuttonstyle", game.skin)
+				actor(undoButton)
+				actor(redoButton)
 			}
+		}
+	}
+	val undoButton: ImageButton by lazy {
+		scene2d {
+			imageButton("undobuttonstyle", game.skin) { onClick { grid.actionController.undo() } }
+		}
+	}
+	val redoButton: ImageButton by lazy {
+		scene2d {
+			imageButton("redobuttonstyle", game.skin) { onClick { grid.actionController.redo() } }
 		}
 	}
 	private val grid = SudokuGrid(this)
