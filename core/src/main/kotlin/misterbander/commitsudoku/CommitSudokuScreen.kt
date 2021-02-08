@@ -95,7 +95,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				actor(ModifyColorButton(grid, 8, game.skin, "graybuttonstyle"))
 				textButton("", "textbuttonstyle", game.skin) {
 					onClick {
-						grid.typedDigit(9)
+						grid.typedDigit(9, true)
 						isChecked = false
 					}
 				}
