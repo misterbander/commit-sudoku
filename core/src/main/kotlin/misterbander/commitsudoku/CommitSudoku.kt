@@ -78,11 +78,19 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				up = this@skin["button"]
 				over = this@skin["buttonover"]
 				down = this@skin["buttondown"]
+				disabled = this@skin["buttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
-			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["undo"] }
-			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["redo"] }
+			imageButton("undobuttonstyle", "imagebuttonstylebase") {
+				imageUp = this@skin["undo"]
+				imageDisabled = this@skin["undodisabled"]
+			}
+			imageButton("redobuttonstyle", "imagebuttonstylebase")
+			{
+				imageUp = this@skin["redo"]
+				imageDisabled = this@skin["redodisabled"]
+			}
 			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
 			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
 			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }
@@ -120,11 +128,18 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				up = this@skin["darkbutton"]
 				over = this@skin["darkbuttonover"]
 				down = this@skin["darkbuttondown"]
+				disabled = this@skin["darkbuttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
-			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkundo"] }
-			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkredo"] }
+			imageButton("undobuttonstyle", "imagebuttonstylebase") {
+				imageUp = this@skin["darkundo"]
+				imageDisabled = this@skin["undodisabled"]
+			}
+			imageButton("redobuttonstyle", "imagebuttonstylebase") {
+				imageUp = this@skin["darkredo"]
+				imageDisabled = this@skin["redodisabled"]
+			}
 			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
 			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
 			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }

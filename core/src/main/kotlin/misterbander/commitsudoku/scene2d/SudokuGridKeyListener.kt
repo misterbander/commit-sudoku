@@ -10,33 +10,17 @@ import ktx.async.interval
 class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 {
 	private var keyRepeatTask: Timer.Task? = null
+	private val keyRepeatDelay = 0.3F
+	private val keyRepeatInterval = 0.025F
 	
 	override fun keyDown(event: InputEvent, keycode: Int): Boolean
 	{
 		keyRepeatTask?.cancel()
 		keyRepeatTask = null
+		
 		when (keycode)
 		{
-			Input.Keys.LEFT ->
-			{
-				navigate(left = 1)
-				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(left = 1) }
-			}
-			Input.Keys.RIGHT ->
-			{
-				navigate(right = 1)
-				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(right = 1) }
-			}
-			Input.Keys.UP ->
-			{
-				navigate(up = 1)
-				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(up = 1) }
-			}
-			Input.Keys.DOWN ->
-			{
-				navigate(down = 1)
-				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(down = 1) }
-			}
+			// Handle non repeatable key events
 			Input.Keys.NUM_1, Input.Keys.NUMPAD_1 -> grid.typedDigit(1)
 			Input.Keys.NUM_2, Input.Keys.NUMPAD_2 -> grid.typedDigit(2)
 			Input.Keys.NUM_3, Input.Keys.NUMPAD_3 -> grid.typedDigit(3)
@@ -47,6 +31,42 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 			Input.Keys.NUM_8, Input.Keys.NUMPAD_8 -> grid.typedDigit(8)
 			Input.Keys.NUM_9, Input.Keys.NUMPAD_9 -> grid.typedDigit(9)
 			Input.Keys.NUM_0, Input.Keys.NUMPAD_0, Input.Keys.BACKSPACE, Input.Keys.FORWARD_DEL -> grid.typedDigit(0)
+			else ->
+			{
+				// Handle repeatable key events
+				if (keyDownRepeat(keycode))
+				{
+					keyRepeatTask = interval(delaySeconds = keyRepeatDelay, intervalSeconds = keyRepeatInterval) {
+						keyDownRepeat(keycode)
+					}
+				}
+			}
+		}
+		return true
+	}
+	
+	private fun keyDownRepeat(keycode: Int): Boolean
+	{
+		when (keycode)
+		{
+			Input.Keys.LEFT -> navigate(left = 1)
+			Input.Keys.RIGHT -> navigate(right = 1)
+			Input.Keys.UP -> navigate(up = 1)
+			Input.Keys.DOWN -> navigate(down = 1)
+			Input.Keys.Z ->
+			{
+				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+					grid.actionController.undo()
+				else
+					return false
+			}
+			Input.Keys.Y ->
+			{
+				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+					grid.actionController.redo()
+				else
+					return false
+			}
 		}
 		return true
 	}

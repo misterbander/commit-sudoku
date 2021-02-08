@@ -16,7 +16,7 @@ import misterbander.gframework.util.drawCenter
 import kotlin.math.floor
 
 
-class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
+class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 {
 	private val game = screen.game
 	
@@ -30,7 +30,7 @@ class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
 	var mainSelectedCell: Cell? = null
 		private set
 	
-	val actionController = ActionController()
+	val actionController = ActionController(this)
 	
 	init
 	{
@@ -159,7 +159,7 @@ class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
 			}
 		}
 		modifyCellActions.forEach { this += it }
-		actionController.actionHistory.add(modifyCellActions)
+		actionController.addActions(modifyCellActions)
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)

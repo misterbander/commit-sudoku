@@ -1,19 +1,27 @@
 
 gui.png
-size: 212,278
+size: 138,534
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 blue
   rotate: false
-  xy: 70, 68
+  xy: 94, 326
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 button
   rotate: false
-  xy: 2, 144
+  xy: 2, 70
+  size: 64, 64
+  split: 2, 2, 2, 2
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+buttondisabled
+  rotate: false
+  xy: 70, 206
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -21,7 +29,7 @@ button
   index: -1
 buttondown
   rotate: false
-  xy: 2, 8
+  xy: 2, 2
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -29,7 +37,7 @@ buttondown
   index: -1
 buttonover
   rotate: false
-  xy: 70, 212
+  xy: 2, 138
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -37,21 +45,29 @@ buttonover
   index: -1
 color
   rotate: false
-  xy: 70, 160
+  xy: 48, 274
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 darkblue
   rotate: false
-  xy: 122, 120
+  xy: 48, 372
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 darkbutton
   rotate: false
-  xy: 2, 76
+  xy: 70, 70
+  size: 64, 64
+  split: 2, 2, 2, 2
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+darkbuttondisabled
+  rotate: false
+  xy: 70, 2
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -59,7 +75,7 @@ darkbutton
   index: -1
 darkbuttondown
   rotate: false
-  xy: 138, 212
+  xy: 70, 138
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -67,7 +83,7 @@ darkbuttondown
   index: -1
 darkbuttonover
   rotate: false
-  xy: 2, 212
+  xy: 2, 206
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -75,84 +91,98 @@ darkbuttonover
   index: -1
 darkdelete
   rotate: false
-  xy: 70, 32
+  xy: 38, 500
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkredo
   rotate: false
-  xy: 178, 2
+  xy: 38, 428
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkundo
   rotate: false
-  xy: 152, 38
+  xy: 74, 464
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 delete
   rotate: false
-  xy: 116, 38
+  xy: 2, 500
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 gray
   rotate: false
-  xy: 116, 74
+  xy: 48, 326
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 green
   rotate: false
-  xy: 168, 120
+  xy: 2, 336
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 orange
   rotate: false
-  xy: 168, 166
+  xy: 2, 382
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 purple
   rotate: false
-  xy: 70, 114
+  xy: 94, 372
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 red
   rotate: false
-  xy: 162, 74
+  xy: 2, 290
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 redo
   rotate: false
-  xy: 142, 2
+  xy: 2, 464
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+redodisabled
+  rotate: false
+  xy: 38, 464
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 undo
   rotate: false
-  xy: 106, 2
+  xy: 74, 500
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+undodisabled
+  rotate: false
+  xy: 2, 428
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 yellow
   rotate: false
-  xy: 122, 166
+  xy: 74, 418
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
