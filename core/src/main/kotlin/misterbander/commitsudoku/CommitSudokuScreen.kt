@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Cell
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ExtendViewport
@@ -20,6 +21,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
 	private val buttonSize = 80F
+	private val timerLabel: Label = scene2d { label("0 : 00", "infolabelstyle", game.skin) }
 	private val digitKeypad: Table by lazy {
 		scene2d {
 			table {
@@ -102,7 +104,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			}
 		}
 	}
-	
 	private val keypad by lazy {
 		scene2d.table {
 			defaults().pad(3F)
@@ -119,8 +120,10 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			}
 		}
 	}
-	var inputMode = InputMode.DIGIT
 	private val grid = SudokuGrid(this)
+	private val timer = SudokuTimer(timerLabel)
+	
+	var inputMode = InputMode.DIGIT
 	
 	override fun show()
 	{
@@ -137,7 +140,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				// Status labels
 				label("Edit Mode", "infolabelstyle", game.skin).inCell.left()
 				row()
-				label("0 : 00", "infolabelstyle", game.skin).cell(spaceBottom = 128F).inCell.left()
+				actor(timerLabel).cell(spaceBottom = 128F).inCell.left()
 				row()
 				
 				// Control panel
@@ -177,6 +180,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		grid.addListener(SudokuGridClickListener(grid))
 		grid.addListener(SudokuGridKeyListener(grid))
 		stage.keyboardFocus = grid
+		
+		timer.isRunning = true
 	}
 	
 	private fun setKeypad(keypad: Table)
@@ -189,6 +194,12 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			colorKeypad -> InputMode.COLOR
 			else -> InputMode.DIGIT
 		}
+	}
+	
+	override fun render(delta: Float)
+	{
+		super.render(delta)
+		timer.update(delta)
 	}
 	
 	override fun clearScreen()
