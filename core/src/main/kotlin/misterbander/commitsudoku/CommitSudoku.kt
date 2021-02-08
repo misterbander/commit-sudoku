@@ -15,7 +15,7 @@ import ktx.freetype.generateFont
 import ktx.style.*
 import misterbander.gframework.GFramework
 
-class CommitSudoku : GFramework()
+class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvider) : GFramework()
 {
 	// Assets
 	
@@ -121,7 +121,7 @@ class CommitSudoku : GFramework()
 		assetManager.finishLoading()
 		println("Finished loading assets!")
 		
-		skin = lightSkin
+		skin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 		
 		println("Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}")
 		
