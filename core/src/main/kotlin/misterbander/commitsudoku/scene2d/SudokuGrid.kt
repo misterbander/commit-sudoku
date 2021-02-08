@@ -12,7 +12,7 @@ import ktx.collections.GdxMap
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.scene2d.actions.*
-import misterbander.gframework.drawCenter
+import misterbander.gframework.util.drawCenter
 import kotlin.math.floor
 
 
