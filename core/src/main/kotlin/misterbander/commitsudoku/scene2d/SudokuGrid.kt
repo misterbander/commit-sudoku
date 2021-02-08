@@ -109,7 +109,7 @@ class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
 		
 		if (digit == 0)
 		{
-			if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT))
+			if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT))
 				selectedCells.forEach { cell -> modifyCellActions.apply { add(ModifyColorAction(cell, to = 0)) } }
 			else
 			{
@@ -131,11 +131,11 @@ class SudokuGrid(private val screen: CommitSudokuScreen) : Actor()
 			selectedCells.forEach { cell ->
 				when
 				{
-					Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT) ->
+					Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT) ->
 						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))
-					Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) or Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) ->
+					Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) ->
 						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit))
-					Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) or Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT) ->
+					Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT) ->
 						modifyCellActions.add(ModifyColorAction(cell, to = digit))
 					screen.inputMode == CommitSudokuScreen.InputMode.CORNER_MARK ->
 						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))

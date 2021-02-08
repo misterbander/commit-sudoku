@@ -60,7 +60,7 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 	
 	private fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0)
 	{
-		if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) and !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
+		if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
 			grid.unselect()
 		if (grid.mainSelectedCell == null)
 			grid.select(grid.cells[0][8])
