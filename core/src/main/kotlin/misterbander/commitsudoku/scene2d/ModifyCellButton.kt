@@ -15,9 +15,6 @@ class ModifyCellButton(grid: SudokuGrid, digit: Int, skin: Skin, styleName: Stri
 			label.setAlignment(Align.topLeft)
 			padLeft(5F)
 		}
-		onClick {
-			grid.typedDigit(digit)
-			isChecked = false
-		}
+		onClick { grid.typedDigit(digit, true) }
 	}
 }

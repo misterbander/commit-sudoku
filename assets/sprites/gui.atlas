@@ -1,12 +1,19 @@
 
 gui.png
-size: 140,272
+size: 212,278
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+blue
+  rotate: false
+  xy: 70, 68
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
 button
   rotate: false
-  xy: 2, 70
+  xy: 2, 144
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -14,7 +21,7 @@ button
   index: -1
 buttondown
   rotate: false
-  xy: 2, 2
+  xy: 2, 8
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -22,15 +29,29 @@ buttondown
   index: -1
 buttonover
   rotate: false
-  xy: 2, 138
+  xy: 70, 212
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
+color
+  rotate: false
+  xy: 70, 160
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+darkblue
+  rotate: false
+  xy: 122, 120
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
 darkbutton
   rotate: false
-  xy: 70, 138
+  xy: 2, 76
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -38,7 +59,7 @@ darkbutton
   index: -1
 darkbuttondown
   rotate: false
-  xy: 70, 206
+  xy: 138, 212
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -46,7 +67,7 @@ darkbuttondown
   index: -1
 darkbuttonover
   rotate: false
-  xy: 2, 206
+  xy: 2, 212
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
@@ -54,43 +75,85 @@ darkbuttonover
   index: -1
 darkdelete
   rotate: false
-  xy: 70, 66
+  xy: 70, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkredo
   rotate: false
-  xy: 106, 30
+  xy: 178, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkundo
   rotate: false
-  xy: 106, 66
+  xy: 152, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 delete
   rotate: false
-  xy: 70, 102
+  xy: 116, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+gray
+  rotate: false
+  xy: 116, 74
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+green
+  rotate: false
+  xy: 168, 120
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+orange
+  rotate: false
+  xy: 168, 166
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+purple
+  rotate: false
+  xy: 70, 114
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+red
+  rotate: false
+  xy: 162, 74
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
 redo
   rotate: false
-  xy: 106, 102
+  xy: 142, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 undo
   rotate: false
-  xy: 70, 30
+  xy: 106, 2
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+yellow
+  rotate: false
+  xy: 122, 166
+  size: 42, 42
+  orig: 42, 42
   offset: 0, 0
   index: -1

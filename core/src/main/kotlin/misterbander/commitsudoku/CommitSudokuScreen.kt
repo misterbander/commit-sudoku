@@ -2,7 +2,7 @@ package misterbander.commitsudoku
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Cell
 import com.badlogic.gdx.scenes.scene2d.ui.Table
@@ -12,10 +12,7 @@ import ktx.actors.onClick
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.get
-import misterbander.commitsudoku.scene2d.ModifyCellButton
-import misterbander.commitsudoku.scene2d.SudokuGrid
-import misterbander.commitsudoku.scene2d.SudokuGridClickListener
-import misterbander.commitsudoku.scene2d.SudokuGridKeyListener
+import misterbander.commitsudoku.scene2d.*
 import misterbander.gframework.GScreen
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
@@ -81,6 +78,30 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			}
 		}
 	}
+	private val colorKeypad: Table by lazy {
+		scene2d {
+			table {
+				defaults().size(buttonSize, buttonSize)
+				defaults().pad(3F)
+				actor(ModifyColorButton(grid, 1, game.skin, "redbuttonstyle"))
+				actor(ModifyColorButton(grid, 2, game.skin, "orangebuttonstyle"))
+				actor(ModifyColorButton(grid, 3, game.skin, "yellowbuttonstyle"))
+				row()
+				actor(ModifyColorButton(grid, 4, game.skin, "greenbuttonstyle"))
+				actor(ModifyColorButton(grid, 5, game.skin, "bluebuttonstyle"))
+				actor(ModifyColorButton(grid, 6, game.skin, "darkbluebuttonstyle"))
+				row()
+				actor(ModifyColorButton(grid, 7, game.skin, "purplebuttonstyle"))
+				actor(ModifyColorButton(grid, 8, game.skin, "graybuttonstyle"))
+				textButton("", "textbuttonstyle", game.skin) {
+					onClick {
+						grid.typedDigit(9)
+						isChecked = false
+					}
+				}
+			}
+		}
+	}
 	
 	private val keypad by lazy {
 		scene2d.table {
@@ -91,7 +112,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				defaults().size(buttonSize, buttonSize)
 				defaults().pad(3F)
 				imageButton("deletebuttonstyle", game.skin) {
-					onClick { grid.typedDigit(0) }
+					onClick { grid.typedDigit(0, true) }
 				}
 				imageButton("undobuttonstyle", game.skin)
 				imageButton("redobuttonstyle", game.skin)
@@ -104,6 +125,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override fun show()
 	{
 		super.show()
+		println("Show CommitSudokuScreen")
 		stage += scene2d.table {
 			setDebug(true, true)
 			setFillParent(true)
@@ -125,22 +147,24 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 					buttonGroup(1, 1, game.skin) {
 						defaults().size(buttonSize, buttonSize)
 						defaults().pad(4F)
-						textButton("#", "textbuttonstyle2", game.skin) {
+						textButton("#", "checkabletextbuttonstyle2", game.skin) {
 							isChecked = true
 							onClick { setKeypad(digitKeypad) }
 						}
 						row()
-						textButton("#", "textbuttonstyle", game.skin) {
+						textButton("#", "checkabletextbuttonstyle", game.skin) {
 							label.setAlignment(Align.topLeft)
 							padLeft(5F)
 							onClick { setKeypad(cornerMarkKeypad) }
 						}
 						row()
-						textButton("#", "textbuttonstyle", game.skin) {
+						textButton("#", "checkabletextbuttonstyle", game.skin) {
 							onClick { setKeypad(centerMarkKeypad) }
 						}
 						row()
-						textButton("", "textbuttonstyle", game.skin)
+						imageButton("colorbuttonstyle", game.skin) {
+							onClick { setKeypad(colorKeypad) }
+						}
 					}
 					
 					/* Add an empty onClick listener so that accidentally clicking on the gaps between the buttons does
@@ -162,6 +186,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		{
 			cornerMarkKeypad -> InputMode.CORNER_MARK
 			centerMarkKeypad -> InputMode.CENTER_MARK
+			colorKeypad -> InputMode.COLOR
 			else -> InputMode.DIGIT
 		}
 	}
@@ -170,7 +195,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		val backgroundColor: Color = game.skin["backgroundcolor"]
 		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT or GL30.GL_DEPTH_BUFFER_BIT)
 	}
 	
 	enum class InputMode
