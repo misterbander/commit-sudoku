@@ -1,4 +1,4 @@
-package misterbander.gframework
+package misterbander.gframework.util
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -10,27 +10,26 @@ import ktx.math.vec2
 private val glyph = GlyphLayout()
 private val vec2 = vec2()
 
+
 /**
  * Returns the dimensions of a text in pixels based on the BitmapFont.
- * @param font the bitmap font
  * @param text the text
  * @return A [Vector2] containing the dimensions of the text, in pixels. The returned `Vector2` is not safe for reuse.
  */
-fun getTextSize(font: BitmapFont, text: String): Vector2
+fun BitmapFont.getTextSize(text: String): Vector2
 {
-	glyph.setText(font, text)
+	glyph.setText(this, text)
 	vec2.set(glyph.width, glyph.height)
 	return vec2
 }
 
 /**
  * Wraps a string to fit within a specified width, adding line feeds between words where necessary.
- * @param font        the bitmap font
  * @param text        the text
  * @param targetWidth the width of the wrapped text
  * @return A string wrapped within the specified width.
  */
-fun wrapText(font: BitmapFont, text: String, targetWidth: Int): String
+fun BitmapFont.wrap(text: String, targetWidth: Int): String
 {
 	val builder = StringBuilder() // Current line builder
 	var peeker = StringBuilder() // Current line builder to check if the next word fits within the line
@@ -40,7 +39,7 @@ fun wrapText(font: BitmapFont, text: String, targetWidth: Int): String
 	for (word in words)
 	{
 		peeker.append(if (isFirstWord) word else " $word") // Have the peeker check if the next word fits
-		if (getTextSize(font, peeker.toString()).x <= targetWidth) // It fits
+		if (getTextSize(peeker.toString()).x <= targetWidth) // It fits
 			builder.append(if (isFirstWord) word else " $word")
 		else  // It doesn't fit, move on to the next line
 		{
@@ -54,6 +53,6 @@ fun wrapText(font: BitmapFont, text: String, targetWidth: Int): String
 
 fun BitmapFont.drawCenter(batch: Batch, str: CharSequence, x: Float, y: Float)
 {
-	val textSize = getTextSize(this, str.toString())
+	val textSize = getTextSize(str.toString())
 	draw(batch, str, x - textSize.x/2, y + textSize.y/2, textSize.x, Align.center, false)
 }
