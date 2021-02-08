@@ -105,6 +105,8 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 	fun typedDigit(digit: Int, isKeypad: Boolean = false)
 	{
 		val selectedCells = getSelectedCells()
+		if (selectedCells.isEmpty)
+			return
 		val modifyCellActions: GdxArray<ModifyCellAction> = GdxArray()
 		
 		if (digit == 0)
