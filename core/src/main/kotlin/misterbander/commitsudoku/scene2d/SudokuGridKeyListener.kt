@@ -9,33 +9,33 @@ import ktx.async.interval
 
 class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 {
-	private var job: Timer.Task? = null
+	private var keyRepeatTask: Timer.Task? = null
 	
 	override fun keyDown(event: InputEvent, keycode: Int): Boolean
 	{
-		job?.cancel()
-		job = null
+		keyRepeatTask?.cancel()
+		keyRepeatTask = null
 		when (keycode)
 		{
 			Input.Keys.LEFT ->
 			{
 				navigate(left = 1)
-				job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(left = 1) }
+				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(left = 1) }
 			}
 			Input.Keys.RIGHT ->
 			{
 				navigate(right = 1)
-				job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(right = 1) }
+				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(right = 1) }
 			}
 			Input.Keys.UP ->
 			{
 				navigate(up = 1)
-				job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(up = 1) }
+				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(up = 1) }
 			}
 			Input.Keys.DOWN ->
 			{
 				navigate(down = 1)
-				job = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(down = 1) }
+				keyRepeatTask = interval(delaySeconds = 0.3F, intervalSeconds = 0.025F) { navigate(down = 1) }
 			}
 			Input.Keys.NUM_1, Input.Keys.NUMPAD_1 -> grid.typedDigit(1)
 			Input.Keys.NUM_2, Input.Keys.NUMPAD_2 -> grid.typedDigit(2)
@@ -53,8 +53,8 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 	
 	override fun keyUp(event: InputEvent, keycode: Int): Boolean
 	{
-		job?.cancel()
-		job = null
+		keyRepeatTask?.cancel()
+		keyRepeatTask = null
 		return true
 	}
 	
