@@ -37,7 +37,7 @@ object Lwjgl3Launcher
 			get()
 			{
 				val now: LocalTime = LocalTime.now()
-				return (now.hour >= 22) or (now.hour < 8)
+				return now.hour >= 22 || now.hour < 8
 			}
 	}
 }
