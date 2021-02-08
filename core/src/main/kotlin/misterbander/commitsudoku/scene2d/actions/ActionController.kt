@@ -55,7 +55,6 @@ class ActionController(private val grid: SudokuGrid)
 	
 	private fun updateUndoRedoButtons()
 	{
-		println("update undoredo buttons undid=$undidActionCount actionhistorysize=${actionHistory.size}")
 		grid.screen.undoButton.isDisabled = undidActionCount == actionHistory.size
 		grid.screen.redoButton.isDisabled = undidActionCount == 0
 	}

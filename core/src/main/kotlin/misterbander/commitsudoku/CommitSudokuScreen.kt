@@ -24,6 +24,26 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	private val buttonSize = 80F
 	
 	private val timerLabel: Label by lazy { scene2d { label("0 : 00", "infolabelstyle", game.skin) } }
+	
+	private val editButton: ImageButton by lazy {
+		scene2d {
+			imageButton("editbuttonstyle", game.skin) {
+				isDisabled = true
+				onClick {
+					isEditing = true
+				}
+			}
+		}
+	}
+	private val playButton: ImageButton by lazy {
+		scene2d {
+			imageButton("playbuttonstyle", game.skin) {
+				onClick {
+					isEditing = false
+				}
+			}
+		}
+	}
 	private val digitKeypad: Table by lazy {
 		scene2d {
 			table {
@@ -135,7 +155,12 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	private val grid = SudokuGrid(this)
 	private val timer = SudokuTimer(timerLabel)
 	
-	var inputMode = InputMode.DIGIT
+	var isEditing = false
+		set(value)
+		{
+			field = value
+		}
+	var keypadInputMode = InputMode.DIGIT
 	
 	override fun show()
 	{
@@ -152,11 +177,22 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				// Status labels
 				label("Edit Mode", "infolabelstyle", game.skin).inCell.left()
 				row()
-				actor(timerLabel).cell(spaceBottom = 128F).inCell.left()
+				actor(timerLabel).cell(spaceBottom = 64F).inCell.left()
 				row()
 				
 				// Control panel
 				table {
+					setDebug(true, true)
+					defaults().pad(10F)
+					defaults().size(54F, 54F)
+					Scene2DSkin.defaultSkin
+					actor(editButton)
+					actor(playButton)
+					imageButton("clearbuttonstyle", game.skin)
+				}.inCell.left()
+				row()
+				table {
+					setDebug(true, true)
 					defaults().pad(5F)
 					actor(keypad)
 					buttonGroup(1, 1, game.skin) {
@@ -199,7 +235,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	private fun setKeypad(keypad: Table)
 	{
 		(this.keypad.cells[0] as Cell<*>).setActor(keypad)
-		inputMode = when (keypad)
+		keypadInputMode = when (keypad)
 		{
 			cornerMarkKeypad -> InputMode.CORNER_MARK
 			centerMarkKeypad -> InputMode.CENTER_MARK
