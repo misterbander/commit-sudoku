@@ -26,7 +26,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	val segoeui by lazy {
 		generator.generateFont {
 			size = 18
-			padBottom = 2 // Added to ensure font doesn't get clipped at the bottom
+			padLeft = 4 // Padding to ensure font doesn't get clipped
+			padRight = 4
+			padBottom = 4
+			padTop = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
 		}
@@ -34,7 +37,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	val segoeui2 by lazy {
 		generator.generateFont {
 			size = 32
-			padBottom = 2 // Added to ensure font doesn't get clipped at the bottom
+			padLeft = 4 // Padding to ensure font doesn't get clipped
+			padRight = 4
+			padBottom = 4
+			padTop = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
 		}
