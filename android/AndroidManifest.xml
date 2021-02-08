@@ -12,7 +12,7 @@
                 android:name="misterbander.commitsudoku.AndroidLauncher"
                 android:label="@string/app_name"
                 android:screenOrientation="landscape"
-                android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout">
+                android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
