@@ -1,5 +1,6 @@
 package misterbander.commitsudoku
 
+import android.content.res.Configuration
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
@@ -11,6 +12,11 @@ class AndroidLauncher : AndroidApplication()
 	{
 		super.onCreate(savedInstanceState)
 		val configuration = AndroidApplicationConfiguration()
-		initialize(CommitSudoku(), configuration)
+		val darkModeSettingsProvider = object : DarkModeSettingsProvider
+		{
+			override val defaultDarkModeEnabled: Boolean
+				get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+		}
+		initialize(CommitSudoku(darkModeSettingsProvider), configuration)
 	}
 }
