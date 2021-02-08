@@ -111,7 +111,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		
 		if (digit == 0)
 		{
-			if (isKeypad && screen.inputMode == CommitSudokuScreen.InputMode.COLOR
+			if (isKeypad && screen.keypadInputMode == CommitSudokuScreen.InputMode.COLOR
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)))
 				selectedCells.forEach { cell -> modifyCellActions.apply { add(ModifyColorAction(cell, to = 0)) } }
 			else
@@ -134,7 +134,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 			selectedCells.forEach { cell ->
 				if (isKeypad)
 				{
-					when (screen.inputMode)
+					when (screen.keypadInputMode)
 					{
 						CommitSudokuScreen.InputMode.CORNER_MARK ->
 							modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))

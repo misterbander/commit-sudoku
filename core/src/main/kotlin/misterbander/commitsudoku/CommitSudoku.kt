@@ -67,6 +67,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 			add(highlightColors, "highlightcolors")
+			
+			// Style bases
 			addRegions(guiAtlas)
 			label("infolabelstyle") { font = segoeui; fontColor = Color.BLACK }
 			textButton("textbuttonstylebase") {
@@ -87,13 +89,21 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				disabled = this@skin["buttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
+			
+			// Light derived styles
+			imageButton("editbuttonstyle", "imagebuttonstylebase") {
+				imageUp = this@skin["edit"]
+				imageDisabled = this@skin["editdisabled"]
+			}
+			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["play"] }
+			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pause"] }
+			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clear"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["undo"]
 				imageDisabled = this@skin["undodisabled"]
 			}
-			imageButton("redobuttonstyle", "imagebuttonstylebase")
-			{
+			imageButton("redobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["redo"]
 				imageDisabled = this@skin["redodisabled"]
 			}
@@ -117,6 +127,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			color("markcolor", 0.5F, 0.572549F, 1F)
 			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
 			add(highlightColors, "highlightcolors")
+			
+			// Style bases
 			addRegions(guiAtlas)
 			label("infolabelstyle") { font = segoeui; fontColor = Color.WHITE }
 			textButton("textbuttonstylebase") {
@@ -137,6 +149,15 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				disabled = this@skin["darkbuttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
+			
+			// Dark derived styles
+			imageButton("editbuttonstyle", "imagebuttonstylebase") {
+				imageUp = this@skin["darkedit"]
+				imageDisabled = this@skin["editdisabled"]
+			}
+			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplay"] }
+			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpause"] }
+			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclear"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["darkundo"]
