@@ -68,18 +68,30 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				over = this@skin["buttonover"]
 				down = this@skin["buttondown"]
 				fontColor = Color.BLACK
-				checked = down
 			}
+			textButton("checkabletextbuttonstylebase", "textbuttonstylebase") { checked = down }
 			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui; }
+			textButton("checkabletextbuttonstyle", "checkabletextbuttonstylebase") { font = segoeui; }
 			textButton("textbuttonstyle2", "textbuttonstylebase") { font = segoeui2; }
+			textButton("checkabletextbuttonstyle2", "checkabletextbuttonstylebase") { font = segoeui2; }
 			imageButton("imagebuttonstylebase") {
 				up = this@skin["button"]
 				over = this@skin["buttonover"]
 				down = this@skin["buttondown"]
 			}
+			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["undo"] }
 			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["redo"] }
+			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
+			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
+			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }
+			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellow"] }
+			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["green"] }
+			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blue"] }
+			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblue"] }
+			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purple"] }
+			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["gray"] }
 		}
 	}
 	private val darkSkin by lazy {
@@ -98,18 +110,30 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				over = this@skin["darkbuttonover"]
 				down = this@skin["darkbuttondown"]
 				fontColor = Color.WHITE
-				checked = down
 			}
+			textButton("checkabletextbuttonstylebase", "textbuttonstylebase") { checked = down }
 			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui }
+			textButton("checkabletextbuttonstyle", "checkabletextbuttonstylebase") { font = segoeui }
 			textButton("textbuttonstyle2", "textbuttonstylebase") { font = segoeui2 }
+			textButton("checkabletextbuttonstyle2", "checkabletextbuttonstylebase") { font = segoeui2 }
 			imageButton("imagebuttonstylebase") {
 				up = this@skin["darkbutton"]
 				over = this@skin["darkbuttonover"]
 				down = this@skin["darkbuttondown"]
 			}
+			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkundo"] }
 			imageButton("redobuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkredo"] }
+			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
+			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
+			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }
+			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellow"] }
+			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["green"] }
+			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blue"] }
+			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblue"] }
+			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purple"] }
+			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["gray"] }
 		}
 	}
 	lateinit var skin: Skin
