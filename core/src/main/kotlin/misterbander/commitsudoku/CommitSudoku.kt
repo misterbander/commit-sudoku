@@ -25,7 +25,7 @@ class CommitSudoku : GFramework()
 	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
 	val segoeui by lazy {
 		generator.generateFont {
-			size = 16
+			size = 18
 			padBottom = 2 // Added to ensure font doesn't get clipped at the bottom
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
@@ -120,6 +120,7 @@ class CommitSudoku : GFramework()
 		
 		assetManager.finishLoading()
 		println("Finished loading assets!")
+		
 		skin = lightSkin
 		
 		println("Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}")
