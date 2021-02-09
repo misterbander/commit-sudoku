@@ -29,7 +29,6 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			padLeft = 4 // Padding to ensure font doesn't get clipped
 			padRight = 4
 			padBottom = 4
-			padTop = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
 		}
@@ -40,7 +39,6 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			padLeft = 4 // Padding to ensure font doesn't get clipped
 			padRight = 4
 			padBottom = 4
-			padTop = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
 		}
