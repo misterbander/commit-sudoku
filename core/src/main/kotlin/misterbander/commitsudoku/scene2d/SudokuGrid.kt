@@ -183,6 +183,28 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		actionController.addActions(modifyCellActions)
 	}
 	
+	fun clearGrid()
+	{
+		val modifyCellActions: GdxArray<ModifyCellAction> = GdxArray()
+		cells.forEach {
+			it.forEach { cell ->
+				if (!cell.isGiven)
+				{
+					modifyCellActions.apply {
+						add(ModifyDigitAction(cell, to = 0))
+						for (i in 1..9)
+						{
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
+							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+						}
+					}
+				}
+			}
+		}
+		modifyCellActions.forEach { this += it }
+		actionController.addActions(modifyCellActions)
+	}
+	
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
 		val shapeDrawer = game.shapeDrawer

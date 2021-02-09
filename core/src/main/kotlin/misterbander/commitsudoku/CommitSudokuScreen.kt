@@ -194,7 +194,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 					Scene2DSkin.defaultSkin
 					actor(editButton)
 					actor(playButton)
-					imageButton("clearbuttonstyle", game.skin)
+					imageButton("clearbuttonstyle", game.skin) { onClick { grid.clearGrid() } }
 				}.inCell.left()
 				row()
 				table {
