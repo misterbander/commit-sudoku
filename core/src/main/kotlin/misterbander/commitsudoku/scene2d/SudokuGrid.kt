@@ -90,6 +90,21 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		cells.forEach { it.forEach { cell -> cell.isSelected = false } }
 	}
 	
+	fun setGivens(isGiven: Boolean)
+	{
+		cells.forEach {
+			it.forEach { cell ->
+				if (isGiven)
+				{
+					if (cell.digit != 0)
+						cell.isGiven = true
+				}
+				else
+					cell.isGiven = false
+			}
+		}
+	}
+	
 	private fun getSelectedCells(): GdxArray<Cell>
 	{
 		val selectedCells: GdxArray<Cell> = GdxArray()

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onClick
 import ktx.actors.plusAssign
+import ktx.actors.txt
 import ktx.scene2d.*
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.*
@@ -23,23 +24,24 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	private val buttonSize = 80F
 	
-	private val timerLabel: Label by lazy { scene2d { label("0 : 00", "infolabelstyle", game.skin) } }
+	val modeLabel: Label by lazy { Label("Edit Mode", game.skin, "infolabelstyle") }
+	val timerLabel: Label by lazy { Label("0 : 00", game.skin, "infolabelstyle") }
 	
 	private val editButton: ImageButton by lazy {
-		scene2d {
-			imageButton("editbuttonstyle", game.skin) {
-				isDisabled = true
-				onClick {
-					isEditing = true
-				}
-			}
+		ImageButton(game.skin, "editbuttonstyle").apply {
+			isDisabled = true
+			onClick { isEditing = true }
 		}
 	}
-	private val playButton: ImageButton by lazy {
-		scene2d {
-			imageButton("playbuttonstyle", game.skin) {
-				onClick {
+	val playButton: ImageButton by lazy {
+		ImageButton(game.skin, "playbuttonstyle").apply {
+			onClick {
+				if (isEditing)
 					isEditing = false
+				else
+				{
+					timer.isRunning = !timer.isRunning
+					modeLabel.txt = if (timer.isRunning) "Playing" else "Paused"
 				}
 			}
 		}
@@ -143,22 +145,26 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		}
 	}
 	val undoButton: ImageButton by lazy {
-		scene2d {
-			imageButton("undobuttonstyle", game.skin) { onClick { grid.actionController.undo() } }
-		}
+		ImageButton(game.skin, "undobuttonstyle").apply { onClick { grid.actionController.undo() } }
 	}
 	val redoButton: ImageButton by lazy {
-		scene2d {
-			imageButton("redobuttonstyle", game.skin) { onClick { grid.actionController.redo() } }
-		}
+		ImageButton(game.skin, "redobuttonstyle").apply { onClick { grid.actionController.redo() } }
 	}
 	private val grid = SudokuGrid(this)
-	private val timer = SudokuTimer(timerLabel)
+	private val timer = SudokuTimer(this)
 	
-	var isEditing = false
+	private var isEditing = true
 		set(value)
 		{
 			field = value
+			modeLabel.txt = if (value) "Edit Mode" else "Playing"
+			timerLabel.isVisible = !value
+			editButton.isDisabled = value
+			grid.setGivens(!value)
+			timer.isRunning = !value
+			grid.actionController.clearHistory()
+			if (value)
+				timer.reset()
 		}
 	var keypadInputMode = InputMode.DIGIT
 	
@@ -175,9 +181,9 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				defaults().pad(5F)
 				
 				// Status labels
-				label("Edit Mode", "infolabelstyle", game.skin).inCell.left()
+				actor(modeLabel).inCell.left()
 				row()
-				actor(timerLabel).cell(spaceBottom = 64F).inCell.left()
+				actor(timerLabel) { isVisible = false }.cell(spaceBottom = 64F).inCell.left()
 				row()
 				
 				// Control panel
@@ -228,8 +234,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		grid.addListener(SudokuGridClickListener(grid))
 		grid.addListener(SudokuGridKeyListener(grid))
 		stage.keyboardFocus = grid
-		
-		timer.isRunning = true
 	}
 	
 	private fun setKeypad(keypad: Table)
