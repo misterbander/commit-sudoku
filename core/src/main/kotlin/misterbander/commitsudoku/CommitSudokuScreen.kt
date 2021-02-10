@@ -39,7 +39,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				else
 				{
 					timer.isRunning = !timer.isRunning
-					modeLabel.txt = if (timer.isRunning) "Playing" else "Paused"
+					if (!isFinished)
+						modeLabel.txt = if (timer.isRunning) "Playing" else "Paused"
 				}
 			}
 		}
@@ -149,7 +150,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		ImageButton(game.skin, "redobuttonstyle").apply { onClick { grid.actionController.redo() } }
 	}
 	private val grid = SudokuGrid(this)
-	private val timer = SudokuTimer(this)
+	val timer = SudokuTimer(this)
 	
 	private var isEditing = true
 		set(value)
@@ -164,6 +165,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			if (value)
 				timer.reset()
 		}
+	var isFinished = false
 	var keypadInputMode = InputMode.DIGIT
 	
 	override fun show()

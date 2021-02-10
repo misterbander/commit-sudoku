@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.scene2d.actions.*
 import misterbander.gframework.util.drawCenter
 import kotlin.math.floor
@@ -31,6 +33,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		private set
 	
 	val actionController = ActionController(this)
+	val constraintsChecker = ConstraintsChecker(this)
 	
 	init
 	{
@@ -123,6 +126,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		if (selectedCells.isEmpty)
 			return
 		val modifyCellActions: GdxArray<ModifyCellAction> = GdxArray()
+		var shouldCheck = false
 		
 		when
 		{
@@ -151,6 +155,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 			// Insert digit
 			else ->
 			{
+				shouldCheck = true
 				if (digit == 0)
 				{
 					// Clear cell except color
@@ -181,6 +186,16 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 			return
 		modifyCellActions.forEach { this += it }
 		actionController.addActions(modifyCellActions)
+		if (shouldCheck)
+		{
+			this += object : RunnableAction()
+			{
+				init
+				{
+					runnable = Runnable { constraintsChecker.check() }
+				}
+			}
+		}
 	}
 	
 	fun clearGrid()
@@ -229,7 +244,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		var digit = 0
 		var colorCode = 0
 		var isGiven = false
-		var isCorrect = false
+		var isCorrect = true
 		var isSelected = false
 		val cornerMarks = Array(9) { false }
 		val centerMarks = Array(9) { false }
@@ -270,7 +285,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 			
 			if (digit != 0) // Draw digits
 			{
-				segoeui2.color = if (isGiven) game.skin["primarycolor"] else game.skin["nongivencolor"]
+				segoeui2.color = if (isGiven) game.skin["primarycolor"] else if (isCorrect) game.skin["nongivencolor"] else Color.RED
 				segoeui2.drawCenter(batch, digit.toString(), x + cellSize/2, y + cellSize/2)
 			}
 			else // Draw marks
