@@ -96,7 +96,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["play"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pause"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clear"] }
-			imageButton("darkmodebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["moon"] }
+			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["moon"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["undo"]
@@ -157,7 +157,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplay"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpause"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclear"] }
-			imageButton("darkmodebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkmoon"] }
+			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["darkmoon"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["darkundo"]
