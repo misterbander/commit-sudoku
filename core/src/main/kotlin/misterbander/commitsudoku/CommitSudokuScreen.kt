@@ -3,11 +3,9 @@ package misterbander.commitsudoku
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL30
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.Cell
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onClick
@@ -195,6 +193,12 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 					actor(editButton)
 					actor(playButton)
 					imageButton("clearbuttonstyle", game.skin) { onClick { grid.clearGrid() } }
+					imageButton("darkmodebuttonstyle", game.skin) {
+						onClick {
+							game.skin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
+							updateStyles()
+						}
+					}
 				}.inCell.left()
 				row()
 				table {
@@ -245,6 +249,27 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			centerMarkKeypad -> InputMode.CENTER_MARK
 			colorKeypad -> InputMode.COLOR
 			else -> InputMode.DIGIT
+		}
+	}
+	
+	private fun updateStyles()
+	{
+		val otherSkin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
+		fun updateTable(table: Table)
+		{
+			table.cells.forEach {
+				when (val actor: Actor = it.actor)
+				{
+					is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
+					is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
+					is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
+					is Table -> updateTable(actor)
+				}
+			}
+		}
+		stage.actors.forEach {
+			if (it is Table)
+				updateTable(it)
 		}
 	}
 	

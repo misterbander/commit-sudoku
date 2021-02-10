@@ -56,7 +56,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 		7 to Color(0.568627F, 0.078431F, 1F, 0.313725F), // Purple
 		8 to Color(0.705882F, 0.705882F, 0.705882F, 0.313725F) // Gray
 	)
-	private val lightSkin by lazy {
+	val lightSkin by lazy {
 		skin {
 			add(Color.BLACK, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
@@ -96,6 +96,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["play"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pause"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clear"] }
+			imageButton("darkmodebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["moon"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["undo"]
@@ -116,7 +117,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["gray"] }
 		}
 	}
-	private val darkSkin by lazy {
+	val darkSkin by lazy {
 		skin {
 			add(Color.WHITE, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
@@ -156,6 +157,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplay"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpause"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclear"] }
+			imageButton("darkmodebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkmoon"] }
 			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
 				imageUp = this@skin["darkundo"]
