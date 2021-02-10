@@ -194,8 +194,9 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 					actor(playButton)
 					imageButton("clearbuttonstyle", game.skin) { onClick { grid.clearGrid() } }
 					imageButton("darkmodebuttonstyle", game.skin) {
+						isChecked = game.skin == game.darkSkin
 						onClick {
-							game.skin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
+							game.skin = if (isChecked) game.darkSkin else game.lightSkin
 							updateStyles()
 						}
 					}
