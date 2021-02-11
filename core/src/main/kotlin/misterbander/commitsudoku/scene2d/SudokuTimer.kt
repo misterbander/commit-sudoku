@@ -2,10 +2,9 @@ package misterbander.commitsudoku.scene2d
 
 import ktx.actors.txt
 import ktx.style.get
-import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.util.formatDuration
 
-class SudokuTimer(private val screen: CommitSudokuScreen)
+class SudokuTimer(private val panel: SudokuPanel)
 {
 	private var elapsedSeconds = 0F
 	private var roundedElapsedSeconds = 0L
@@ -14,7 +13,7 @@ class SudokuTimer(private val screen: CommitSudokuScreen)
 			if (field != value)
 			{
 				field = value
-				screen.timerLabel.txt = formatDuration(value)
+				panel.timerLabel.txt = formatDuration(value)
 			}
 		}
 	
@@ -22,7 +21,7 @@ class SudokuTimer(private val screen: CommitSudokuScreen)
 		set(value)
 		{
 			field = value
-			screen.playButton.style = screen.game.skin[if (value) "pausebuttonstyle" else "playbuttonstyle"]
+			panel.playButton.style = panel.screen.game.skin[if (value) "pausebuttonstyle" else "playbuttonstyle"]
 		}
 	
 	fun update(delta: Float)

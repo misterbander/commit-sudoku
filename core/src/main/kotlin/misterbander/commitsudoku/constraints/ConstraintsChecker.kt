@@ -15,9 +15,9 @@ class ConstraintsChecker(private val grid: SudokuGrid)
 		var correctFlag = true
 		if (correctFlag && sudokuConstraint.check())
 		{
-			grid.screen.isFinished = true
-			grid.screen.modeLabel.txt = "Completed!"
-			grid.screen.timer.isRunning = false
+			grid.panel.isFinished = true
+			grid.panel.modeLabel.txt = "Completed!"
+			grid.panel.timer.isRunning = false
 		}
 	}
 }

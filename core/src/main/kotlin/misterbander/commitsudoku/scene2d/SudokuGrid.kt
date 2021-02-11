@@ -5,29 +5,24 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.style.get
-import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.scene2d.actions.*
 import misterbander.gframework.util.drawCenter
 import kotlin.math.floor
 
 
-class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
+class SudokuGrid(val panel: SudokuPanel) : Actor()
 {
-	private val game = screen.game
+	private val game = panel.screen.game
 	
 	val cells = Array(9) { i -> Array(9) { j -> Cell(i, j) } }
-	val cellSize: Float
-		get() = 64F
-	
-	private val gridSize: Float
-		get() = 9*cellSize
+	val cellSize = 64F
+	private val gridSize = 9*cellSize
 	
 	var mainSelectedCell: Cell? = null
 		private set
@@ -39,16 +34,9 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 	{
 		width = gridSize
 		height = gridSize
-	}
-	
-	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?
-	{
-		return when
-		{
-			touchable && this.touchable != Touchable.enabled -> null
-			!isVisible -> null
-			else -> this
-		}
+		
+		addListener(SudokuGridClickListener(this))
+		addListener(SudokuGridKeyListener(this))
 	}
 	
 	fun iToX(i: Int): Float
@@ -131,7 +119,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 		when
 		{
 			// Insert corner mark
-			isKeypad && screen.keypadInputMode == CommitSudokuScreen.InputMode.CORNER_MARK
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CORNER_MARK
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) ->
 			{
 				selectedCells.forEach { cell ->
@@ -140,7 +128,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 				}
 			}
 			// Insert center mark
-			isKeypad && screen.keypadInputMode == CommitSudokuScreen.InputMode.CENTER_MARK
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CENTER_MARK
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) ->
 			{
 				selectedCells.forEach { cell ->
@@ -149,7 +137,7 @@ class SudokuGrid(val screen: CommitSudokuScreen) : Actor()
 				}
 			}
 			// Highlight color
-			isKeypad && screen.keypadInputMode == CommitSudokuScreen.InputMode.COLOR
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) ->
 				selectedCells.forEach { cell -> modifyCellActions.add(ModifyColorAction(cell, to = digit)) }
 			// Insert digit

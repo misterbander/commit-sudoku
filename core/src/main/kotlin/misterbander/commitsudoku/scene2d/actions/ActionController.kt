@@ -9,11 +9,6 @@ class ActionController(private val grid: SudokuGrid)
 	private val actionHistory: GdxArray<GdxArray<ModifyCellAction>> = GdxArray()
 	private var undidActionCount: Int = 0
 	
-	init
-	{
-		updateUndoRedoButtons()
-	}
-	
 	fun addActions(actions: GdxArray<ModifyCellAction>)
 	{
 		if (undidActionCount > 0)
@@ -62,7 +57,7 @@ class ActionController(private val grid: SudokuGrid)
 	
 	private fun updateUndoRedoButtons()
 	{
-		grid.screen.undoButton.isDisabled = undidActionCount == actionHistory.size
-		grid.screen.redoButton.isDisabled = undidActionCount == 0
+		grid.panel.undoButton.isDisabled = undidActionCount == actionHistory.size
+		grid.panel.redoButton.isDisabled = undidActionCount == 0
 	}
 }
