@@ -4,10 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.plusAssign
 import ktx.scene2d.actor
@@ -35,25 +33,22 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		stage.keyboardFocus = sudokuPanel.grid
 	}
 	
+	private fun updateActorStyle(actor: Actor, otherSkin: Skin)
+	{
+		when (actor)
+		{
+			is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
+			is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
+			is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
+			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin) }
+			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin) }
+		}
+	}
+	
 	fun updateStyles()
 	{
 		val otherSkin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
-		fun updateTable(table: Table)
-		{
-			table.cells.forEach {
-				when (val actor: Actor = it.actor)
-				{
-					is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
-					is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
-					is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
-					is Table -> updateTable(actor)
-				}
-			}
-		}
-		stage.actors.forEach {
-			if (it is Table)
-				updateTable(it)
-		}
+		stage.actors.forEach { updateActorStyle(it, otherSkin) }
 	}
 	
 	override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean
