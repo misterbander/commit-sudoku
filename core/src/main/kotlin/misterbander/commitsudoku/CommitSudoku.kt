@@ -47,23 +47,24 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	// Skins
 	private val highlightColors: GdxMap<Int, Color> = gdxMapOf(
 		0 to Color.CLEAR,
-		1 to Color(1F, 0F, 0F, 0.313725F), // Red
-		2 to Color(1F, 0.568627F, 0.078431F, 0.313725F), // Orange
-		3 to Color(0.968627F, 1F, 0.078431F, 0.313725F), // Yellow
-		4 to Color(0.501960F, 1F, 0.078431F, 0.313725F), // Green
-		5 to Color(0.078431F, 0.968627F, 1F, 0.313725F), // Blue
-		6 to Color(0.078431F, 0.501960F, 1F, 0.313725F), // Dark blue
-		7 to Color(0.568627F, 0.078431F, 1F, 0.313725F), // Purple
-		8 to Color(0.705882F, 0.705882F, 0.705882F, 0.313725F) // Gray
+		1 to Color(0xFF000050.toInt()), // Red
+		2 to Color(0xFF911450.toInt()), // Orange
+		3 to Color(0xF7FF1450.toInt()), // Yellow
+		4 to Color(0x81FF1450.toInt()), // Green
+		5 to Color(0x14F7FF50), // Blue
+		6 to Color(0x1481FF50), // Dark blue
+		7 to Color(0x9114FF50.toInt()), // Purple
+		8 to Color(0xB4B4B450.toInt()) // Gray
 	)
 	val lightSkin by lazy {
 		skin {
 			add(Color.BLACK, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
 			add(Color.WHITE, "backgroundcolor")
-			color("nongivencolor", 0F, 0.858824F, 0.082353F)
-			color("markcolor", 0.5F, 0.572549F, 1F)
-			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
+			add(Color(0xF0F0F0FF.toInt()), "toolbarbackgroundcolor")
+			add(Color(0x00DB15FF), "nongivencolor")
+			add(Color(0x7F92FFFF), "markcolor")
+			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			
 			// Style bases
@@ -87,44 +88,63 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				disabled = this@skin["buttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
+			imageButton("toolbarbuttonstylebase") {
+				over = this@skin["toolbarbuttonover"]
+				down = this@skin["toolbarbuttondown"]
+				checked = down
+			}
 			
 			// Light derived styles
 			imageButton("editbuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["edit"]
-				imageDisabled = this@skin["editdisabled"]
+				imageUp = this@skin["editicon"]
+				imageDisabled = this@skin["editdisabledicon"]
 			}
-			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["play"] }
-			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pause"] }
-			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clear"] }
-			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["moon"] }
-			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["delete"] }
+			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["playicon"] }
+			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pauseicon"] }
+			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clearicon"] }
+			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["moonicon"] }
+			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["deleteicon"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["undo"]
-				imageDisabled = this@skin["undodisabled"]
+				imageUp = this@skin["undoicon"]
+				imageDisabled = this@skin["undodisabledicon"]
 			}
 			imageButton("redobuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["redo"]
-				imageDisabled = this@skin["redodisabled"]
+				imageUp = this@skin["redoicon"]
+				imageDisabled = this@skin["redodisabledicon"]
 			}
-			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
-			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
-			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }
-			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellow"] }
-			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["green"] }
-			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blue"] }
-			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblue"] }
-			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purple"] }
-			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["gray"] }
+			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["coloricon"] }
+			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["redicon"] }
+			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orangeicon"] }
+			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellowicon"] }
+			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["greenicon"] }
+			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blueicon"] }
+			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblueicon"] }
+			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purpleicon"] }
+			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
+			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["setgivensicon"] }
+			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addthermoicon"] }
+			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsandwichicon"] }
+			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addtextdecorationicon"] }
+			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsmalltextdecorationicon"] }
+			imageButton("addcircledecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addcircledecorationicon"] }
+			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addlinedecorationicon"] }
+			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addarrowdecorationicon"] }
+			imageButton("addcagedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addcagedecorationicon"] }
+			imageButton("xbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["xicon"] }
+			imageButton("antikingbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["antikingicon"] }
+			imageButton("antiknightbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["antiknighticon"] }
+			imageButton("nonconsecutivebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["nonconsecutiveicon"] }
 		}
 	}
 	val darkSkin by lazy {
 		skin {
 			add(Color.WHITE, "primarycolor")
 			add(Color.GRAY, "secondarycolor")
-			color("backgroundcolor", 0.15F, 0.15F, 0.15F, 1F)
-			color("nongivencolor", 0F, 0.858824F, 0.082353F)
-			color("markcolor", 0.5F, 0.572549F, 1F)
-			color("selectedcolor", 1F, 0.949019F, 0.5F, 0.470588F)
+			add(Color(0x252525FF), "backgroundcolor")
+			add(Color(0x0F0F0FFF), "toolbarbackgroundcolor")
+			add(Color(0x00DB15FF), "nongivencolor")
+			add(Color(0x7F92FFFF), "markcolor")
+			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			
 			// Style bases
@@ -148,34 +168,52 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				disabled = this@skin["darkbuttondisabled"]
 			}
 			imageButton("checkableimagebuttonstylebase", "imagebuttonstylebase") { checked = down }
+			imageButton("toolbarbuttonstylebase") {
+				over = this@skin["toolbarbuttonover"]
+				down = this@skin["toolbarbuttondown"]
+				checked = down
+			}
 			
 			// Dark derived styles
 			imageButton("editbuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["darkedit"]
-				imageDisabled = this@skin["editdisabled"]
+				imageUp = this@skin["darkediticon"]
+				imageDisabled = this@skin["editdisabledicon"]
 			}
-			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplay"] }
-			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpause"] }
-			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclear"] }
-			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["darkmoon"] }
-			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdelete"] }
+			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplayicon"] }
+			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpauseicon"] }
+			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclearicon"] }
+			imageButton("darkmodebuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["darkmoonicon"] }
+			imageButton("deletebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkdeleteicon"] }
 			imageButton("undobuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["darkundo"]
-				imageDisabled = this@skin["undodisabled"]
+				imageUp = this@skin["darkundoicon"]
+				imageDisabled = this@skin["undodisabledicon"]
 			}
 			imageButton("redobuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["darkredo"]
-				imageDisabled = this@skin["redodisabled"]
+				imageUp = this@skin["darkredoicon"]
+				imageDisabled = this@skin["redodisabledicon"]
 			}
-			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["color"] }
-			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["red"] }
-			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orange"] }
-			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellow"] }
-			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["green"] }
-			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blue"] }
-			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblue"] }
-			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purple"] }
-			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["gray"] }
+			imageButton("colorbuttonstyle", "checkableimagebuttonstylebase") { imageUp = this@skin["coloricon"] }
+			imageButton("redbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["redicon"] }
+			imageButton("orangebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["orangeicon"] }
+			imageButton("yellowbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["yellowicon"] }
+			imageButton("greenbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["greenicon"] }
+			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blueicon"] }
+			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblueicon"] }
+			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purpleicon"] }
+			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
+			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darksetgivensicon"] }
+			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddthermoicon"] }
+			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsandwichicon"] }
+			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddtextdecorationicon"] }
+			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsmalltextdecorationicon"] }
+			imageButton("addcircledecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddcircledecorationicon"] }
+			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddlinedecorationicon"] }
+			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddarrowdecorationicon"] }
+			imageButton("addcagedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddcagedecorationicon"] }
+			imageButton("xbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkxicon"] }
+			imageButton("antikingbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkantikingicon"] }
+			imageButton("antiknightbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkantiknighticon"] }
+			imageButton("nonconsecutivebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darknonconsecutiveicon"] }
 		}
 	}
 	lateinit var skin: Skin
