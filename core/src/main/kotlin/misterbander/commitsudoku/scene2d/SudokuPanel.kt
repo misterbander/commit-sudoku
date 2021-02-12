@@ -15,129 +15,111 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin)
 {
 	private val game = screen.game
 	
-	private val buttonSize = 80F
+	val grid = SudokuGrid(this)
 	
-	val modeLabel: Label by lazy { Label("Edit Mode", game.skin, "infolabelstyle") }
-	val timerLabel: Label by lazy { Label("0 : 00", game.skin, "infolabelstyle").apply { isVisible = false } }
-	private val editButton: ImageButton by lazy {
-		ImageButton(game.skin, "editbuttonstyle").apply {
-			isDisabled = true
-			onClick { isEditing = true }
+	private val buttonSize = 80F
+	val modeLabel = Label("Edit Mode", game.skin, "infolabelstyle")
+	val timerLabel = Label("0 : 00", game.skin, "infolabelstyle").apply { isVisible = false }
+	private val editButton = ImageButton(game.skin, "editbuttonstyle").apply {
+		isDisabled = true
+		onClick { isEditing = true }
+	}
+	val playButton = ImageButton(game.skin, "playbuttonstyle").apply {
+		onClick {
+			if (isEditing)
+				isEditing = false
+			else
+			{
+				timer.isRunning = !timer.isRunning
+				if (!isFinished)
+					modeLabel.txt = if (timer.isRunning) "Playing" else "Paused"
+			}
 		}
 	}
-	val playButton: ImageButton by lazy {
-		ImageButton(game.skin, "playbuttonstyle").apply {
+	val undoButton = ImageButton(game.skin, "undobuttonstyle").apply {
+		isDisabled = true
+		onClick { grid.actionController.undo() }
+	}
+	val redoButton = ImageButton(game.skin, "redobuttonstyle").apply {
+		isDisabled = true
+		onClick { grid.actionController.redo() }
+	}
+	private val digitKeypad = scene2d.table {
+		defaults().size(buttonSize, buttonSize).pad(3F)
+		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle2"))
+		row()
+		actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle2"))
+		row()
+		actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle2"))
+		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle2"))
+	}
+	private val cornerMarkKeypad = scene2d.table {
+		defaults().size(buttonSize, buttonSize).pad(3F)
+		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle", true))
+		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle", true))
+		actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle", true))
+		row()
+		actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle", true))
+		actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle", true))
+		actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle", true))
+		row()
+		actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle",true))
+		actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle",true))
+		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle",true))
+		row()
+	}
+	private val centerMarkKeypad = scene2d.table {
+		defaults().size(buttonSize, buttonSize).pad(3F)
+		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle"))
+		row()
+		actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle"))
+		row()
+		actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle"))
+		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle"))
+	}
+	private val colorKeypad = scene2d.table {
+		defaults().size(buttonSize, buttonSize).pad(3F)
+		actor(ModifyColorButton(grid, 1, game.skin, "redbuttonstyle"))
+		actor(ModifyColorButton(grid, 2, game.skin, "orangebuttonstyle"))
+		actor(ModifyColorButton(grid, 3, game.skin, "yellowbuttonstyle"))
+		row()
+		actor(ModifyColorButton(grid, 4, game.skin, "greenbuttonstyle"))
+		actor(ModifyColorButton(grid, 5, game.skin, "bluebuttonstyle"))
+		actor(ModifyColorButton(grid, 6, game.skin, "darkbluebuttonstyle"))
+		row()
+		actor(ModifyColorButton(grid, 7, game.skin, "purplebuttonstyle"))
+		actor(ModifyColorButton(grid, 8, game.skin, "graybuttonstyle"))
+		textButton("", "textbuttonstyle", game.skin) {
 			onClick {
-				if (isEditing)
-					isEditing = false
-				else
-				{
-					timer.isRunning = !timer.isRunning
-					if (!isFinished)
-						modeLabel.txt = if (timer.isRunning) "Playing" else "Paused"
-				}
+				grid.typedDigit(9, true)
+				isChecked = false
 			}
 		}
 	}
-	private val digitKeypad: Table by lazy {
-		scene2d.table {
+	private val keypad = scene2d.table {
+		defaults().pad(3F)
+		actor(digitKeypad)
+		row()
+		table {
 			defaults().size(buttonSize, buttonSize).pad(3F)
-			actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle2"))
-			row()
-			actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle2"))
-			row()
-			actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle2"))
-			actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle2"))
-		}
-	}
-	private val cornerMarkKeypad: Table by lazy {
-		scene2d.table {
-			defaults().size(buttonSize, buttonSize).pad(3F)
-			actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle", true))
-			actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle", true))
-			actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle", true))
-			row()
-			actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle", true))
-			actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle", true))
-			actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle", true))
-			row()
-			actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle",true))
-			actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle",true))
-			actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle",true))
-			row()
-		}
-	}
-	private val centerMarkKeypad: Table by lazy {
-		scene2d.table {
-			defaults().size(buttonSize, buttonSize).pad(3F)
-			actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 3, game.skin, "textbuttonstyle"))
-			row()
-			actor(ModifyCellButton(grid, 4, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 5, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 6, game.skin, "textbuttonstyle"))
-			row()
-			actor(ModifyCellButton(grid, 7, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle"))
-			actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle"))
-		}
-	}
-	private val colorKeypad: Table by lazy {
-		scene2d.table {
-			defaults().size(buttonSize, buttonSize).pad(3F)
-			actor(ModifyColorButton(grid, 1, game.skin, "redbuttonstyle"))
-			actor(ModifyColorButton(grid, 2, game.skin, "orangebuttonstyle"))
-			actor(ModifyColorButton(grid, 3, game.skin, "yellowbuttonstyle"))
-			row()
-			actor(ModifyColorButton(grid, 4, game.skin, "greenbuttonstyle"))
-			actor(ModifyColorButton(grid, 5, game.skin, "bluebuttonstyle"))
-			actor(ModifyColorButton(grid, 6, game.skin, "darkbluebuttonstyle"))
-			row()
-			actor(ModifyColorButton(grid, 7, game.skin, "purplebuttonstyle"))
-			actor(ModifyColorButton(grid, 8, game.skin, "graybuttonstyle"))
-			textButton("", "textbuttonstyle", game.skin) {
-				onClick {
-					grid.typedDigit(9, true)
-					isChecked = false
-				}
+			imageButton("deletebuttonstyle", game.skin) {
+				onClick { grid.typedDigit(0, true) }
 			}
-		}
-	}
-	private val keypad by lazy {
-		scene2d.table {
-			defaults().pad(3F)
-			actor(digitKeypad)
-			row()
-			table {
-				defaults().size(buttonSize, buttonSize).pad(3F)
-				imageButton("deletebuttonstyle", game.skin) {
-					onClick { grid.typedDigit(0, true) }
-				}
-				actor(undoButton)
-				actor(redoButton)
-			}
-		}
-	}
-	val undoButton: ImageButton by lazy {
-		ImageButton(game.skin, "undobuttonstyle").apply {
-			isDisabled = true
-			onClick { grid.actionController.undo() }
-		}
-	}
-	val redoButton: ImageButton by lazy {
-		ImageButton(game.skin, "redobuttonstyle").apply {
-			isDisabled = true
-			onClick { grid.actionController.redo() }
+			actor(undoButton)
+			actor(redoButton)
 		}
 	}
 	val timer = SudokuTimer(this)
-	val grid = SudokuGrid(this)
 	
 	private var isEditing = true
 		set(value)
