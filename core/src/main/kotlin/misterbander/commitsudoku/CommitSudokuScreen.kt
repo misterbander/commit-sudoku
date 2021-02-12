@@ -13,6 +13,7 @@ import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuPanel
+import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.gframework.GScreen
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
@@ -20,6 +21,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
 	private val sudokuPanel = SudokuPanel(this)
+	private val toolbar = Toolbar(this)
 	
 	override fun show()
 	{
@@ -28,6 +30,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		stage += scene2d.table {
 			setFillParent(true)
 			debug = true
+			actor(toolbar).cell(expandY = true).inCell.top()
 			actor(sudokuPanel).cell(expand = true)
 		}
 		stage.keyboardFocus = sudokuPanel.grid
