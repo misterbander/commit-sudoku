@@ -21,7 +21,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
-	private val sudokuPanel by lazy { SudokuPanel(this) }
+	private val sudokuPanel = SudokuPanel(this)
 	
 	override fun show()
 	{
@@ -30,7 +30,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		stage += scene2d.table {
 			setFillParent(true)
 			debug = true
-			actor(sudokuPanel)
+			actor(sudokuPanel).cell(expand = true)
 		}
 		stage.keyboardFocus = sudokuPanel.grid
 	}
