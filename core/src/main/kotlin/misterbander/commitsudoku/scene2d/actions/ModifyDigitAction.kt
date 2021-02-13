@@ -17,4 +17,9 @@ class ModifyDigitAction(
 			cell.digit = to
 		}
 	}
+	
+	override fun toString(): String
+	{
+		return "digit (${cell.i},${cell.j}) $from $to"
+	}
 }

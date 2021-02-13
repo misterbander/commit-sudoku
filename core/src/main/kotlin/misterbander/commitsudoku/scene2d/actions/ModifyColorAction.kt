@@ -17,4 +17,9 @@ class ModifyColorAction(
 			cell.colorCode = to
 		}
 	}
+	
+	override fun toString(): String
+	{
+		return "color (${cell.i},${cell.j}) $from $to"
+	}
 }

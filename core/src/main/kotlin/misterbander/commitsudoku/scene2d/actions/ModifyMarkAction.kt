@@ -28,6 +28,11 @@ class ModifyMarkAction(
 		}
 	}
 	
+	override fun toString(): String
+	{
+		return "${if (type == Type.CORNER) "corner" else "center"} (${cell.i},${cell.j}) $digit $from $to"
+	}
+	
 	enum class Type
 	{
 		CORNER, CENTER

@@ -15,6 +15,7 @@ import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.gframework.GScreen
+import misterbander.gframework.util.PersistentStateMapper
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
@@ -22,6 +23,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	private val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
+	
+	private val mapper = PersistentStateMapper("commit_sudoku_state")
 	
 	override fun show()
 	{
@@ -34,6 +37,9 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			actor(sudokuPanel).cell(expand = true)
 		}
 		stage.keyboardFocus = sudokuPanel.grid
+		
+		if (mapper.read())
+			sudokuPanel.readState(mapper)
 	}
 	
 	private fun updateActorStyle(actor: Actor, otherSkin: Skin)
@@ -58,6 +64,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		sudokuPanel.grid.unselect()
 		return true
+	}
+	
+	override fun pause()
+	{
+		println("Pause! Saving game state...")
+		sudokuPanel.writeState(mapper)
+		mapper.write()
 	}
 	
 	override fun render(delta: Float)
