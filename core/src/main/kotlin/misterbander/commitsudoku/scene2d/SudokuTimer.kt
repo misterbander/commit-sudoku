@@ -2,9 +2,11 @@ package misterbander.commitsudoku.scene2d
 
 import ktx.actors.txt
 import ktx.style.get
+import misterbander.gframework.util.PersistentState
+import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.formatDuration
 
-class SudokuTimer(private val panel: SudokuPanel)
+class SudokuTimer(private val panel: SudokuPanel) : PersistentState
 {
 	private var elapsedSeconds = 0F
 	private var roundedElapsedSeconds = 0L
@@ -36,5 +38,15 @@ class SudokuTimer(private val panel: SudokuPanel)
 	{
 		elapsedSeconds = 0F
 		roundedElapsedSeconds = 0
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		elapsedSeconds = mapper["elapsedSeconds"] ?: elapsedSeconds
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["elapsedSeconds"] = elapsedSeconds
 	}
 }

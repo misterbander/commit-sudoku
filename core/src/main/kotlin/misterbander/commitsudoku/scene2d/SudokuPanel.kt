@@ -10,8 +10,10 @@ import ktx.actors.onClick
 import ktx.actors.txt
 import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.gframework.util.PersistentState
+import misterbander.gframework.util.PersistentStateMapper
 
-class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin)
+class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), PersistentState
 {
 	private val game = screen.game
 	
@@ -135,6 +137,15 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin)
 				timer.reset()
 		}
 	var isFinished = false
+		set(value)
+		{
+			field = value
+			if (value)
+			{
+				modeLabel.txt = "Completed!"
+				timer.isRunning = false
+			}
+		}
 	var keypadInputMode = InputMode.DIGIT
 	
 	init
@@ -208,6 +219,22 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin)
 		}
 	}
 	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		isEditing = mapper["isEditing"] ?: isEditing
+		isFinished = mapper["isFinished"] ?: isFinished
+		timer.readState(mapper)
+		grid.readState(mapper)
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["isEditing"] = isEditing
+		mapper["isFinished"] = isFinished
+		timer.writeState(mapper)
+		grid.writeState(mapper)
+	}
+
 	enum class InputMode
 	{
 		DIGIT, CORNER_MARK, CENTER_MARK, COLOR

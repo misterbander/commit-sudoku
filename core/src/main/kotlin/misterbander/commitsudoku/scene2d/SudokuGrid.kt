@@ -12,11 +12,14 @@ import ktx.collections.GdxMap
 import ktx.style.get
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.scene2d.actions.*
+import misterbander.gframework.util.PersistentState
+import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.drawCenter
+import java.io.Serializable
 import kotlin.math.floor
 
 
-class SudokuGrid(val panel: SudokuPanel) : Actor()
+class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 {
 	private val game = panel.screen.game
 	
@@ -222,11 +225,76 @@ class SudokuGrid(val panel: SudokuPanel) : Actor()
 		}
 	}
 	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		actionController.readState(mapper)
+		val digits: Array<Int> = mapper["digits"] ?: return
+		val colors: Array<Int> = mapper["colors"] ?: return
+		val isGiven: Array<Boolean> = mapper["isGiven"] ?: return
+		val cornerMarks: Array<Boolean> = mapper["cornerMarks"] ?: return
+		val centerMarks: Array<Boolean> = mapper["centerMarks"] ?: return
+		
+		for (i in 0..8)
+		{
+			for (j in 0..8)
+			{
+				val cell = cells[i][j]
+				val index = i*9 + j
+				
+				cell.digit = digits[index]
+				cell.colorCode = colors[index]
+				cell.isGiven = isGiven[index]
+				for (k in 0..8)
+				{
+					cell.cornerMarks[k] = cornerMarks[index*9 + k]
+					cell.centerMarks[k] = centerMarks[index*9 + k]
+				}
+			}
+		}
+		
+	}
+
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		actionController.writeState(mapper)
+		val digits = Array(81) { 0 }
+		val colors = Array(81) { 0 }
+		val isGiven = Array(81) { false }
+		val cornerMarks = Array(81*9) { false }
+		val centerMarks = Array(81*9) { false }
+		
+		for (i in 0..8)
+		{
+			for (j in 0..8)
+			{
+				val cell = cells[i][j]
+				val index = i*9 + j
+				
+				digits[index] = cell.digit
+				colors[index] = cell.colorCode
+				isGiven[index] = cell.isGiven
+				for (k in 0..8)
+				{
+					if (cell.cornerMarks[k])
+						cornerMarks[index*9 + k] = true
+					if (cell.centerMarks[k])
+						centerMarks[index*9 + k] = true
+				}
+			}
+		}
+		mapper["digits"] = digits
+		mapper["colors"] = colors
+		mapper["isGiven"] = isGiven
+		mapper["cornerMarks"] = cornerMarks
+		mapper["centerMarks"] = centerMarks
+		
+	}
+	
 	/**
 	 * @property i 0 based horizontal index of the cell
 	 * @property j 0 based vertical index of the cell
 	 */
-	inner class Cell(val i: Int, val j: Int)
+	inner class Cell(val i: Int, val j: Int) : Serializable
 	{
 		var digit = 0
 		var colorCode = 0
