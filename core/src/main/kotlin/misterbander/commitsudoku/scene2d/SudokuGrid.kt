@@ -118,6 +118,25 @@ class SudokuGrid(val panel: SudokuPanel) : Actor()
 		
 		when
 		{
+			// Clear cell except color
+			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR
+				|| !isKeypad && !Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) ->
+			{
+				selectedCells.forEach { cell ->
+					if (!cell.isGiven)
+					{
+						shouldCheck = true
+						modifyCellActions.apply {
+							add(ModifyDigitAction(cell, to = 0))
+							for (i in 1..9)
+							{
+								add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
+								add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+							}
+						}
+					}
+				}
+			}
 			// Insert corner mark
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CORNER_MARK
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) ->
@@ -144,29 +163,9 @@ class SudokuGrid(val panel: SudokuPanel) : Actor()
 			else ->
 			{
 				shouldCheck = true
-				if (digit == 0)
-				{
-					// Clear cell except color
-					selectedCells.forEach { cell ->
-						if (!cell.isGiven)
-						{
-							modifyCellActions.apply {
-								add(ModifyDigitAction(cell, to = 0))
-								for (i in 1..9)
-								{
-									add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
-									add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					selectedCells.forEach { cell ->
-						if (!cell.isGiven)
-							modifyCellActions.add(ModifyDigitAction(cell, to = digit))
-					}
+				selectedCells.forEach { cell ->
+					if (!cell.isGiven)
+						modifyCellActions.add(ModifyDigitAction(cell, to = digit))
 				}
 			}
 		}
