@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
@@ -177,15 +177,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		modifyCellActions.forEach { this += it }
 		actionController.addActions(modifyCellActions)
 		if (shouldCheck)
-		{
-			this += object : RunnableAction()
-			{
-				init
-				{
-					runnable = Runnable { constraintsChecker.check() }
-				}
-			}
-		}
+			this += Actions.run { constraintsChecker.check() }
 	}
 	
 	fun clearGrid()
