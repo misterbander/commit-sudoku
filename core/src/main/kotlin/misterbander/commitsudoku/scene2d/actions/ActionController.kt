@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d.actions
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import misterbander.commitsudoku.scene2d.SudokuGrid
@@ -34,6 +35,7 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 			grid += action
 		}
 		updateUndoRedoButtons()
+		grid += Actions.run { grid.constraintsChecker.check() }
 	}
 	
 	fun redo()
@@ -48,6 +50,7 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 			grid += action
 		}
 		updateUndoRedoButtons()
+		grid += Actions.run { grid.constraintsChecker.check() }
 	}
 	
 	fun clearHistory()
