@@ -318,6 +318,13 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			val segoeui2 = game.segoeui2
 			
 			val highlightColorsMap: GdxMap<Int, Color> = game.skin["highlightcolors"]
+			
+			if (constraintsChecker.xConstraint in constraintsChecker && (i == j || i == 8 - j)) // Color X
+			{
+				shapeDrawer.setColor(highlightColorsMap[8])
+				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
+			}
+			
 			val highlightColor: Color? = highlightColorsMap[colorCode]
 			if (highlightColor != null)
 			{

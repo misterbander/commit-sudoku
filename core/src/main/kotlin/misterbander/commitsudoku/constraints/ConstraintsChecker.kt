@@ -9,9 +9,11 @@ class ConstraintsChecker(private val grid: SudokuGrid)
 {
 	private val globalStatements: GdxArray<Statement> = GdxArray()
 	private val staticStatements: GdxArray<Statement> = GdxArray()
+	private val additionalConstraints: GdxArray<Constraint> = GdxArray()
 	
 	// Preset constraints
-	val sudokuConstraint = SudokuConstraint(grid)
+	private val sudokuConstraint = SudokuConstraint(grid.cells)
+	val xConstraint = XConstraint(grid.cells)
 	val antiKingStatement = CompoundStatement(grid.cells, "!=[~1~1]", "!=[~-1~1]")
 	val antiKnightStatement = CompoundStatement(
 		grid.cells,
@@ -35,24 +37,40 @@ class ConstraintsChecker(private val grid: SudokuGrid)
 		var correctFlag = true
 		globalStatements.forEach { correctFlag = it.check() && correctFlag }
 		staticStatements.forEach { correctFlag = it.check() && correctFlag }
+		additionalConstraints.forEach { correctFlag = it.check() && correctFlag }
 		correctFlag = sudokuConstraint.check() && correctFlag
 		if (correctFlag)
 			grid.panel.isFinished = true
 	}
 	
-	operator fun plusAssign(statement: Statement)
+	operator fun plusAssign(constraint: Constraint)
 	{
-		if (statement.isGlobal && statement !in globalStatements)
-			globalStatements += statement
-		else if (statement !in staticStatements)
-			staticStatements += statement
+		if (constraint is Statement)
+		{
+			if (constraint.isGlobal && constraint !in globalStatements)
+				globalStatements += constraint
+			else if (constraint !in staticStatements)
+				staticStatements += constraint
+		}
+		else if (constraint !in additionalConstraints)
+			additionalConstraints += constraint
 		check()
 	}
 	
-	operator fun minusAssign(statement: Statement)
+	operator fun minusAssign(constraint: Constraint)
 	{
-		globalStatements -= statement
-		staticStatements -= statement
+		if (constraint is Statement)
+		{
+			globalStatements -= constraint
+			staticStatements -= constraint
+		}
+		else
+			additionalConstraints -= constraint
 		check()
+	}
+	
+	operator fun contains(constraint: Constraint): Boolean
+	{
+		return constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
 	}
 }

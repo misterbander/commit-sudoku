@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.IntIntMap
 import ktx.collections.set
 import misterbander.commitsudoku.scene2d.SudokuGrid
 
-class SudokuConstraint(private val grid: SudokuGrid) : Constraint
+class SudokuConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Constraint
 {
 	private val digitIndexMap: IntIntMap = IntIntMap()
 	
@@ -19,7 +19,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 			digitIndexMap.clear()
 			for (i in 0..8)
 			{
-				val cell = grid.cells[i][j]
+				val cell = cells[i][j]
 				if (cell.digit == 0)
 				{
 					allFilled = false
@@ -29,7 +29,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 				if (digitIndex != -1)
 				{
 					cell.isCorrect = false
-					grid.cells[digitIndex][j].isCorrect = false
+					cells[digitIndex][j].isCorrect = false
 					correctFlag = false
 				}
 				else
@@ -43,7 +43,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 			digitIndexMap.clear()
 			for (j in 0..8)
 			{
-				val cell = grid.cells[i][j]
+				val cell = cells[i][j]
 				if (cell.digit == 0)
 				{
 					allFilled = false
@@ -53,7 +53,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 				if (digitIndex != -1)
 				{
 					cell.isCorrect = false
-					grid.cells[i][digitIndex].isCorrect = false
+					cells[i][digitIndex].isCorrect = false
 					correctFlag = false
 				}
 				else
@@ -71,7 +71,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 				{
 					val i = k%3 + i1
 					val j = k/3 + j1
-					val cell = grid.cells[i][j]
+					val cell = cells[i][j]
 					if (cell.digit == 0)
 					{
 						allFilled = false
@@ -81,7 +81,7 @@ class SudokuConstraint(private val grid: SudokuGrid) : Constraint
 					if (digitIndex != -1)
 					{
 						cell.isCorrect = false
-						grid.cells[digitIndex%3 + i1][digitIndex/3 + j1].isCorrect = false
+						cells[digitIndex%3 + i1][digitIndex/3 + j1].isCorrect = false
 						correctFlag = false
 					}
 					else
