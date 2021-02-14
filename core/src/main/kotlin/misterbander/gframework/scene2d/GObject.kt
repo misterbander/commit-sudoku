@@ -3,6 +3,7 @@ package misterbander.gframework.scene2d
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.scenes.scene2d.Group
 import ktx.collections.GdxArray
+import ktx.collections.plusAssign
 import misterbander.gframework.GFramework
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.module.GModule
@@ -38,7 +39,7 @@ abstract class GObject<T : GFramework>(val screen: GScreen<T>) : Group()
 	 */
 	fun destroy()
 	{
-		screen.scheduledRemovalGObjects.add(this)
+		screen.scheduledRemovalGObjects += this
 	}
 	
 	override fun remove(): Boolean
