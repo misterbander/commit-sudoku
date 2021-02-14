@@ -134,7 +134,10 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			timer.isRunning = !value
 			grid.actionController.clearHistory()
 			if (value)
+			{
 				timer.reset()
+				isFinished = false
+			}
 		}
 	var isFinished = false
 		set(value)

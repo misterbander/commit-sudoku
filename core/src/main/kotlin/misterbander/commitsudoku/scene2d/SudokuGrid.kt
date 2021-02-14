@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
@@ -30,6 +32,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	var mainSelectedCell: Cell? = null
 		private set
+	var completionCharmT = 0F
+		private set
 	
 	val actionController = ActionController(this)
 	val constraintsChecker = ConstraintsChecker(this)
@@ -41,6 +45,15 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		
 		addListener(SudokuGridClickListener(this))
 		addListener(SudokuGridKeyListener(this))
+	}
+	
+	override fun act(delta: Float)
+	{
+		super.act(delta)
+		if (panel.isFinished)
+			completionCharmT += delta
+		else
+			completionCharmT = 0F
 	}
 	
 	fun iToX(i: Int): Float
@@ -297,6 +310,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		val cornerMarks = Array(9) { false }
 		val centerMarks = Array(9) { false }
 		var hasCornerTextDecoration = false
+		val green: Color = Color(0x81FF1450.toInt())
 		
 		private val x: Float
 			get() = iToX(i)
@@ -319,6 +333,18 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			
 			val highlightColorsMap: GdxMap<Int, Color> = game.skin["highlightcolors"]
 			
+			// Draw completion charm
+			if (panel.isFinished)
+			{
+				val shift = (i + j)/16F
+				var t = MathUtils.clamp((completionCharmT - shift)*2, 0F, 1F)
+				if (t > 0.5F)
+					t = 1 - t
+				green.a = Interpolation.smoother.apply(t)
+				shapeDrawer.setColor(green)
+				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
+			}
+			
 			if (constraintsChecker.xConstraint in constraintsChecker && (i == j || i == 8 - j)) // Color X
 			{
 				shapeDrawer.setColor(highlightColorsMap[8])
@@ -326,13 +352,13 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			}
 			
 			val highlightColor: Color? = highlightColorsMap[colorCode]
-			if (highlightColor != null)
+			if (highlightColor != null) // Draw highlight
 			{
 				shapeDrawer.setColor(highlightColor)
 				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
 			}
 			
-			if (isSelected)
+			if (isSelected) // Draw selection
 			{
 				shapeDrawer.setColor(game.skin.getColor("selectedcolor"))
 				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
