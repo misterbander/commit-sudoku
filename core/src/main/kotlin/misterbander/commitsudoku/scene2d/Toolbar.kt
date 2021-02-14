@@ -21,7 +21,15 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 	private val constraintsChecker
 		get() = screen.sudokuPanel.grid.constraintsChecker
 	
-	private val xButton = ImageButton(game.skin, "xbuttonstyle")
+	private val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
+		setProgrammaticChangeEvents(true)
+		onChange {
+			if (isChecked)
+				constraintsChecker += constraintsChecker.xConstraint
+			else
+				constraintsChecker -= constraintsChecker.xConstraint
+		}
+	}
 	private val antiKingButton = ImageButton(game.skin, "antikingbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
