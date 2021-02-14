@@ -46,7 +46,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		isDisabled = true
 		onClick { grid.actionController.redo() }
 	}
-	private val digitKeypad = scene2d.table {
+	val digitKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
 		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle2"))
 		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle2"))
@@ -60,7 +60,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle2"))
 		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle2"))
 	}
-	private val cornerMarkKeypad = scene2d.table {
+	val cornerMarkKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
 		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle", true))
 		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle", true))
@@ -75,7 +75,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle",true))
 		row()
 	}
-	private val centerMarkKeypad = scene2d.table {
+	val centerMarkKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
 		actor(ModifyCellButton(grid, 1, game.skin, "textbuttonstyle"))
 		actor(ModifyCellButton(grid, 2, game.skin, "textbuttonstyle"))
@@ -89,7 +89,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		actor(ModifyCellButton(grid, 8, game.skin, "textbuttonstyle"))
 		actor(ModifyCellButton(grid, 9, game.skin, "textbuttonstyle"))
 	}
-	private val colorKeypad = scene2d.table {
+	val colorKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
 		actor(ModifyColorButton(grid, 1, game.skin, "redbuttonstyle"))
 		actor(ModifyColorButton(grid, 2, game.skin, "orangebuttonstyle"))
