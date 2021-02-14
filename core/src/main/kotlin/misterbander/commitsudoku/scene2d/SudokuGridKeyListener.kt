@@ -85,6 +85,6 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 		if (grid.mainSelectedCell == null)
 			grid.select(grid.cells[0][8])
 		else
-			grid.select(grid.mainSelectedCell!!.getCell(right - left, up - down))
+			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down))
 	}
 }

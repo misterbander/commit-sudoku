@@ -21,7 +21,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
-	private val sudokuPanel = SudokuPanel(this)
+	val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
@@ -39,7 +39,10 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		stage.keyboardFocus = sudokuPanel.grid
 		
 		if (mapper.read())
+		{
 			sudokuPanel.readState(mapper)
+			toolbar.readState(mapper)
+		}
 	}
 	
 	private fun updateActorStyle(actor: Actor, otherSkin: Skin)
@@ -70,6 +73,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		println("Pause! Saving game state...")
 		sudokuPanel.writeState(mapper)
+		toolbar.writeState(mapper)
 		mapper.write()
 	}
 	
