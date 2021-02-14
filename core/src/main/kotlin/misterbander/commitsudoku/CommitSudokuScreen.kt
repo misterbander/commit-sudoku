@@ -45,8 +45,14 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		}
 	}
 	
-	private fun updateActorStyle(actor: Actor, otherSkin: Skin)
+	private fun updateActorStyle(actor: Actor, otherSkin: Skin, excludeKeypads: Boolean = true)
 	{
+		if (excludeKeypads)
+		{
+			if (actor == sudokuPanel.digitKeypad || actor == sudokuPanel.cornerMarkKeypad
+				|| actor == sudokuPanel.centerMarkKeypad || actor == sudokuPanel.colorKeypad)
+			return
+		}
 		when (actor)
 		{
 			is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
@@ -61,6 +67,10 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		val otherSkin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
 		stage.actors.forEach { updateActorStyle(it, otherSkin) }
+		updateActorStyle(sudokuPanel.digitKeypad, otherSkin, false)
+		updateActorStyle(sudokuPanel.cornerMarkKeypad, otherSkin, false)
+		updateActorStyle(sudokuPanel.centerMarkKeypad, otherSkin, false)
+		updateActorStyle(sudokuPanel.colorKeypad, otherSkin, false)
 	}
 	
 	override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean
