@@ -304,7 +304,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		private val y: Float
 			get() = jToY(j)
 		
-		fun getCell(iOffset: Int, jOffset: Int): Cell
+		fun offset(iOffset: Int, jOffset: Int): Cell
 		{
 			val i2 = (i + iOffset + 9)%9
 			val j2 = (j + jOffset + 9)%9

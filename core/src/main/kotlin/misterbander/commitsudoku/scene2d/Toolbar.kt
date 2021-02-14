@@ -3,20 +3,52 @@ package misterbander.commitsudoku.scene2d
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
+import ktx.actors.onChange
 import ktx.actors.plusAssign
-import ktx.scene2d.buttonGroup
-import ktx.scene2d.imageButton
-import ktx.scene2d.scene2d
-import ktx.scene2d.table
+import ktx.scene2d.*
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.gframework.util.PersistentState
+import misterbander.gframework.util.PersistentStateMapper
 
-class Toolbar(screen: CommitSudokuScreen) : VerticalGroup()
+class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), PersistentState
 {
 	private val game = screen.game
+	private val constraintsChecker
+		get() = screen.sudokuPanel.grid.constraintsChecker
+	
+	private val xButton = ImageButton(game.skin, "xbuttonstyle")
+	private val antiKingButton = ImageButton(game.skin, "antikingbuttonstyle").apply {
+		setProgrammaticChangeEvents(true)
+		onChange {
+			if (isChecked)
+				constraintsChecker += constraintsChecker.antiKingStatement
+			else
+				constraintsChecker -= constraintsChecker.antiKingStatement
+		}
+	}
+	private val antiKnightButton = ImageButton(game.skin, "antiknightbuttonstyle").apply {
+		setProgrammaticChangeEvents(true)
+		onChange {
+			if (isChecked)
+				constraintsChecker += constraintsChecker.antiKnightStatement
+			else
+				constraintsChecker -= constraintsChecker.antiKnightStatement
+		}
+	}
+	private val nonconsecutiveButton = ImageButton(game.skin, "nonconsecutivebuttonstyle").apply {
+		setProgrammaticChangeEvents(true)
+		onChange {
+			if (isChecked)
+				constraintsChecker += constraintsChecker.nonconsecutiveStatement
+			else
+				constraintsChecker -= constraintsChecker.nonconsecutiveStatement
+		}
+	}
 	
 	init
 	{
@@ -37,11 +69,28 @@ class Toolbar(screen: CommitSudokuScreen) : VerticalGroup()
 		}
 		this += Image(game.skin["divider"], Scaling.none, Align.center)
 		this += scene2d.table {
-			imageButton("xbuttonstyle", game.skin)
-			imageButton("antikingbuttonstyle", game.skin)
+			actor(xButton)
+			actor(antiKingButton)
 			row()
-			imageButton("antiknightbuttonstyle", game.skin)
+			actor(antiKnightButton)
+			actor(nonconsecutiveButton)
 		}
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		xButton.isChecked = mapper["x"] ?: xButton.isChecked
+		antiKingButton.isChecked = mapper["antiKing"] ?: antiKingButton.isChecked
+		antiKnightButton.isChecked = mapper["antiKnight"] ?: antiKnightButton.isChecked
+		nonconsecutiveButton.isChecked = mapper["nonconsecutive"] ?: nonconsecutiveButton.isChecked
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["x"] = xButton.isChecked
+		mapper["antiKing"] = antiKingButton.isChecked
+		mapper["antiKnight"] = antiKnightButton.isChecked
+		mapper["nonconsecutive"] = nonconsecutiveButton.isChecked
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
