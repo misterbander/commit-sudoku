@@ -13,6 +13,7 @@ import ktx.actors.plusAssign
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.collections.GdxSet
+import ktx.collections.plusAssign
 import misterbander.gframework.scene2d.GContactListener
 import misterbander.gframework.scene2d.GObject
 
@@ -60,7 +61,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, KtxInputAdapter
 	
 	fun scheduleSpawnGObject(gObject: GObject<T>)
 	{
-		scheduledAddingGObjects.add(gObject)
+		scheduledAddingGObjects += gObject
 	}
 	
 	override fun resize(width: Int, height: Int)

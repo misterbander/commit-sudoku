@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
+import ktx.collections.plusAssign
 import ktx.style.get
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.scene2d.actions.*
@@ -105,7 +106,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		cells.forEach {
 			it.forEach { cell ->
 				if (cell.isSelected)
-					selectedCells.add(cell)
+					selectedCells += cell
 			}
 		}
 		return selectedCells
@@ -146,7 +147,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit))
+						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit)
 				}
 			}
 			// Insert center mark
@@ -155,20 +156,20 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit))
+						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit)
 				}
 			}
 			// Highlight color
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR
 				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) ->
-				selectedCells.forEach { cell -> modifyCellActions.add(ModifyColorAction(cell, to = digit)) }
+				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = digit) }
 			// Insert digit
 			else ->
 			{
 				shouldCheck = true
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions.add(ModifyDigitAction(cell, to = digit))
+						modifyCellActions += ModifyDigitAction(cell, to = digit)
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package misterbander.commitsudoku.scene2d.actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
+import ktx.collections.plusAssign
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
@@ -19,7 +20,7 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 			actionHistory.removeRange(actionHistory.size - undidActionCount, actionHistory.size - 1)
 			undidActionCount = 0
 		}
-		actionHistory.add(actions)
+		actionHistory += actions
 		updateUndoRedoButtons()
 	}
 	
@@ -76,13 +77,13 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 				val cell = grid.cells[tokens[1][1].toString().toInt()][tokens[1][3].toString().toInt()]
 				when (tokens[0])
 				{
-					"digit" -> subActionHistory.add(ModifyDigitAction(cell, tokens[2].toInt(), tokens[3].toInt()))
-					"color" -> subActionHistory.add(ModifyColorAction(cell, tokens[2].toInt(), tokens[3].toInt()))
-					"corner" -> subActionHistory.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean()))
-					"center" -> subActionHistory.add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean()))
+					"digit" -> subActionHistory += ModifyDigitAction(cell, tokens[2].toInt(), tokens[3].toInt())
+					"color" -> subActionHistory += ModifyColorAction(cell, tokens[2].toInt(), tokens[3].toInt())
+					"corner" -> subActionHistory += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean())
+					"center" -> subActionHistory += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean())
 				}
 			}
-			actionHistory.add(subActionHistory)
+			actionHistory += subActionHistory
 		}
 		undidActionCount = mapper["undidActionCount"] ?: undidActionCount
 		updateUndoRedoButtons()
