@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.scene2d.actor
 import ktx.scene2d.scene2d
@@ -30,6 +31,18 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		super.show()
 		println("Show CommitSudokuScreen")
+		stage += object : Actor() // Fallback actor
+		{
+			init
+			{
+				onTouchDown { sudokuPanel.grid.unselect() }
+			}
+			
+			override fun hit(x: Float, y: Float, touchable: Boolean): Actor
+			{
+				return this
+			}
+		}
 		stage += scene2d.table {
 			setFillParent(true)
 			debug = true
@@ -71,12 +84,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		updateActorStyle(sudokuPanel.cornerMarkKeypad, otherSkin, false)
 		updateActorStyle(sudokuPanel.centerMarkKeypad, otherSkin, false)
 		updateActorStyle(sudokuPanel.colorKeypad, otherSkin, false)
-	}
-	
-	override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean
-	{
-		sudokuPanel.grid.unselect()
-		return true
 	}
 	
 	override fun pause()
