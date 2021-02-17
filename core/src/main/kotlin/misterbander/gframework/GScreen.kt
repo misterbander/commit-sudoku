@@ -1,7 +1,6 @@
 package misterbander.gframework
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.actors.plusAssign
-import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.collections.GdxSet
 import ktx.collections.plusAssign
@@ -30,7 +28,7 @@ import misterbander.gframework.scene2d.GObject
  * `GScreen`s may also optionally include a `Box2D` world.
  * @property game parent GFramework instance
  */
-abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, KtxInputAdapter, ContactListener
+abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 {
 	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
 	open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
@@ -46,7 +44,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, KtxInputAdapter
 	
 	override fun show()
 	{
-		Gdx.input.inputProcessor = InputMultiplexer(stage, this)
+		Gdx.input.inputProcessor = stage
 		world?.setContactListener(this)
 	}
 	
