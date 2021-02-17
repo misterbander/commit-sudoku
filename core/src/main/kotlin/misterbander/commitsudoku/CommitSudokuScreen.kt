@@ -13,9 +13,11 @@ import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.style.get
+import misterbander.commitsudoku.scene2d.InputWindow
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.gframework.GScreen
+import misterbander.gframework.scene2d.MBTextField
 import misterbander.gframework.util.PersistentStateMapper
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
@@ -24,6 +26,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
+	val textInputWindow = InputWindow(game, true)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
 	
@@ -50,6 +53,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			actor(sudokuPanel).cell(expand = true)
 		}
 		stage.keyboardFocus = sudokuPanel.grid
+		stage += textInputWindow
 		
 		if (mapper.read())
 		{
@@ -71,6 +75,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
 			is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
 			is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
+			is MBTextField -> actor.style = game.skin[otherSkin.find(actor.style)]
+			is InputWindow ->
+			{
+				actor.style = game.skin[otherSkin.find(actor.style)]
+				actor.cells.forEach { updateActorStyle(it.actor, otherSkin) }
+				actor.closeButton.style = game.skin[otherSkin.find(actor.closeButton.style)]
+			}
 			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin) }
 			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin) }
 		}

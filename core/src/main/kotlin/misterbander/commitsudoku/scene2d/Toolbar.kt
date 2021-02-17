@@ -18,8 +18,10 @@ import misterbander.gframework.util.PersistentStateMapper
 class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), PersistentState
 {
 	private val game = screen.game
+	private val grid
+		get() = screen.sudokuPanel.grid
 	private val constraintsChecker
-		get() = screen.sudokuPanel.grid.constraintsChecker
+		get() = grid.constraintsChecker
 	
 	private val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
@@ -61,11 +63,16 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 	init
 	{
 		this += scene2d.buttonGroup(1, 1, game.skin) {
-			imageButton("setgivensbuttonstyle", game.skin) { isChecked = true }
+			imageButton("setgivensbuttonstyle", game.skin) {
+				isChecked = true
+				onChange { grid.modifier = null }
+			}
 			imageButton("addthermobuttonstyle", game.skin)
 			row()
 			imageButton("addsandwichbuttonstyle", game.skin)
-			imageButton("addtextdecorationbuttonstyle", game.skin)
+			imageButton("addtextdecorationbuttonstyle", game.skin) {
+				onChange { grid.modifier = grid.modifiers.textDecorationAdder }
+			}
 			row()
 			imageButton("addsmalltextdecorationbuttonstyle", game.skin)
 			imageButton("addcircledecorationbuttonstyle", game.skin)
@@ -103,7 +110,9 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
-		game.shapeDrawer.filledRectangle(0F, 0F, width, 720F, game.skin["toolbarbackgroundcolor", Color::class.java])
+		game.shapeDrawer.filledRectangle(
+			0F, 0F, width, screen.viewport.worldHeight, game.skin["toolbarbackgroundcolor", Color::class.java]
+		)
 		super.draw(batch, parentAlpha)
 	}
 }

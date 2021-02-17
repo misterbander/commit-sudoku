@@ -1,19 +1,22 @@
 package misterbander.commitsudoku.scene2d
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils
 import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.plusAssign
 import ktx.style.get
 import misterbander.commitsudoku.constraints.ConstraintsChecker
+import misterbander.commitsudoku.decorations.Decoration
+import misterbander.commitsudoku.modifiers.GridModfier
+import misterbander.commitsudoku.modifiers.GridModifiers
 import misterbander.commitsudoku.scene2d.actions.*
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
@@ -35,8 +38,16 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	var completionCharmT = 0F
 		private set
 	
-	val actionController = ActionController(this)
+	val decorations: GdxArray<Decoration> = GdxArray()
+	val modifiers = GridModifiers(this)
+	var modifier: GridModfier? = null
+		set(value)
+		{
+			field = value
+			unselect()
+		}
 	val constraintsChecker = ConstraintsChecker(this)
+	val actionController = ActionController(this)
 	
 	init
 	{
@@ -45,6 +56,15 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		
 		addListener(SudokuGridClickListener(this))
 		addListener(SudokuGridKeyListener(this))
+	}
+	
+	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?
+	{
+		if (touchable && this.touchable != Touchable.enabled)
+			return null
+		if (!isVisible)
+			return null
+		return if (x >= -64 && x < width + 64 && y >= -64 && y < height + 64) this else null
 	}
 	
 	override fun act(delta: Float)
@@ -56,12 +76,12 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			completionCharmT = 0F
 	}
 	
-	fun iToX(i: Int): Float
+	fun iToX(i: Float): Float
 	{
 		return x + i*cellSize
 	}
 	
-	fun jToY(j: Int): Float
+	fun jToY(j: Float): Float
 	{
 		return y + j*cellSize
 	}
@@ -136,8 +156,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		when
 		{
 			// Clear cell except color
-			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR
-				|| !isKeypad && !Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) ->
+			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
@@ -155,8 +174,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 			// Insert corner mark
-			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CORNER_MARK
-				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) ->
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CORNER_MARK || !isKeypad && UIUtils.shift() ->
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
@@ -164,8 +182,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 			// Insert center mark
-			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CENTER_MARK
-				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) ->
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CENTER_MARK || !isKeypad && (UIUtils.ctrl()) ->
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
@@ -173,8 +190,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 			// Highlight color
-			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR
-				|| !isKeypad && (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) ->
+			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR || !isKeypad && UIUtils.alt() ->
 				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = digit) }
 			// Insert digit
 			else ->
@@ -216,21 +232,6 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		actionController.addActions(modifyCellActions)
 	}
 	
-	override fun draw(batch: Batch, parentAlpha: Float)
-	{
-		val shapeDrawer = game.shapeDrawer
-		val lineColor: Color = game.skin["secondarycolor"]
-		shapeDrawer.rectangle(x, y, gridSize, gridSize, lineColor, 3F)
-		cells.forEach { it.forEach { cell -> cell.draw(batch) } }
-		for (i in 1 until 9)
-		{
-			// Draw vertical lines
-			shapeDrawer.line(x + i*cellSize, y, x + i*cellSize, y + 9*cellSize, if (i%3 == 0) 3F else 1F, true, lineColor, lineColor)
-			// Draw horizontal lines
-			shapeDrawer.line(x, y + i*cellSize, x + 9*cellSize, y + i*cellSize, if (i%3 == 0) 3F else 1F, true, lineColor, lineColor)
-		}
-	}
-	
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		actionController.readState(mapper)
@@ -257,9 +258,9 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 		}
-		
+		constraintsChecker.check()
 	}
-
+	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		actionController.writeState(mapper)
@@ -293,7 +294,26 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		mapper["isGiven"] = isGiven
 		mapper["cornerMarks"] = cornerMarks
 		mapper["centerMarks"] = centerMarks
+	}
+	
+	override fun draw(batch: Batch, parentAlpha: Float)
+	{
+		val shapeDrawer = game.shapeDrawer
 		
+		decorations.forEach { it.draw(batch, parentAlpha) }
+		
+		val lineColor: Color = game.skin["secondarycolor"]
+		shapeDrawer.rectangle(x, y, gridSize, gridSize, lineColor, 3F)
+		cells.forEach { it.forEach { cell -> cell.draw(batch) } }
+		for (i in 1 until 9)
+		{
+			// Draw vertical lines
+			shapeDrawer.line(x + i*cellSize, y, x + i*cellSize, y + 9*cellSize, if (i%3 == 0) 3F else 1F, true, lineColor, lineColor)
+			// Draw horizontal lines
+			shapeDrawer.line(x, y + i*cellSize, x + 9*cellSize, y + i*cellSize, if (i%3 == 0) 3F else 1F, true, lineColor, lineColor)
+		}
+		
+		modifier?.draw(batch)
 	}
 	
 	/**
@@ -310,13 +330,13 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		val cornerMarks = Array(9) { false }
 		val centerMarks = Array(9) { false }
 		var hasCornerTextDecoration = false
-		val green: Color = Color(0x81FF1450.toInt())
+		private val green: Color = Color(0x81FF1450.toInt())
 		
 		private val x: Float
-			get() = iToX(i)
+			get() = iToX(i.toFloat())
 		
 		private val y: Float
-			get() = jToY(j)
+			get() = jToY(j.toFloat())
 		
 		fun offset(iOffset: Int, jOffset: Int): Cell
 		{
@@ -380,8 +400,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				{
 					if (cornerMarks[k])
 					{
-						var drawX: Float = iToX(i)
-						var drawY: Float = jToY(j + 1)
+						var drawX: Float = iToX(i.toFloat())
+						var drawY: Float = jToY(j.toFloat() + 1)
 						when (markCount)
 						{
 							1 -> { drawX += 5*cellSize/6; drawY -= cellSize/6 }
@@ -406,7 +426,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 					if (centerMarks[k])
 						centerMarkBuilder.append(k + 1)
 				}
-				segoeui.drawCenter(batch, centerMarkBuilder.toString(), iToX(i) + cellSize/2, jToY(j) + cellSize/2)
+				segoeui.drawCenter(batch, centerMarkBuilder.toString(), iToX(i.toFloat() + 0.5F), jToY(j.toFloat() + 0.5F))
 			}
 		}
 	}
