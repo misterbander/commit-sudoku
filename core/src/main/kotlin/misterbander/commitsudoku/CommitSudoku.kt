@@ -14,6 +14,7 @@ import ktx.collections.gdxMapOf
 import ktx.freetype.generateFont
 import ktx.style.*
 import misterbander.gframework.GFramework
+import misterbander.gframework.scene2d.mbTextField
 
 class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvider) : GFramework()
 {
@@ -26,8 +27,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	val segoeui by lazy {
 		generator.generateFont {
 			size = 18
-			padLeft = 4 // Padding to ensure font doesn't get clipped
-			padRight = 4
+			padLeft = 1 // Padding to ensure font doesn't get clipped
+			padRight = 1
 			padBottom = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
@@ -36,8 +37,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	val segoeui2 by lazy {
 		generator.generateFont {
 			size = 32
-			padLeft = 4 // Padding to ensure font doesn't get clipped
-			padRight = 4
+			padLeft = 1 // Padding to ensure font doesn't get clipped
+			padRight = 1
 			padBottom = 4
 			minFilter = Texture.TextureFilter.Linear
 			magFilter = Texture.TextureFilter.Linear
@@ -66,6 +67,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0x7F92FFFF), "markcolor")
 			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
+			add(Color(0xDCDCDCFF.toInt()), "thermocolor")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -134,6 +136,28 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("antikingbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["antikingicon"] }
 			imageButton("antiknightbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["antiknighticon"] }
 			imageButton("nonconsecutivebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["nonconsecutiveicon"] }
+			imageButton("closebuttonstyle")
+			window("windowstyle") {
+				background = this@skin["window"]
+				titleFont = segoeui
+				titleFontColor = this@skin["primarycolor"]
+			}
+			button("closebuttonstyle") {
+				up = this@skin["closebutton"]
+				over = this@skin["closebuttonover"]
+				down = this@skin["closebuttondown"]
+			}
+			mbTextField("textfieldstyle") {
+				background = this@skin["textfield"]
+				background.leftWidth = 16F
+				background.rightWidth = 16F
+				font = segoeui
+				fontColor = this@skin["primarycolor"]
+				selectionFontColor = Color.WHITE
+				cursor = this@skin["cursor"]
+				cursor.leftWidth = 32F
+				selection = this@skin["textselection"]
+			}
 		}
 	}
 	val darkSkin by lazy {
@@ -146,6 +170,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0x7F92FFFF), "markcolor")
 			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
+			add(Color(0x3C3C3CFF), "thermocolor")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -214,6 +239,27 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("antikingbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkantikingicon"] }
 			imageButton("antiknightbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkantiknighticon"] }
 			imageButton("nonconsecutivebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darknonconsecutiveicon"] }
+			window("windowstyle") {
+				background = this@skin["darkwindow"]
+				titleFont = segoeui
+				titleFontColor = this@skin["primarycolor"]
+			}
+			button("closebuttonstyle") {
+				up = this@skin["darkclosebutton"]
+				over = this@skin["closebuttonover"]
+				down = this@skin["closebuttondown"]
+			}
+			mbTextField("textfieldstyle") {
+				background = this@skin["darktextfield"]
+				background.leftWidth = 16F
+				background.rightWidth = 16F
+				font = segoeui
+				fontColor = this@skin["primarycolor"]
+				selectionFontColor = Color.WHITE
+				cursor = this@skin["darkcursor"]
+				cursor.leftWidth = 32F
+				selection = this@skin["textselection"]
+			}
 		}
 	}
 	lateinit var skin: Skin

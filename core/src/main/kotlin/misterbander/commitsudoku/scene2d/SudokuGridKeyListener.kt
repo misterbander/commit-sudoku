@@ -1,8 +1,8 @@
 package misterbander.commitsudoku.scene2d
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils
 import com.badlogic.gdx.utils.Timer
 import ktx.actors.KtxInputListener
 import ktx.async.interval
@@ -55,14 +55,14 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 			Input.Keys.DOWN -> navigate(down = 1)
 			Input.Keys.Z ->
 			{
-				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+				if (UIUtils.ctrl())
 					grid.actionController.undo()
 				else
 					return false
 			}
 			Input.Keys.Y ->
 			{
-				if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+				if (UIUtils.ctrl())
 					grid.actionController.redo()
 				else
 					return false
@@ -80,7 +80,7 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 	
 	private fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0)
 	{
-		if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
+		if (!UIUtils.shift() && !UIUtils.ctrl())
 			grid.unselect()
 		if (grid.mainSelectedCell == null)
 			grid.select(grid.cells[0][8])

@@ -153,61 +153,60 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 	
 	init
 	{
+		setDebug(true, true)
+		add(grid).space(grid.cellSize)
 		add(scene2d.table {
-			setDebug(true, true)
-			actor(grid).cell(space = grid.cellSize)
+			defaults().pad(5F)
+			actor(modeLabel).inCell.left()
+			row()
+			actor(timerLabel).cell(spaceBottom = 64F).inCell.left()
+			row()
+			table {
+				defaults().pad(10F).size(54F, 54F)
+				actor(editButton)
+				actor(playButton)
+				imageButton("clearbuttonstyle", game.skin) { onClick { grid.clearGrid() } }
+				imageButton("darkmodebuttonstyle", game.skin) {
+					isChecked = game.skin == game.darkSkin
+					onClick {
+						game.skin = if (isChecked) game.darkSkin else game.lightSkin
+						screen.updateStyles()
+					}
+				}
+			}.inCell.left()
+			row()
 			table {
 				defaults().pad(5F)
-				actor(modeLabel).inCell.left()
-				row()
-				actor(timerLabel).cell(spaceBottom = 64F).inCell.left()
-				row()
-				table {
-					defaults().pad(10F).size(54F, 54F)
-					actor(editButton)
-					actor(playButton)
-					imageButton("clearbuttonstyle", game.skin) { onClick { grid.clearGrid() } }
-					imageButton("darkmodebuttonstyle", game.skin) {
-						isChecked = game.skin == game.darkSkin
-						onClick {
-							game.skin = if (isChecked) game.darkSkin else game.lightSkin
-							screen.updateStyles()
-						}
+				actor(keypad)
+				buttonGroup(1, 1, game.skin) {
+					defaults().size(buttonSize, buttonSize)
+					defaults().pad(4F)
+					textButton("#", "checkabletextbuttonstyle2", game.skin) {
+						isChecked = true
+						onClick { setKeypad(digitKeypad) }
 					}
-				}.inCell.left()
-				row()
-				table {
-					defaults().pad(5F)
-					actor(keypad)
-					buttonGroup(1, 1, game.skin) {
-						defaults().size(buttonSize, buttonSize).pad(4F)
-						textButton("#", "checkabletextbuttonstyle2", game.skin) {
-							isChecked = true
-							onClick { setKeypad(digitKeypad) }
-						}
-						row()
-						textButton("#", "checkabletextbuttonstyle", game.skin) {
-							label.setAlignment(Align.topLeft)
-							padLeft(5F)
-							onClick { setKeypad(cornerMarkKeypad) }
-						}
-						row()
-						textButton("#", "checkabletextbuttonstyle", game.skin) {
-							onClick { setKeypad(centerMarkKeypad) }
-						}
-						row()
-						imageButton("colorbuttonstyle", game.skin) {
-							onClick { setKeypad(colorKeypad) }
-						}
+					row()
+					textButton("#", "checkabletextbuttonstyle", game.skin) {
+						label.setAlignment(Align.topLeft)
+						padLeft(5F)
+						onClick { setKeypad(cornerMarkKeypad) }
 					}
-					
-					/* Add an empty onClick listener so that accidentally clicking on the gaps between the buttons does
-					   not unselect grid cells for improved user experience */
-					touchable = Touchable.enabled
-					onClick {}
+					row()
+					textButton("#", "checkabletextbuttonstyle", game.skin) {
+						onClick { setKeypad(centerMarkKeypad) }
+					}
+					row()
+					imageButton("colorbuttonstyle", game.skin) {
+						onClick { setKeypad(colorKeypad) }
+					}
 				}
-			}.inCell.top().left()
-		})
+				
+				/* Add an empty onClick listener so that accidentally clicking on the gaps between the buttons does
+				   not unselect grid cells for improved user experience */
+				touchable = Touchable.enabled
+				onClick {}
+			}
+		}).top().left()
 	}
 	
 	private fun setKeypad(keypad: Table)
