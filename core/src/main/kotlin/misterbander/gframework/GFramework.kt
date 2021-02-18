@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.freetype.registerFreeTypeFontLoaders
+import misterbander.gframework.util.LayoutSizeChangeListener
 import space.earlygrey.shapedrawer.ShapeDrawer
 
 
@@ -44,6 +45,12 @@ abstract class GFramework : KtxGame<KtxScreen>(clearScreen = false)
 		val assetManager = AssetManager()
 		assetManager.registerFreeTypeFontLoaders()
 		assetManager
+	}
+	
+	fun notifyLayoutSizeChange(screenWidth: Int, screenHeight: Int)
+	{
+		if (shownScreen is LayoutSizeChangeListener)
+			(shownScreen as LayoutSizeChangeListener).onLayoutSizeChange(screenWidth, screenHeight)
 	}
 	
 	override fun dispose()
