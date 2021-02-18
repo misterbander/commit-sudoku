@@ -332,7 +332,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		val cornerMarks = Array(9) { false }
 		val centerMarks = Array(9) { false }
 		var hasCornerTextDecoration = false
-		private val green: Color = Color(0x81FF1450.toInt())
+		private val white: Color = Color.WHITE.cpy()
+		private val lightGray: Color = Color.LIGHT_GRAY.cpy()
 		
 		private val x: Float
 			get() = iToX(i.toFloat())
@@ -355,17 +356,6 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			
 			val highlightColorsMap: GdxMap<Int, Color> = game.skin["highlightcolors"]
 			
-			// Draw completion charm
-			if (panel.isFinished)
-			{
-				val shift = (i + j)/16F
-				var t = MathUtils.clamp((completionCharmT - shift)*2, 0F, 1F)
-				if (t > 0.5F)
-					t = 1 - t
-				green.a = Interpolation.smoother.apply(t)
-				shapeDrawer.setColor(green)
-				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
-			}
 			
 			if (constraintsChecker.xConstraint in constraintsChecker && (i == j || i == 8 - j)) // Color X
 			{
@@ -429,6 +419,19 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 						centerMarkBuilder.append(k + 1)
 				}
 				segoeui.drawCenter(batch, centerMarkBuilder.toString(), iToX(i.toFloat() + 0.5F), jToY(j.toFloat() + 0.5F))
+			}
+			
+			// Draw completion charm
+			if (panel.isFinished)
+			{
+				val shift = (i + j)/16F
+				var t = MathUtils.clamp((completionCharmT - shift)*2, 0F, 1F)
+				if (t > 0.5F)
+					t = 1 - t
+				val charmColor = if (colorCode in 1..8) white else lightGray
+				charmColor.a = Interpolation.smoother.apply(t)
+				shapeDrawer.setColor(charmColor)
+				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
 			}
 		}
 	}
