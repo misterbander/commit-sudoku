@@ -11,12 +11,12 @@ import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 
 
-class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
+open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 {
 	private val textDecorations: GdxArray<TextDecoration> = GdxArray()
 	
-	private var highlightI = 0
-	private var highlightJ = 0
+	protected var highlightI = 0
+	protected var highlightJ = 0
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
@@ -55,9 +55,9 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 		return null
 	}
 	
-	private fun isValidIndex(i: Int, j: Int): Boolean
+	protected open fun isValidIndex(i: Int, j: Int): Boolean
 	{
-		return i >= -1 && i <= 9 && j >= -1 && j <= 9 && (i == -1 || i == 9 || j == -1 || j == 9)
+		return i in -1..9 && j in -1..9 && (i == -1 || i == 9 || j == -1 || j == 9)
 	}
 	
 	override fun clear()
@@ -79,7 +79,7 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 		}
 	}
 	
-	private fun drawClickableArea(i: Int, j: Int)
+	protected fun drawClickableArea(i: Int, j: Int)
 	{
 		val x = grid.iToX(i.toFloat())
 		val y = grid.jToY(j.toFloat())

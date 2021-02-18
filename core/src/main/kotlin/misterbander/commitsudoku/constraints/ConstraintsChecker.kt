@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.constraints
 
+import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.collections.GdxArray
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
@@ -72,5 +73,10 @@ class ConstraintsChecker(private val grid: SudokuGrid)
 	operator fun contains(constraint: Constraint): Boolean
 	{
 		return constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
+	}
+	
+	fun drawAdditionalConstraints(batch: Batch)
+	{
+		additionalConstraints.forEach { it.drawConstraint(batch) }
 	}
 }

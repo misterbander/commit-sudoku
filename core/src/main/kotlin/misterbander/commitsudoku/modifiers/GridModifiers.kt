@@ -4,5 +4,6 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 
 class GridModifiers(grid: SudokuGrid)
 {
+	val sandwichConstraintSetter = SandwichConstraintSetter(grid)
 	val textDecorationAdder = TextDecorationAdder(grid)
 }
