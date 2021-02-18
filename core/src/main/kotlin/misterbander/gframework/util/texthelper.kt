@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
 import ktx.math.vec2
+import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 private val glyph = GlyphLayout()
 private val vec2 = vec2()
@@ -31,8 +32,8 @@ fun BitmapFont.getTextSize(text: String): Vector2
  */
 fun BitmapFont.wrap(text: String, targetWidth: Int): String
 {
-	val builder = StringBuilder() // Current line builder
-	var peeker = StringBuilder() // Current line builder to check if the next word fits within the line
+	val builder = GdxStringBuilder() // Current line builder
+	var peeker = GdxStringBuilder() // Current line builder to check if the next word fits within the line
 	val words = text.split(" ").toTypedArray()
 	var isFirstWord = true
 	// Add each word one by one, moving on to the next line if there's not enough space
@@ -44,7 +45,7 @@ fun BitmapFont.wrap(text: String, targetWidth: Int): String
 		else  // It doesn't fit, move on to the next line
 		{
 			builder.append("\n").append(word)
-			peeker = StringBuilder(word)
+			peeker = GdxStringBuilder(word)
 		}
 		isFirstWord = false
 	}

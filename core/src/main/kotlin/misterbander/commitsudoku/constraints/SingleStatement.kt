@@ -6,6 +6,7 @@ import ktx.collections.GdxMap
 import ktx.collections.gdxMapOf
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 
 class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, private val statementStr: String) : Statement
@@ -115,7 +116,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, private 
 		involvingCells.clear()
 		
 		// Remove all spaces and replace all #s with the cell digit
-		val builder = StringBuilder(statementStr.replace("#".toRegex(), cells[i][j].toString()))
+		val builder = GdxStringBuilder(statementStr.replace("#".toRegex(), cells[i][j].toString()))
 		
 		// Plug in variables
 		while (true)

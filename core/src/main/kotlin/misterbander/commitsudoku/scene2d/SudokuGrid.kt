@@ -23,6 +23,7 @@ import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 import kotlin.math.floor
+import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 
 class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
@@ -420,7 +421,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 				
 				// Center marks
-				val centerMarkBuilder = StringBuilder()
+				val centerMarkBuilder = GdxStringBuilder()
 				for (k in 0..8)
 				{
 					if (centerMarks[k])
