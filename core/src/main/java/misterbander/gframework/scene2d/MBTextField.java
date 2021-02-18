@@ -29,14 +29,16 @@ import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 /**
- * A {@link TextField} that supports selection color.
+ * Copied directly from {@link TextField} with slight modifications to support selection color.
  *
  * @author Mister_Bander
  */
+@SuppressWarnings("unused")
 public class MBTextField extends Widget implements Disableable
 {
 	protected static final char BACKSPACE = 8;
@@ -52,7 +54,9 @@ public class MBTextField extends Widget implements Disableable
 	
 	protected String text;
 	protected int cursor, selectionStart;
-	protected int prevCursor, prevSelectionStart;
+	// ================ MODIFICATION START ================
+	protected int prevCursor, prevSelectionStart; // Detect selection changes
+	// ================  MODIFICATION END  ================
 	protected boolean hasSelection;
 	protected boolean writeEnters;
 	protected final GlyphLayout layout = new GlyphLayout();
@@ -61,7 +65,9 @@ public class MBTextField extends Widget implements Disableable
 	MBTextFieldStyle style;
 	private String messageText;
 	protected CharSequence displayText;
-	protected CharSequence colorMarkupDisplayText;
+	// ================ MODIFICATION START ================
+	protected CharSequence colorMarkupDisplayText; // Display text with color markup
+	// ================  MODIFICATION END  ================
 	Clipboard clipboard;
 	InputListener inputListener;
 	@Null MBTextFieldListener listener;
@@ -81,6 +87,9 @@ public class MBTextField extends Widget implements Disableable
 	protected float fontOffset, textHeight, textOffset;
 	float renderOffset;
 	private int visibleTextStart, visibleTextEnd;
+	// ================ MODIFICATION START ================
+	private int prevVisibleTextStart, prevVisibleTextEnd;
+	// ================  MODIFICATION END  ================
 	private int maxLength;
 	
 	boolean focused;
@@ -423,27 +432,51 @@ public class MBTextField extends Widget implements Disableable
 	
 	protected void drawText(Batch batch, BitmapFont font, float x, float y)
 	{
-		boolean prev = font.getData().markupEnabled;
-		
-		if (hasKeyboardFocus() && hasSelection)
+		// ================ MODIFICATION START ================
+		if (hasKeyboardFocus() && hasSelection && cursor != selectionStart)
 		{
+			boolean prev = font.getData().markupEnabled;
+			int cursor = this.cursor;
+			int selectionStart = this.selectionStart;
+			int visibleTextStart = this.visibleTextStart;
+			int visibleTextEnd = this.visibleTextEnd;
 			if (colorMarkupDisplayText.equals("") || prevCursor != cursor || prevSelectionStart != selectionStart)
 			{
 				StringBuilder colorMarkupDisplayTextBuilder = new StringBuilder(displayText);
+				for (int i = 0; i < colorMarkupDisplayTextBuilder.length; i++) // Escape all '['
+				{
+					if (colorMarkupDisplayTextBuilder.charAt(i) == '[')
+					{
+						colorMarkupDisplayTextBuilder.insert(i, '[');
+						if (i < cursor)
+							cursor++;
+						if (i < selectionStart)
+							selectionStart++;
+						if (i < visibleTextStart)
+							visibleTextStart++;
+						if (i < visibleTextEnd)
+							visibleTextEnd++;
+						i++;
+					}
+				}
+				
 				colorMarkupDisplayTextBuilder.insert(Math.min(Math.max(cursor, selectionStart), visibleTextEnd), "[]");
 				colorMarkupDisplayTextBuilder.insert(Math.min(cursor, selectionStart), "[#" + style.selectionFontColor.toString() + "]");
 				colorMarkupDisplayText = colorMarkupDisplayTextBuilder.toString();
 				
-				prevCursor = cursor;
-				prevSelectionStart = selectionStart;
+				prevCursor = this.cursor;
+				prevSelectionStart = this.selectionStart;
+				prevVisibleTextStart = visibleTextStart;
+				prevVisibleTextEnd = visibleTextEnd;
 			}
 			
 			font.getData().markupEnabled = true;
-			font.draw(batch, colorMarkupDisplayText, x + textOffset, y, visibleTextStart, visibleTextEnd + 13, 0, Align.left, false);
+			font.draw(batch, colorMarkupDisplayText, x + textOffset, y, prevVisibleTextStart, prevVisibleTextEnd + 13, 0, Align.left, false);
 			font.getData().markupEnabled = prev;
 		}
 		else
 			font.draw(batch, displayText, x + textOffset, y, visibleTextStart, visibleTextEnd, 0, Align.left, false);
+		// ================  MODIFICATION END  ================
 	}
 	
 	protected void drawMessageText(Batch batch, BitmapFont font, float x, float y, float maxWidth)
@@ -513,7 +546,9 @@ public class MBTextField extends Widget implements Disableable
 		if (selectionStart > newDisplayText.length())
 			selectionStart = textLength;
 		
-		colorMarkupDisplayText = displayText;
+		// ================ MODIFICATION START ================
+		colorMarkupDisplayText = displayText.toString().replace("[", "[[") + "[#ffffffff][]";
+		// ================  MODIFICATION END  ================
 	}
 	
 	/**
@@ -1343,7 +1378,7 @@ public class MBTextField extends Widget implements Disableable
 	 * @author mzechner
 	 * @author Nathan Sweet
 	 */
-	static public class MBTextFieldStyle
+	public static class MBTextFieldStyle
 	{
 		public BitmapFont font;
 		public Color fontColor;
