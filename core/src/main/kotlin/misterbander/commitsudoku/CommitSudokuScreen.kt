@@ -18,9 +18,10 @@ import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.MBTextField
+import misterbander.gframework.util.LayoutSizeChangeListener
 import misterbander.gframework.util.PersistentStateMapper
 
-class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
+class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), LayoutSizeChangeListener
 {
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
@@ -109,6 +110,11 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		super.render(delta)
 		sudokuPanel.timer.update(delta)
+	}
+	
+	override fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
+	{
+		textInputWindow.adjustPosition(screenHeight)
 	}
 	
 	override fun clearScreen()

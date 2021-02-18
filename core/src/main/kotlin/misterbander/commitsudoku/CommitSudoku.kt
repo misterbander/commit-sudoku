@@ -15,6 +15,7 @@ import ktx.freetype.generateFont
 import ktx.style.*
 import misterbander.gframework.GFramework
 import misterbander.gframework.scene2d.mbTextField
+import misterbander.gframework.util.LayoutSizeChangeListener
 
 class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvider) : GFramework()
 {
@@ -283,6 +284,12 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	{
 		super.resize(width, height)
 		println("Resizing to = ${width}x${height}")
+	}
+	
+	fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
+	{
+		if (currentScreen is LayoutSizeChangeListener)
+			(currentScreen as LayoutSizeChangeListener).onLayoutSizeChange(screenWidth, screenHeight)
 	}
 	
 	override fun dispose()
