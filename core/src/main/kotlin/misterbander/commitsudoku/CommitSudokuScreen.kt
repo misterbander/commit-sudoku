@@ -106,12 +106,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		mapper.write()
 	}
 	
-	override fun render(delta: Float)
-	{
-		super.render(delta)
-		sudokuPanel.timer.update(delta)
-	}
-	
 	override fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
 	{
 		textInputWindow.adjustPosition(screenHeight)

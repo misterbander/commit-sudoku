@@ -268,6 +268,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	override fun create()
 	{
 		KtxAsync.initiate()
+		Gdx.graphics.isContinuousRendering = false
 		
 		assetManager.finishLoading()
 		println("Finished loading assets!")

@@ -92,6 +92,7 @@ class InputWindow(game: CommitSudoku, isModal: Boolean = false) : Window("", gam
 			setPosition(x, prevWindowPos.y)
 			shouldShift = false
 		}
+		Gdx.graphics.requestRendering()
 	}
 	
 	private fun close()
