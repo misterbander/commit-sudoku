@@ -14,7 +14,12 @@ import ktx.scene2d.textButton
 import misterbander.commitsudoku.CommitSudoku
 import misterbander.gframework.scene2d.MBTextField
 
-class InputWindow(game: CommitSudoku, isModal: Boolean = false) : Window("", game.skin, "windowstyle")
+class InputWindow(
+	game: CommitSudoku,
+	isModal: Boolean = false,
+	digitsOnly: Boolean = false,
+	maxLength: Int = 0
+) : Window("", game.skin, "windowstyle")
 {
 	val closeButton = Button(game.skin, "closebuttonstyle").apply { onClick { close() } }
 	private val messageLabel = Label("", game.skin, "infolabelstyle")
@@ -39,6 +44,9 @@ class InputWindow(game: CommitSudoku, isModal: Boolean = false) : Window("", gam
 			actor(messageLabel)
 			row()
 			actor(textField) {
+				if (digitsOnly)
+					textFieldFilter = MBTextField.MBTextFieldFilter.DigitsOnlyFilter()
+				this.maxLength = maxLength
 				onKeyboardFocus { focused -> textField.onscreenKeyboard.show(focused) }
 			}.cell(colspan = 2, fillX = true)
 			row()
@@ -61,13 +69,14 @@ class InputWindow(game: CommitSudoku, isModal: Boolean = false) : Window("", gam
 	
 	fun show(title: String, message: String, onSuccess: (String) -> Unit)
 	{
-		centerPosition()
 		isVisible = true
 		titleLabel.txt = title
 		messageLabel.txt = message
 		textField.text = null
 		textField.setKeyboardFocus(true)
 		this.onSuccess = onSuccess
+		pack()
+		centerPosition()
 	}
 	
 	fun adjustPosition(screenHeight: Int)

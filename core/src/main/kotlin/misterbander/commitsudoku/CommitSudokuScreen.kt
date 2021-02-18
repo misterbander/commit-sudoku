@@ -27,7 +27,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	
 	val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
-	val textInputWindow = InputWindow(game, true)
+	val textInputWindow = InputWindow(game, isModal = true)
+	val valueInputWindow = InputWindow(game, isModal = true, digitsOnly = true, maxLength = 2)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
 	
@@ -55,6 +56,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		}
 		stage.keyboardFocus = sudokuPanel.grid
 		stage += textInputWindow
+		stage += valueInputWindow
 		
 		if (mapper.read())
 		{
@@ -109,6 +111,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	override fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
 	{
 		textInputWindow.adjustPosition(screenHeight)
+		valueInputWindow.adjustPosition(screenHeight)
 	}
 	
 	override fun clearScreen()

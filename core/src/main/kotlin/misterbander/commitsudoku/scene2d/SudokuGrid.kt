@@ -306,7 +306,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	{
 		val shapeDrawer = game.shapeDrawer
 		
-		decorations.forEach { it.draw(batch, parentAlpha) }
+		decorations.forEach { it.draw(batch) }
+		constraintsChecker.drawAdditionalConstraints(batch)
 		
 		val lineColor: Color = game.skin["secondarycolor"]
 		shapeDrawer.rectangle(x, y, gridSize, gridSize, lineColor, 3F)
