@@ -83,8 +83,8 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 		if (!UIUtils.shift() && !UIUtils.ctrl())
 			grid.unselect()
 		if (grid.mainSelectedCell == null)
-			grid.select(grid.cells[0][8])
+			grid.select(grid.cells[0][8], false)
 		else
-			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down))
+			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down), false)
 	}
 }

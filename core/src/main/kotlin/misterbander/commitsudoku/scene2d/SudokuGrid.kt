@@ -102,21 +102,16 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		return floor((y - this.y)/cellSize).toInt()
 	}
 	
-	/**
-	 * Selects a cell at world coordinate (x, y)
-	 */
-	fun select(x: Float, y: Float)
+	fun select(i: Int, j: Int, toggleUnselect: Boolean)
 	{
-		val selectedI = floor(x/cellSize).toInt()
-		val selectedJ = floor(y/cellSize).toInt()
-		if (selectedI in 0..8 && selectedJ in 0..8)
-			select(cells[selectedI][selectedJ])
+		if (i in 0..8 && j in 0..8)
+			select(cells[i][j], toggleUnselect)
 	}
 	
-	fun select(cell: Cell)
+	fun select(cell: Cell, toggleUnselect: Boolean)
 	{
 		mainSelectedCell = cell
-		cell.isSelected = true
+		cell.isSelected = if (toggleUnselect) !cell.isSelected else true
 	}
 	
 	fun unselect()
