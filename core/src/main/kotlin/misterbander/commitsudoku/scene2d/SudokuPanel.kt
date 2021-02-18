@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Cell
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
@@ -147,6 +148,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			{
 				modeLabel.txt = "Completed!"
 				timer.isRunning = false
+				Gdx.graphics.isContinuousRendering = true
 			}
 		}
 	var keypadInputMode = InputMode.DIGIT

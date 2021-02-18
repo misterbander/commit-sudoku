@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d
 
+import com.badlogic.gdx.utils.Timer
 import ktx.actors.txt
 import ktx.style.get
 import misterbander.gframework.util.PersistentState
@@ -8,45 +9,55 @@ import misterbander.gframework.util.formatDuration
 
 class SudokuTimer(private val panel: SudokuPanel) : PersistentState
 {
-	private var elapsedSeconds = 0F
-	private var roundedElapsedSeconds = 0L
+	private var seconds = 0L
 		set(value)
 		{
-			if (field != value)
-			{
-				field = value
-				panel.timerLabel.txt = formatDuration(value)
-			}
+			field = value
+			panel.timerLabel.txt = formatDuration(seconds)
 		}
+	private var lastSecondMillis = 0L
+	private var stopTimerMillis = 0L
 	
+	private val incrementSeconds: Timer.Task = object : Timer.Task()
+	{
+		override fun run()
+		{
+			lastSecondMillis = System.currentTimeMillis()
+			seconds++
+		}
+	}
 	var isRunning = false
 		set(value)
 		{
 			field = value
 			panel.playButton.style = panel.screen.game.skin[if (value) "pausebuttonstyle" else "playbuttonstyle"]
+			if (value)
+				Timer.schedule(incrementSeconds, 1 - (stopTimerMillis - lastSecondMillis)/1000F, 1F)
+			else
+			{
+				stopTimerMillis = System.currentTimeMillis()
+				incrementSeconds.cancel()
+			}
 		}
-	
-	fun update(delta: Float)
-	{
-		if (!isRunning)
-			return
-		elapsedSeconds += delta
-		roundedElapsedSeconds = elapsedSeconds.toLong()
-	}
 	
 	fun reset()
 	{
-		elapsedSeconds = 0F
-		roundedElapsedSeconds = 0
+		seconds = 0
+		lastSecondMillis = 0
+		stopTimerMillis = 0
 	}
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		elapsedSeconds = mapper["elapsedSeconds"] ?: elapsedSeconds
+		seconds = mapper["seconds"] ?: seconds
+		lastSecondMillis = mapper["lastSecondMillis"] ?: lastSecondMillis
+		stopTimerMillis = mapper["stopTimerMillis"] ?: stopTimerMillis
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["elapsedSeconds"] = elapsedSeconds
+		mapper["seconds"] = seconds
+		mapper["lastSecondMillis"] = lastSecondMillis
+		mapper["stopTimerMillis"] = stopTimerMillis
 	}
 }

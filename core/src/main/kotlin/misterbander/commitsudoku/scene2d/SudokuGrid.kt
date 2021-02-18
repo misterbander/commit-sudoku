@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Interpolation
@@ -72,7 +73,11 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	{
 		super.act(delta)
 		if (panel.isFinished)
+		{
 			completionCharmT += delta
+			if (completionCharmT > 2)
+				Gdx.graphics.isContinuousRendering = false
+		}
 		else
 			completionCharmT = 0F
 	}
