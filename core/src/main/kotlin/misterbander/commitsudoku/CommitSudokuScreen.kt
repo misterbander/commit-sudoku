@@ -28,7 +28,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
 	val textInputWindow = InputWindow(this, isModal = true)
-	val valueInputWindow = InputWindow(this, isModal = true, digitsOnly = true, maxLength = 2)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
 	
@@ -55,7 +54,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		}
 		stage.keyboardFocus = sudokuPanel.grid
 		stage += textInputWindow
-		stage += valueInputWindow
 		
 		if (mapper.read())
 		{
@@ -64,13 +62,11 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		}
 	}
 	
-	private fun updateActorStyle(actor: Actor, otherSkin: Skin, excludeKeypads: Boolean = true)
+	private fun updateActorStyle(actor: Actor, otherSkin: Skin, vararg exclude: Actor)
 	{
-		if (excludeKeypads)
-		{
-			if (actor == sudokuPanel.digitKeypad || actor == sudokuPanel.cornerMarkKeypad
-				|| actor == sudokuPanel.centerMarkKeypad || actor == sudokuPanel.colorKeypad)
-			return
+		exclude.forEach {
+			if (actor == it)
+				return
 		}
 		when (actor)
 		{
@@ -81,22 +77,34 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 			is InputWindow ->
 			{
 				actor.style = game.skin[otherSkin.find(actor.style)]
-				actor.cells.forEach { updateActorStyle(it.actor, otherSkin) }
+				actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
 				actor.closeButton.style = game.skin[otherSkin.find(actor.closeButton.style)]
 			}
-			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin) }
-			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin) }
+			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
+			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin, *exclude) }
 		}
 	}
 	
 	fun updateStyles()
 	{
 		val otherSkin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
-		stage.actors.forEach { updateActorStyle(it, otherSkin) }
-		updateActorStyle(sudokuPanel.digitKeypad, otherSkin, false)
-		updateActorStyle(sudokuPanel.cornerMarkKeypad, otherSkin, false)
-		updateActorStyle(sudokuPanel.centerMarkKeypad, otherSkin, false)
-		updateActorStyle(sudokuPanel.colorKeypad, otherSkin, false)
+		stage.actors.forEach {
+			updateActorStyle(
+				it, otherSkin,
+				sudokuPanel.digitKeypad,
+				sudokuPanel.cornerMarkKeypad,
+				sudokuPanel.centerMarkKeypad,
+				sudokuPanel.colorKeypad,
+				sudokuPanel.undoRedoTray,
+				sudokuPanel.zeroButton
+			)
+		}
+		updateActorStyle(sudokuPanel.digitKeypad, otherSkin)
+		updateActorStyle(sudokuPanel.cornerMarkKeypad, otherSkin)
+		updateActorStyle(sudokuPanel.centerMarkKeypad, otherSkin)
+		updateActorStyle(sudokuPanel.colorKeypad, otherSkin)
+		updateActorStyle(sudokuPanel.undoRedoTray, otherSkin)
+		updateActorStyle(sudokuPanel.zeroButton, otherSkin)
 	}
 	
 	override fun pause()
@@ -110,7 +118,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	override fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
 	{
 		textInputWindow.adjustPosition(screenHeight)
-		valueInputWindow.adjustPosition(screenHeight)
 	}
 	
 	override fun clearScreen()

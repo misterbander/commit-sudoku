@@ -9,9 +9,16 @@ class SandwichConstraint(
 	private val grid: SudokuGrid,
 	private val index: Int,
 	private val isColumn: Boolean,
-	private val sandwichValue: Int
+	sandwichValue: Int
 ) : Constraint
 {
+	var sandwichValue = sandwichValue
+		set(value)
+		{
+			field = value
+			textDecoration.text = value.toString()
+		}
+	
 	private val textDecoration = TextDecoration(
 		grid,
 		if (isColumn) index else -1,
@@ -32,7 +39,7 @@ class SandwichConstraint(
 			val theDigit = if (isColumn) grid.cells[index][i].digit else grid.cells[i][index].digit
 			if (sandwichStart != -1) // Sandwich has begun
 			{
-				if (theDigit != 9/sandwichStartNum) // Keep on adding until the sandwich terminates
+				if (theDigit != if (sandwichStartNum == 9) 1 else 9) // Keep on adding until the sandwich terminates
 				{
 					if (theDigit == 0)
 						break

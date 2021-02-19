@@ -11,7 +11,7 @@ class TextDecoration(
 	grid: SudokuGrid,
 	val i: Int,
 	val j: Int,
-	private val text: String
+	var text: String
 ) : Decoration(grid)
 {
 	var color: Color? = null

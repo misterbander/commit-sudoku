@@ -9,6 +9,7 @@ import ktx.collections.plusAssign
 import ktx.style.get
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.cycle
 
 
 open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
@@ -19,13 +20,45 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	protected var highlightJ = 0
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 	
-	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
+	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		highlightI = grid.xToI(x)
 		highlightJ = grid.yToJ(y)
-		
+		enter()
+	}
+	
+	override fun navigate(up: Int, down: Int, left: Int, right: Int)
+	{
 		if (!isValidIndex(highlightI, highlightJ))
-			return false
+		{
+			highlightI = -1
+			highlightJ = 9
+		}
+		
+		val di = right - left
+		val dj = up - down
+		if (di != 0)
+		{
+			if (highlightJ in 0..8)
+				highlightI = if (highlightI == 9) -1 else 9
+			else
+				highlightI += di
+			highlightI = highlightI cycle -1..9
+		}
+		else if (dj != 0)
+		{
+			if (highlightI in 0..8)
+				highlightJ = if (highlightJ == 9) -1 else 9
+			else
+				highlightJ += dj
+			highlightJ = highlightJ cycle -1..9
+		}
+	}
+	
+	override fun enter()
+	{
+		if (!isValidIndex(highlightI, highlightJ))
+			return
 		
 		val existingTextDecoration = findTextDecoration(highlightI, highlightJ)
 		if (existingTextDecoration != null)
@@ -43,7 +76,6 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 				grid.decorations += textDecoration
 			}
 		}
-		return false
 	}
 	
 	private fun findTextDecoration(i: Int, j: Int): TextDecoration?
