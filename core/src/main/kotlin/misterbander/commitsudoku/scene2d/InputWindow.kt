@@ -24,7 +24,7 @@ class InputWindow(
 {
 	val game = screen.game
 	
-	val closeButton = Button(game.skin, "closebuttonstyle").apply { onClick { close() } }
+	val closeButton = Button(game.skin, "closebuttonstyle").apply { onChange { close() } }
 	private val messageLabel = Label("", game.skin, "infolabelstyle")
 	private val textField = MBTextField("", game.skin, "textfieldstyle")
 	var onSuccess: (String) -> Unit = {}
@@ -54,12 +54,12 @@ class InputWindow(
 			}.cell(colspan = 2, fillX = true)
 			row()
 			textButton("OK", "textbuttonstyle", game.skin) {
-				onClick {
+				onChange {
 					onSuccess(textField.text)
 					close()
 				}
 			}.cell(width = 96F)
-			textButton("Cancel", "textbuttonstyle", game.skin) { onClick { close() } }.cell(width = 96F)
+			textButton("Cancel", "textbuttonstyle", game.skin) { onChange { close() } }.cell(width = 96F)
 		})
 		left()
 		pack()
