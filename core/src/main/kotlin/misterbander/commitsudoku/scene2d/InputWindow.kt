@@ -1,6 +1,7 @@
 package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -11,16 +12,18 @@ import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.scene2d.textButton
-import misterbander.commitsudoku.CommitSudoku
+import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.scene2d.MBTextField
 
 class InputWindow(
-	game: CommitSudoku,
+	private val screen: CommitSudokuScreen,
 	isModal: Boolean = false,
 	digitsOnly: Boolean = false,
 	maxLength: Int = 0
-) : Window("", game.skin, "windowstyle")
+) : Window("", screen.game.skin, "windowstyle")
 {
+	val game = screen.game
+	
 	val closeButton = Button(game.skin, "closebuttonstyle").apply { onClick { close() } }
 	private val messageLabel = Label("", game.skin, "infolabelstyle")
 	private val textField = MBTextField("", game.skin, "textfieldstyle")
@@ -65,6 +68,15 @@ class InputWindow(
 			if (event.type == InputEvent.Type.touchDown && event.target !is MBTextField)
 				stage.keyboardFocus = null
 		}
+		onKeyDown { keycode ->
+			if (keycode == Input.Keys.ENTER)
+			{
+				onSuccess(textField.text)
+				close()
+			}
+			else if (keycode == Input.Keys.ESCAPE)
+				close()
+		}
 	}
 	
 	fun show(title: String, message: String, onSuccess: (String) -> Unit)
@@ -108,5 +120,6 @@ class InputWindow(
 	{
 		isVisible = false
 		Gdx.input.setOnscreenKeyboardVisible(false)
+		screen.sudokuPanel.grid.setKeyboardFocus(true)
 	}
 }
