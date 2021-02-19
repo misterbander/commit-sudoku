@@ -6,49 +6,84 @@ import ktx.collections.GdxMap
 import ktx.collections.set
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.cycle
 
 
 class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 {
 	private val sandwichConstraints: GdxMap<Int, SandwichConstraint> = GdxMap()
 	
-	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
+	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		highlightI = grid.xToI(x)
 		highlightJ = grid.yToJ(y)
-		
+	}
+	
+	override fun navigate(up: Int, down: Int, left: Int, right: Int)
+	{
 		if (!isValidIndex(highlightI, highlightJ))
-			return false
+		{
+			highlightI = 0
+			highlightJ = 9
+		}
 		
-		val key = if (highlightI == -1) highlightJ + 9 else highlightI
-		val existingSandwichConstraint: SandwichConstraint? = sandwichConstraints[key]
-		if (existingSandwichConstraint != null)
+		val di = right - left
+		val dj = up - down
+		if (di != 0)
 		{
-			sandwichConstraints.remove(key)
-			grid.constraintsChecker -= existingSandwichConstraint
+			highlightI += di
+			highlightI = highlightI cycle -1..8
+			highlightJ = if (highlightI == -1) 8 else 9
 		}
-		else
+		else if (dj != 0)
 		{
-			grid.panel.screen.valueInputWindow.show("Add Sandwich Constraint", "Enter Sandwich Value:") { result ->
-				if (result.isEmpty())
-					return@show
-				val sandwichConstraint = SandwichConstraint(
-					grid,
-					if (highlightI == -1) highlightJ else highlightI,
-					highlightJ == 9,
-					result.toInt()
-				)
-				sandwichConstraints[key] = sandwichConstraint
-				grid.constraintsChecker += sandwichConstraint
-			}
+			highlightJ += dj
+			highlightJ = highlightJ cycle 0..9
+			highlightI = if (highlightJ == 9) 0 else -1
 		}
-		grid.constraintsChecker.check()
-		return false
 	}
 	
 	override fun isValidIndex(i: Int, j: Int): Boolean
 	{
 		return i == -1 && j in 0..8 || j == 9 && i in 0..8
+	}
+	
+	override fun enter() {}
+	
+	override fun typedDigit(digit: Int)
+	{
+		if (!isValidIndex(highlightI, highlightJ))
+			return
+		
+		val key = if (highlightI == -1) highlightJ + 9 else highlightI
+		val sandwichConstraint: SandwichConstraint? = sandwichConstraints[key]
+		if (sandwichConstraint != null)
+		{
+			if (digit == -1) // Backspace
+			{
+				if (sandwichConstraint.sandwichValue < 10)
+				{
+					sandwichConstraints.remove(key)
+					grid.constraintsChecker -= sandwichConstraint
+				}
+				else
+					sandwichConstraint.sandwichValue/=10
+			}
+			else
+				sandwichConstraint.sandwichValue = sandwichConstraint.sandwichValue*10 + digit
+		}
+		else if (digit != -1)
+		{
+			val newSandwichConstraint = SandwichConstraint(
+				grid,
+				if (highlightI == -1) highlightJ else highlightI,
+				highlightJ == 9,
+				digit
+			)
+			sandwichConstraints[key] = newSandwichConstraint
+			grid.constraintsChecker += newSandwichConstraint
+		}
+		grid.constraintsChecker.check()
 	}
 	
 	override fun clear()

@@ -109,6 +109,12 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			}
 		}
 	}
+	val zeroButton = ModifyCellButton(grid, 0, game.skin, "textbuttonstyle2")
+	val undoRedoTray = scene2d.table {
+		defaults().size(buttonSize, buttonSize).pad(3F)
+		actor(undoButton)
+		actor(redoButton)
+	}
 	private val keypad = scene2d.table {
 		defaults().pad(3F)
 		actor(digitKeypad)
@@ -118,29 +124,28 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			imageButton("deletebuttonstyle", game.skin) {
 				onChange { grid.typedDigit(-1, true) }
 			}
-			actor(undoButton)
-			actor(redoButton)
+			actor(undoRedoTray).cell(width = buttonSize*2 + 6, height = buttonSize)
 		}
 	}
 	val keypadButtonGroup = scene2d.buttonGroup(1, 1, game.skin) {
 		defaults().size(buttonSize, buttonSize).pad(4F)
 		textButton("#", "checkabletextbuttonstyle2", game.skin) {
 			isChecked = true
-			onChange { setKeypad(digitKeypad) }
+			onChange { keypadInputMode = InputMode.DIGIT }
 		}
 		row()
 		textButton("#", "checkabletextbuttonstyle", game.skin) {
 			label.setAlignment(Align.topLeft)
 			padLeft(5F)
-			onChange { setKeypad(cornerMarkKeypad) }
+			onChange { keypadInputMode = InputMode.CORNER_MARK }
 		}
 		row()
 		textButton("#", "checkabletextbuttonstyle", game.skin) {
-			onChange { setKeypad(centerMarkKeypad) }
+			onChange { keypadInputMode = InputMode.CENTER_MARK }
 		}
 		row()
 		imageButton("colorbuttonstyle", game.skin) {
-			onChange { setKeypad(colorKeypad) }
+			onChange { keypadInputMode = InputMode.COLOR }
 		}
 	}
 	
@@ -174,6 +179,24 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			}
 		}
 	var keypadInputMode = InputMode.DIGIT
+		private set(value)
+		{
+			field = value
+			val keypad = when (value)
+			{
+				InputMode.CORNER_MARK -> cornerMarkKeypad
+				InputMode.CENTER_MARK -> centerMarkKeypad
+				InputMode.COLOR -> colorKeypad
+				else -> digitKeypad
+			}
+			(this.keypad.cells[0] as Cell<*>).setActor(keypad)
+		}
+	var showZero = false
+		set(value)
+		{
+			field = value
+			((keypad.cells[1].actor as Table).cells[1] as Cell<*>).setActor(if (value) zeroButton else undoRedoTray)
+		}
 	
 	init
 	{
@@ -208,18 +231,6 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 				touchable = Touchable.enabled
 			}
 		}).top().left()
-	}
-	
-	private fun setKeypad(keypad: Table)
-	{
-		(this.keypad.cells[0] as Cell<*>).setActor(keypad)
-		keypadInputMode = when (keypad)
-		{
-			cornerMarkKeypad -> InputMode.CORNER_MARK
-			centerMarkKeypad -> InputMode.CENTER_MARK
-			colorKeypad -> InputMode.COLOR
-			else -> InputMode.DIGIT
-		}
 	}
 	
 	override fun readState(mapper: PersistentStateMapper)

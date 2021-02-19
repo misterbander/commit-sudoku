@@ -30,7 +30,9 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 			Input.Keys.NUM_7, Input.Keys.NUMPAD_7 -> grid.typedDigit(7)
 			Input.Keys.NUM_8, Input.Keys.NUMPAD_8 -> grid.typedDigit(8)
 			Input.Keys.NUM_9, Input.Keys.NUMPAD_9 -> grid.typedDigit(9)
-			Input.Keys.NUM_0, Input.Keys.NUMPAD_0, Input.Keys.BACKSPACE, Input.Keys.FORWARD_DEL -> grid.typedDigit(0)
+			Input.Keys.NUM_0, Input.Keys.NUMPAD_0 -> grid.typedDigit(0)
+			Input.Keys.BACKSPACE, Input.Keys.FORWARD_DEL -> grid.typedDigit(-1)
+			Input.Keys.ENTER -> grid.modifier?.enter()
 			else ->
 			{
 				// Handle repeatable key events
@@ -82,6 +84,11 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 	{
 		if (!UIUtils.shift() && !UIUtils.ctrl())
 			grid.unselect()
+		if (grid.modifier != null)
+		{
+			grid.modifier!!.navigate(up, down, left, right)
+			return
+		}
 		if (grid.mainSelectedCell == null)
 			grid.select(grid.cells[0][8], false)
 		else

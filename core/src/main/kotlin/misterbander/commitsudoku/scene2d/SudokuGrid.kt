@@ -21,6 +21,7 @@ import misterbander.commitsudoku.modifiers.GridModifiers
 import misterbander.commitsudoku.scene2d.actions.*
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
+import misterbander.gframework.util.cycle
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 import kotlin.math.floor
@@ -47,6 +48,19 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		{
 			field = value
 			unselect()
+			if (value == modifiers.sandwichConstraintSetter)
+			{
+				panel.keypadButtonGroup.buttonGroup.apply {
+					buttons[0].isChecked = true
+					buttons.forEach { it.isDisabled = true }
+				}
+				panel.showZero = true
+			}
+			else
+			{
+				panel.keypadButtonGroup.buttonGroup.buttons.forEach { it.isDisabled = false }
+				panel.showZero = false
+			}
 		}
 	val constraintsChecker = ConstraintsChecker(this)
 	val actionController = ActionController(this)
@@ -148,6 +162,13 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	fun typedDigit(digit: Int, isKeypad: Boolean = false)
 	{
+		if (modifier != null)
+		{
+			modifier!!.typedDigit(digit)
+			return
+		}
+		val to = if (digit == -1) 0 else digit
+		
 		val selectedCells = getSelectedCells()
 		if (selectedCells.isEmpty)
 			return
@@ -157,7 +178,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		when
 		{
 			// Clear cell except color
-			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
+			to == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
@@ -179,7 +200,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, digit)
+						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, to)
 				}
 			}
 			// Insert center mark
@@ -187,19 +208,19 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, digit)
+						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, to)
 				}
 			}
 			// Highlight color
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR || !isKeypad && UIUtils.alt() ->
-				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = digit) }
+				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = to) }
 			// Insert digit
 			else ->
 			{
 				shouldCheck = true
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyDigitAction(cell, to = digit)
+						modifyCellActions += ModifyDigitAction(cell, to = to)
 				}
 			}
 		}
@@ -343,8 +364,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		
 		fun offset(iOffset: Int, jOffset: Int): Cell
 		{
-			val i2 = (i + iOffset + 9)%9
-			val j2 = (j + jOffset + 9)%9
+			val i2 = i + iOffset cycle 0..8
+			val j2 = j + jOffset cycle 0..8
 			return cells[i2][j2]
 		}
 		

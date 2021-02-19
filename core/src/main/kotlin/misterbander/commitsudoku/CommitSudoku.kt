@@ -77,7 +77,9 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				up = this@skin["button"]
 				over = this@skin["buttonover"]
 				down = this@skin["buttondown"]
+				disabled = this@skin["buttondisabled"]
 				fontColor = Color.BLACK
+				disabledFontColor = Color(0x868686FF.toInt())
 			}
 			textButton("checkabletextbuttonstylebase", "textbuttonstylebase") { checked = down }
 			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui; }
@@ -180,7 +182,9 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				up = this@skin["darkbutton"]
 				over = this@skin["darkbuttonover"]
 				down = this@skin["darkbuttondown"]
+				disabled = this@skin["darkbuttondisabled"]
 				fontColor = Color.WHITE
+				disabledFontColor = Color(0x868686FF.toInt())
 			}
 			textButton("checkabletextbuttonstylebase", "textbuttonstylebase") { checked = down }
 			textButton("textbuttonstyle", "textbuttonstylebase") { font = segoeui }
