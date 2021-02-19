@@ -25,7 +25,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 {
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
-	val sudokuPanel = SudokuPanel(this)
+	val panel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
 	val textInputWindow = InputWindow(this, isModal = true)
 	
@@ -39,7 +39,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		{
 			init
 			{
-				onTouchDown { sudokuPanel.grid.unselect() }
+				onTouchDown { panel.grid.unselect() }
 			}
 			
 			override fun hit(x: Float, y: Float, touchable: Boolean): Actor
@@ -50,14 +50,14 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		stage += scene2d.table {
 			setFillParent(true)
 			actor(toolbar).cell(expandY = true).inCell.top()
-			actor(sudokuPanel).cell(expand = true)
+			actor(panel).cell(expand = true)
 		}
-		stage.keyboardFocus = sudokuPanel.grid
+		stage.keyboardFocus = panel.grid
 		stage += textInputWindow
 		
 		if (mapper.read())
 		{
-			sudokuPanel.readState(mapper)
+			panel.readState(mapper)
 			toolbar.readState(mapper)
 		}
 	}
@@ -91,26 +91,26 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		stage.actors.forEach {
 			updateActorStyle(
 				it, otherSkin,
-				sudokuPanel.digitKeypad,
-				sudokuPanel.cornerMarkKeypad,
-				sudokuPanel.centerMarkKeypad,
-				sudokuPanel.colorKeypad,
-				sudokuPanel.undoRedoTray,
-				sudokuPanel.zeroButton
+				panel.digitKeypad,
+				panel.cornerMarkKeypad,
+				panel.centerMarkKeypad,
+				panel.colorKeypad,
+				panel.undoRedoTray,
+				panel.zeroButton
 			)
 		}
-		updateActorStyle(sudokuPanel.digitKeypad, otherSkin)
-		updateActorStyle(sudokuPanel.cornerMarkKeypad, otherSkin)
-		updateActorStyle(sudokuPanel.centerMarkKeypad, otherSkin)
-		updateActorStyle(sudokuPanel.colorKeypad, otherSkin)
-		updateActorStyle(sudokuPanel.undoRedoTray, otherSkin)
-		updateActorStyle(sudokuPanel.zeroButton, otherSkin)
+		updateActorStyle(panel.digitKeypad, otherSkin)
+		updateActorStyle(panel.cornerMarkKeypad, otherSkin)
+		updateActorStyle(panel.centerMarkKeypad, otherSkin)
+		updateActorStyle(panel.colorKeypad, otherSkin)
+		updateActorStyle(panel.undoRedoTray, otherSkin)
+		updateActorStyle(panel.zeroButton, otherSkin)
 	}
 	
 	override fun pause()
 	{
 		println("Pause! Saving game state...")
-		sudokuPanel.writeState(mapper)
+		panel.writeState(mapper)
 		toolbar.writeState(mapper)
 		mapper.write()
 	}

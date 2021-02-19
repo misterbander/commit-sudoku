@@ -19,7 +19,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 {
 	private val game = screen.game
 	private val grid
-		get() = screen.sudokuPanel.grid
+		get() = screen.panel.grid
 	private val constraintsChecker
 		get() = grid.constraintsChecker
 	
