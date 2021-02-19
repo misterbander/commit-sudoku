@@ -120,6 +120,6 @@ class InputWindow(
 	{
 		isVisible = false
 		Gdx.input.setOnscreenKeyboardVisible(false)
-		screen.sudokuPanel.grid.setKeyboardFocus(true)
+		screen.panel.grid.setKeyboardFocus(true)
 	}
 }
