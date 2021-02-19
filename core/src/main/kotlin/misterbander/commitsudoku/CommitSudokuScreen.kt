@@ -27,8 +27,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	
 	val sudokuPanel = SudokuPanel(this)
 	private val toolbar = Toolbar(this)
-	val textInputWindow = InputWindow(game, isModal = true)
-	val valueInputWindow = InputWindow(game, isModal = true, digitsOnly = true, maxLength = 2)
+	val textInputWindow = InputWindow(this, isModal = true)
+	val valueInputWindow = InputWindow(this, isModal = true, digitsOnly = true, maxLength = 2)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
 	
@@ -50,7 +50,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		}
 		stage += scene2d.table {
 			setFillParent(true)
-			debug = true
 			actor(toolbar).cell(expandY = true).inCell.top()
 			actor(sudokuPanel).cell(expand = true)
 		}
