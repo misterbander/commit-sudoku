@@ -69,6 +69,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			add(Color(0xDCDCDCFF.toInt()), "thermocolor")
+			add(Color(0xFFF9C3FF.toInt()), "selectedthermocolor")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -174,6 +175,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			add(Color(0x3C3C3CFF), "thermocolor")
+			add(Color(0x8C854FFF.toInt()), "selectedthermocolor")
 			
 			// Style bases
 			addRegions(guiAtlas)

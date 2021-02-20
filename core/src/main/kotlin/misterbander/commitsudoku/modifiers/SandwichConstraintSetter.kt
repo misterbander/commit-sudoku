@@ -13,6 +13,9 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 {
 	private val sandwichConstraints: GdxMap<Int, SandwichConstraint> = GdxMap()
 	
+	override val isValidIndex
+		get() = highlightI == -1 && highlightJ in 0..8 || highlightJ == 9 && highlightI in 0..8
+	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		highlightI = grid.xToI(x)
@@ -21,7 +24,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 	
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
-		if (!isValidIndex(highlightI, highlightJ))
+		if (!isValidIndex)
 		{
 			highlightI = 0
 			highlightJ = 9
@@ -43,16 +46,11 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 		}
 	}
 	
-	override fun isValidIndex(i: Int, j: Int): Boolean
-	{
-		return i == -1 && j in 0..8 || j == 9 && i in 0..8
-	}
-	
 	override fun enter() {}
 	
 	override fun typedDigit(digit: Int)
 	{
-		if (!isValidIndex(highlightI, highlightJ))
+		if (!isValidIndex)
 			return
 		
 		val key = if (highlightI == -1) highlightJ + 9 else highlightI
