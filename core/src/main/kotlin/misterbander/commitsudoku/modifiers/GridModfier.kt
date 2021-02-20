@@ -6,7 +6,7 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 
 abstract class GridModfier(protected val grid: SudokuGrid)
 {
-	protected val game = grid.panel.screen.game
+	protected val game = grid.game
 	abstract fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	open fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) {}
 	open fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0) {}

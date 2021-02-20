@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 {
-	private val game = panel.screen.game
+	val game = panel.screen.game
 	
 	val cells = Array(9) { i -> Array(9) { j -> Cell(i, j) } }
 	val cellSize = 64F

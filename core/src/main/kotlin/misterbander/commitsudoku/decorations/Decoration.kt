@@ -5,6 +5,6 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 
 abstract class Decoration(protected val grid: SudokuGrid)
 {
-	protected val game = grid.panel.screen.game
+	protected val game = grid.game
 	abstract fun draw(batch: Batch)
 }
