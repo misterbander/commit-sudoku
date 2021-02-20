@@ -18,6 +18,10 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	
 	protected var highlightI = 0
 	protected var highlightJ = 0
+	protected open val isValidIndex
+		get() = highlightI in -1..9
+			&& highlightJ in -1..9 && (highlightI == -1 || highlightI == 9 || highlightJ == -1 || highlightJ == 9)
+	
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
@@ -29,7 +33,7 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
-		if (!isValidIndex(highlightI, highlightJ))
+		if (!isValidIndex)
 		{
 			highlightI = -1
 			highlightJ = 9
@@ -57,7 +61,7 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	
 	override fun enter()
 	{
-		if (!isValidIndex(highlightI, highlightJ))
+		if (!isValidIndex)
 			return
 		
 		val existingTextDecoration = findTextDecoration(highlightI, highlightJ)
@@ -85,11 +89,6 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 				return it
 		}
 		return null
-	}
-	
-	protected open fun isValidIndex(i: Int, j: Int): Boolean
-	{
-		return i in -1..9 && j in -1..9 && (i == -1 || i == 9 || j == -1 || j == 9)
 	}
 	
 	override fun clear()

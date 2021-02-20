@@ -67,7 +67,9 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 				isChecked = true
 				onChange { grid.modifier = null }
 			}
-			imageButton("addthermobuttonstyle", game.skin)
+			imageButton("addthermobuttonstyle", game.skin) {
+				onChange { grid.modifier = grid.modifiers.thermoAdder }
+			}
 			row()
 			imageButton("addsandwichbuttonstyle", game.skin) {
 				onChange { grid.modifier = grid.modifiers.sandwichConstraintSetter }

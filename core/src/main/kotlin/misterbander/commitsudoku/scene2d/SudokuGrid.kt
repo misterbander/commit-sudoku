@@ -71,6 +71,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		height = gridSize
 		
 		addListener(SudokuGridClickListener(this))
+		addListener(SudokuGridGestureListener(this))
 		addListener(SudokuGridKeyListener(this))
 	}
 	

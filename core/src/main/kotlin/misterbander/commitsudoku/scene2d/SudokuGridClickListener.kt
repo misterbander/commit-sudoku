@@ -26,19 +26,27 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 		return true
 	}
 	
+	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
+	{
+		super.touchUp(event, x, y, pointer, button)
+		grid.modifier?.touchUp(event, x, y, pointer, button)
+	}
+	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		super.touchDragged(event, x, y, pointer)
+		if (grid.modifier != null)
+		{
+			grid.modifier!!.touchDragged(event, x, y, pointer)
+			return
+		}
+		
 		val i = grid.xToI(x)
 		val j = grid.yToJ(y)
 		if (i == selectI && j == selectJ)
 			return
 		selectI = i
 		selectJ = j
-		val modifier = grid.modifier
-		if (modifier == null)
-			grid.select(i, j, false)
-		else
-			modifier.touchDragged(event, x, y, pointer)
+		grid.select(i, j, false)
 	}
 }
