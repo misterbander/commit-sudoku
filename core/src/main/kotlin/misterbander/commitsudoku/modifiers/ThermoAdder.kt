@@ -8,6 +8,7 @@ import ktx.collections.minusAssign
 import ktx.math.vec2
 import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.PersistentStateMapper
 import kotlin.math.abs
 
 
@@ -50,10 +51,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 		if (currentThermoConstraint != null)
 		{
 			if (currentThermoConstraint!!.length > 1)
-			{
 				currentThermoConstraint!!.generateThermoStatement()
-				currentThermoConstraint!!.isHighlighted = false
-			}
 			else
 				tryDeleteThermo()
 		}
@@ -106,6 +104,27 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 	override fun clear()
 	{
 		thermoConstraints.clear()
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		val thermometers: Array<Array<Pair<Int, Int>>>? = mapper["thermometers"]
+		thermometers?.forEach { thermoCells ->
+			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second)
+			thermoConstraints.insert(0, thermoConstraint)
+			grid.constraintsChecker += thermoConstraint
+			thermoCells.forEachIndexed { index, pair ->
+				if (index == 0)
+					return@forEachIndexed
+				thermoConstraint.addThermoCell(pair.first, pair.second)
+			}
+			thermoConstraint.generateThermoStatement()
+		}
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["thermometers"] = thermoConstraints.map { thermoConstraint -> thermoConstraint.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch) {}

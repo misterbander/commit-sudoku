@@ -189,8 +189,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 							add(ModifyDigitAction(cell, to = 0))
 							for (i in 1..9)
 							{
-								add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
-								add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+								add(ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, i, to = false))
+								add(ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, i, to = false))
 							}
 						}
 					}
@@ -201,7 +201,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, to)
+						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, to)
 				}
 			}
 			// Insert center mark
@@ -209,7 +209,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, to)
+						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, to)
 				}
 			}
 			// Highlight color
@@ -244,8 +244,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 						add(ModifyDigitAction(cell, to = 0))
 						for (i in 1..9)
 						{
-							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, i, to = false))
-							add(ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, i, to = false))
+							add(ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, i, to = false))
+							add(ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, i, to = false))
 						}
 					}
 				}
@@ -281,7 +281,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 		}
-		constraintsChecker.check()
+		modifiers.readState(mapper)
+		constraintsChecker.readState(mapper)
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)
@@ -317,6 +318,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		mapper["isGiven"] = isGiven
 		mapper["cornerMarks"] = cornerMarks
 		mapper["centerMarks"] = centerMarks
+		modifiers.writeState(mapper)
+		constraintsChecker.writeState(mapper)
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
@@ -357,10 +360,10 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		private val white: Color = Color.WHITE.cpy()
 		private val lightGray: Color = Color.LIGHT_GRAY.cpy()
 		
-		private val x: Float
+		private val x
 			get() = iToX(i.toFloat())
 		
-		private val y: Float
+		private val y
 			get() = jToY(j.toFloat())
 		
 		fun offset(iOffset: Int, jOffset: Int): Cell

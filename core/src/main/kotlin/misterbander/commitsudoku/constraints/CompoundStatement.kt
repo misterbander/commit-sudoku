@@ -8,6 +8,7 @@ class CompoundStatement(
 ) : Statement
 {
 	private val statements: Array<Statement> = Array(statementStrings.size) { i -> SingleStatement(cells, statementStrings[i]) }
+	val statementStrs = statements.map { statement -> (statement as SingleStatement).statementStr }.toTypedArray()
 	override val isGlobal by lazy {
 		var isGlobalFlag = false
 		statements.forEach { if (it.isGlobal) isGlobalFlag = true }

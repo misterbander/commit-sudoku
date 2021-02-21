@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Intersector
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.roundedLine
+import java.io.Serializable
 
 class LineDecoration(
 	grid: SudokuGrid,
@@ -16,6 +17,7 @@ class LineDecoration(
 ) : Decoration(grid)
 {
 	var color: Color? = null
+	override val dataObject: HashMap<String, Serializable> = hashMapOf("i1" to i1, "j1" to j1, "i2" to i2, "j2" to j2)
 	
 	fun isOver(i: Int, j: Int): Boolean
 	{

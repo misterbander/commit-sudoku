@@ -12,10 +12,8 @@ import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.get
 import misterbander.commitsudoku.CommitSudokuScreen
-import misterbander.gframework.util.PersistentState
-import misterbander.gframework.util.PersistentStateMapper
 
-class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), PersistentState
+class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 {
 	private val game = screen.game
 	private val grid
@@ -23,7 +21,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 	private val constraintsChecker
 		get() = grid.constraintsChecker
 	
-	private val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
+	val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -32,7 +30,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 				constraintsChecker -= constraintsChecker.xConstraint
 		}
 	}
-	private val antiKingButton = ImageButton(game.skin, "antikingbuttonstyle").apply {
+	val antiKingButton = ImageButton(game.skin, "antikingbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -41,7 +39,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 				constraintsChecker -= constraintsChecker.antiKingStatement
 		}
 	}
-	private val antiKnightButton = ImageButton(game.skin, "antiknightbuttonstyle").apply {
+	val antiKnightButton = ImageButton(game.skin, "antiknightbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -50,7 +48,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 				constraintsChecker -= constraintsChecker.antiKnightStatement
 		}
 	}
-	private val nonconsecutiveButton = ImageButton(game.skin, "nonconsecutivebuttonstyle").apply {
+	val nonconsecutiveButton = ImageButton(game.skin, "nonconsecutivebuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -94,22 +92,6 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup(), Persist
 			actor(antiKnightButton)
 			actor(nonconsecutiveButton)
 		}
-	}
-	
-	override fun readState(mapper: PersistentStateMapper)
-	{
-		xButton.isChecked = mapper["x"] ?: xButton.isChecked
-		antiKingButton.isChecked = mapper["antiKing"] ?: antiKingButton.isChecked
-		antiKnightButton.isChecked = mapper["antiKnight"] ?: antiKnightButton.isChecked
-		nonconsecutiveButton.isChecked = mapper["nonconsecutive"] ?: nonconsecutiveButton.isChecked
-	}
-	
-	override fun writeState(mapper: PersistentStateMapper)
-	{
-		mapper["x"] = xButton.isChecked
-		mapper["antiKing"] = antiKingButton.isChecked
-		mapper["antiKnight"] = antiKnightButton.isChecked
-		mapper["nonconsecutive"] = nonconsecutiveButton.isChecked
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)

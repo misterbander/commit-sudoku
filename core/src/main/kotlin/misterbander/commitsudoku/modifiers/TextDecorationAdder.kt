@@ -9,7 +9,9 @@ import ktx.collections.plusAssign
 import ktx.style.get
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.cycle
+import java.io.Serializable
 
 
 open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
@@ -94,6 +96,24 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	override fun clear()
 	{
 		textDecorations.clear()
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		val textDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["textdecorations"]
+		textDecorationDataObjects?.forEach { dataObject ->
+			val i = dataObject["i"] as Int
+			val j = dataObject["j"] as Int
+			val text = dataObject["text"] as String
+			val textDecoration = TextDecoration(grid, i, j, text)
+			textDecorations += textDecoration
+			grid.decorations += textDecoration
+		}
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["textdecorations"] = textDecorations.map { it.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch)

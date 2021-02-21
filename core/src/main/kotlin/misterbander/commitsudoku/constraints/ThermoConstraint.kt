@@ -28,7 +28,10 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	val length
 		get() = thermoCells.size
-	var isHighlighted = true
+	private var isHighlighted = true
+	
+	val dataObject: Array<Pair<Int, Int>>
+		get() = thermoCells.map { cell -> Pair(cell.i, cell.j) }.toTypedArray()
 	
 	fun addThermoCell(endI: Int, endJ: Int)
 	{
@@ -68,6 +71,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 			}
 		}
 		thermoStatement = CompoundStatement(grid.cells, *statementStrs.toArray(String::class.java))
+		isHighlighted = false
 		grid.constraintsChecker.check()
 	}
 	

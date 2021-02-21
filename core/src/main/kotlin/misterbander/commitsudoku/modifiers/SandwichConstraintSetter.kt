@@ -6,7 +6,9 @@ import ktx.collections.GdxMap
 import ktx.collections.set
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.cycle
+import java.io.Serializable
 
 
 class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
@@ -87,6 +89,25 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 	override fun clear()
 	{
 		sandwichConstraints.clear()
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		val sandwichConstraintDataObjects: Array<HashMap<String, Serializable>>? = mapper["sandwichconstraints"]
+		sandwichConstraintDataObjects?.forEach { dataObject ->
+			val index = dataObject["index"] as Int
+			val isColumn = dataObject["isColumn"] as Boolean
+			val sandwichValue = dataObject["sandwichValue"] as Int
+			val sandwichConstraint = SandwichConstraint(grid, index, isColumn, sandwichValue)
+			val key = if (isColumn) index else index + 9
+			sandwichConstraints[key] = sandwichConstraint
+			grid.constraintsChecker += sandwichConstraint
+		}
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["sandwichconstraints"] = sandwichConstraints.values().map { it.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch)

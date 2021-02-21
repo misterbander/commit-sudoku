@@ -3,8 +3,9 @@ package misterbander.commitsudoku.modifiers
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.PersistentState
 
-abstract class GridModfier(protected val grid: SudokuGrid)
+abstract class GridModfier(protected val grid: SudokuGrid) : PersistentState
 {
 	protected val game = grid.game
 	abstract fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)

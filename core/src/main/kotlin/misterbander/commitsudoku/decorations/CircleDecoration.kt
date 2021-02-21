@@ -3,6 +3,7 @@ package misterbander.commitsudoku.decorations
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import java.io.Serializable
 
 class CircleDecoration(
 	grid: SudokuGrid,
@@ -13,6 +14,8 @@ class CircleDecoration(
 	var outlineColor: Color = Color.CLEAR
 ) : Decoration(grid)
 {
+	override val dataObject: HashMap<String, Serializable> = hashMapOf("i" to i, "j" to j, "radius" to radius)
+	
 	override fun draw(batch: Batch)
 	{
 		val shapeDrawer = game.shapeDrawer
