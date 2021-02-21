@@ -2,12 +2,11 @@ package misterbander.gframework.util
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
-import com.badlogic.gdx.utils.ObjectMap
-import ktx.collections.GdxMap
-import ktx.collections.set
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 
 /**
@@ -17,7 +16,7 @@ import java.io.Serializable
 class PersistentStateMapper(filePath: String)
 {
 	private val stateFile: FileHandle = Gdx.files.local(filePath)
-	val stateMap: GdxMap<String, Serializable> = GdxMap()
+	val stateMap: HashMap<String, Serializable> = HashMap()
 	
 	inline operator fun <reified T : Serializable> get(key: String): T?
 	{
@@ -39,13 +38,7 @@ class PersistentStateMapper(filePath: String)
 		if (stateFile.exists())
 		{
 			val inputStream = ObjectInputStream(stateFile.read())
-			val size = inputStream.readInt()
-			for (i in 0 until size)
-			{
-				val key = inputStream.readUTF()
-				val value = inputStream.readObject() as Serializable
-				stateMap[key] = value
-			}
+			stateMap.putAll(inputStream.readObject() as HashMap<String, Serializable>)
 			inputStream.close()
 			return true
 		}
@@ -58,11 +51,7 @@ class PersistentStateMapper(filePath: String)
 	fun write()
 	{
 		val outputStream = ObjectOutputStream(stateFile.write(false))
-		outputStream.writeInt(stateMap.size)
-		stateMap.forEach { entry: ObjectMap.Entry<String, Serializable> ->
-			outputStream.writeUTF(entry.key)
-			outputStream.writeObject(entry.value)
-		}
+		outputStream.writeObject(stateMap)
 		outputStream.close()
 	}
 }
