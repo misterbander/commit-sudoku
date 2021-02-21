@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 
@@ -20,7 +19,7 @@ class PersistentStateMapper(filePath: String)
 	
 	inline operator fun <reified T : Serializable> get(key: String): T?
 	{
-		return stateMap[key] as T?
+		return stateMap[key] as? T?
 	}
 	
 	operator fun set(key: String, value: Serializable)

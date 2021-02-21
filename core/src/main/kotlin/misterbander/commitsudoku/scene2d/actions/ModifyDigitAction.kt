@@ -1,6 +1,8 @@
 package misterbander.commitsudoku.scene2d.actions
 
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import java.io.Serializable
+
 
 class ModifyDigitAction(
 	private val cell: SudokuGrid.Cell,
@@ -8,6 +10,14 @@ class ModifyDigitAction(
 	private val to: Int
 ) : ModifyCellAction()
 {
+	override val dataObject: HashMap<String, Serializable> = hashMapOf(
+		"type" to Type.DIGIT,
+		"i" to cell.i,
+		"j" to cell.j,
+		"from" to from,
+		"to" to to
+	)
+	
 	init
 	{
 		runnable = Runnable {
@@ -16,10 +26,5 @@ class ModifyDigitAction(
 			println("Set cell (${cell.i}, ${cell.j}) digit from $from to $to")
 			cell.digit = to
 		}
-	}
-	
-	override fun toString(): String
-	{
-		return "digit (${cell.i},${cell.j}) $from $to"
 	}
 }

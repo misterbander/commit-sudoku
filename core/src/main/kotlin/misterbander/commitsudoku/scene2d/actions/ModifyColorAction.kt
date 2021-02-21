@@ -1,6 +1,7 @@
 package misterbander.commitsudoku.scene2d.actions
 
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import java.io.Serializable
 
 class ModifyColorAction(
 	private val cell: SudokuGrid.Cell,
@@ -8,6 +9,14 @@ class ModifyColorAction(
 	private val to: Int
 ) : ModifyCellAction()
 {
+	override val dataObject: HashMap<String, Serializable> = hashMapOf(
+		"type" to Type.COLOR,
+		"i" to cell.i,
+		"j" to cell.j,
+		"from" to from,
+		"to" to to
+	)
+	
 	init
 	{
 		runnable = Runnable {
@@ -16,10 +25,5 @@ class ModifyColorAction(
 			println("Set cell (${cell.i}, ${cell.j}) color from $from to $to")
 			cell.colorCode = to
 		}
-	}
-	
-	override fun toString(): String
-	{
-		return "color (${cell.i},${cell.j}) $from $to"
 	}
 }

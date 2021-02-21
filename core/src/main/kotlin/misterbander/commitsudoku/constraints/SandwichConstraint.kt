@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import java.io.Serializable
 
 class SandwichConstraint(
 	private val grid: SudokuGrid,
@@ -26,6 +27,13 @@ class SandwichConstraint(
 		sandwichValue.toString()
 	)
 	private var correctFlag = true
+	
+	val dataObject: HashMap<String, Serializable>
+		get() = hashMapOf(
+			"index" to index,
+			"isColumn" to isColumn,
+			"sandwichValue" to sandwichValue,
+		)
 	
 	override fun check(): Boolean
 	{

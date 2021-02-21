@@ -19,7 +19,7 @@ class AndroidLauncher : AndroidApplication()
 		val configuration = AndroidApplicationConfiguration()
 		val darkModeSettingsProvider = object : DarkModeSettingsProvider
 		{
-			override val defaultDarkModeEnabled: Boolean
+			override val defaultDarkModeEnabled
 				get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 		}
 		val commitSudoku = CommitSudoku(darkModeSettingsProvider)

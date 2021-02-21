@@ -9,7 +9,7 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 
-class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, private val statementStr: String) : Statement
+class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val statementStr: String) : Statement
 {
 	private val operatorPredicateMap: GdxMap<Regex, (Double, Double) -> Boolean> = gdxMapOf(
 		"(^=|[^!><]=)".toRegex() to { x, y -> x.compareTo(y) == 0 },

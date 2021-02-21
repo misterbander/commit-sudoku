@@ -5,8 +5,10 @@ import ktx.collections.GdxArray
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.PersistentState
+import misterbander.gframework.util.PersistentStateMapper
 
-class ConstraintsChecker(private val grid: SudokuGrid)
+class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 {
 	private val globalStatements: GdxArray<Statement> = GdxArray()
 	private val staticStatements: GdxArray<Statement> = GdxArray()
@@ -73,6 +75,65 @@ class ConstraintsChecker(private val grid: SudokuGrid)
 	operator fun contains(constraint: Constraint): Boolean
 	{
 		return constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
+	}
+	
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		val toolbar = grid.panel.screen.toolbar
+		toolbar.xButton.isChecked = mapper["x"] ?: false
+		toolbar.antiKingButton.isChecked = mapper["antiKing"] ?: false
+		toolbar.antiKnightButton.isChecked = mapper["antiKnight"] ?: false
+		toolbar.nonconsecutiveButton.isChecked = mapper["nonconsecutive"] ?: false
+		
+		val globalStatementStrs: Array<Array<String>>? = mapper["globalstatements"]
+		val staticStatementStrs: Array<Array<String>>? = mapper["staticstatements"]
+		globalStatementStrs?.forEach { statementStrGroup ->
+			if (statementStrGroup.size == 1)
+				globalStatements += SingleStatement(grid.cells, statementStrGroup[0])
+			else
+				globalStatements += CompoundStatement(grid.cells, *statementStrGroup)
+		}
+		staticStatementStrs?.forEach { statementStrGroup ->
+			if (statementStrGroup.size == 1)
+				staticStatements += SingleStatement(grid.cells, statementStrGroup[0])
+			else
+				staticStatements += CompoundStatement(grid.cells, *statementStrGroup)
+		}
+		check()
+	}
+	
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		mapper["x"] = xConstraint in additionalConstraints
+		mapper["antiKing"] = false
+		mapper["antiKnight"] = false
+		mapper["nonconsecutive"] = false
+		
+		val globalStatementStrs: GdxArray<Array<String>> = GdxArray()
+		val staticStatementStrs: GdxArray<Array<String>> = GdxArray()
+		globalStatements.forEach { statement ->
+			when (statement)
+			{
+				antiKingStatement -> mapper["antiKing"] = true
+				antiKnightStatement -> mapper["antiKnight"] = true
+				nonconsecutiveStatement -> mapper["nonconsecutive"] = true
+				is SingleStatement ->
+					globalStatementStrs += arrayOf(statement.statementStr)
+				is CompoundStatement ->
+					globalStatementStrs += statement.statementStrs
+			}
+		}
+		staticStatements.forEach { statement ->
+			when (statement)
+			{
+				is SingleStatement ->
+					staticStatementStrs += arrayOf(statement.statementStr)
+				is CompoundStatement ->
+					staticStatementStrs += statement.statementStrs
+			}
+		}
+		mapper["globalStatements"] = globalStatementStrs.toArray(Array<Array<String>>::class.java)
+		mapper["staticStatements"] = staticStatementStrs.toArray(Array<Array<String>>::class.java)
 	}
 	
 	fun drawAdditionalConstraints(batch: Batch)

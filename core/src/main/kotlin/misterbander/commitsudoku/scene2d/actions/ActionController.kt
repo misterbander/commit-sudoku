@@ -7,6 +7,7 @@ import ktx.collections.plusAssign
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
+import java.io.Serializable
 
 class ActionController(private val grid: SudokuGrid): PersistentState
 {
@@ -69,21 +70,27 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val actionHistoryStrs: Array<Array<String>>? = mapper["actionHistory"]
-		actionHistoryStrs?.forEach { actionStrGroup ->
-			val subActionHistory: GdxArray<ModifyCellAction> = GdxArray()
-			actionStrGroup.forEach { actionStr ->
-				val tokens = actionStr.split(" ".toRegex()).toTypedArray()
-				val cell = grid.cells[tokens[1][1].toString().toInt()][tokens[1][3].toString().toInt()]
-				when (tokens[0])
+		val actionHistoryDataObjects: Array<Array<HashMap<String, Serializable>>>? = mapper["actionHistory"]
+		actionHistoryDataObjects?.forEach { dataObjectGroup ->
+			val actionHistoryGroup: GdxArray<ModifyCellAction> = GdxArray()
+			dataObjectGroup.forEach { dataObject ->
+				val type = dataObject["type"] as ModifyCellAction.Type
+				val i = dataObject["i"] as Int
+				val j = dataObject["j"] as Int
+				val cell = grid.cells[i][j]
+				when (type)
 				{
-					"digit" -> subActionHistory += ModifyDigitAction(cell, tokens[2].toInt(), tokens[3].toInt())
-					"color" -> subActionHistory += ModifyColorAction(cell, tokens[2].toInt(), tokens[3].toInt())
-					"corner" -> subActionHistory += ModifyMarkAction(cell, ModifyMarkAction.Type.CORNER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean())
-					"center" -> subActionHistory += ModifyMarkAction(cell, ModifyMarkAction.Type.CENTER, tokens[2].toInt(), tokens[3].toBoolean(), tokens[4].toBoolean())
+					ModifyCellAction.Type.DIGIT ->
+						actionHistoryGroup += ModifyDigitAction(cell, dataObject["from"] as Int, dataObject["to"] as Int)
+					ModifyCellAction.Type.CORNER ->
+						actionHistoryGroup += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, dataObject["digit"] as Int, dataObject["from"] as Boolean, dataObject["to"] as Boolean)
+					ModifyCellAction.Type.CENTER ->
+						actionHistoryGroup += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, dataObject["digit"] as Int, dataObject["from"] as Boolean, dataObject["to"] as Boolean)
+					ModifyCellAction.Type.COLOR ->
+						actionHistoryGroup += ModifyColorAction(cell, dataObject["from"] as Int, dataObject["to"] as Int)
 				}
 			}
-			actionHistory += subActionHistory
+			actionHistory += actionHistoryGroup
 		}
 		undidActionCount = mapper["undidActionCount"] ?: undidActionCount
 		updateUndoRedoButtons()
@@ -91,10 +98,10 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		val actionHistoryStr = Array(actionHistory.size) { i ->
-			Array(actionHistory[i].size) { j -> actionHistory[i][j].toString() }
+		val actionHistoryDataObjects = Array(actionHistory.size) { i ->
+			Array(actionHistory[i].size) { j -> actionHistory[i][j].dataObject }
 		}
-		mapper["actionHistory"] = actionHistoryStr
+		mapper["actionHistory"] = actionHistoryDataObjects
 		mapper["undidActionCount"] = undidActionCount
 	}
 }
