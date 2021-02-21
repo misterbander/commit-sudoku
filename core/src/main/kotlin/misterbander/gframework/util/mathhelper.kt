@@ -13,3 +13,14 @@ infix fun Int.cycle(range: IntRange): Int
 		i += size
 	return i
 }
+
+infix fun Float.cycle(range: ClosedFloatingPointRange<Float>): Float
+{
+	var f = this
+	val size = range.endInclusive - range.start
+	while (f > range.endInclusive)
+		f -= size
+	while (f < range.start)
+		f += size
+	return f
+}
