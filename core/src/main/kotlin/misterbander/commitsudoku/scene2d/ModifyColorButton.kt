@@ -9,9 +9,6 @@ class ModifyColorButton(grid: SudokuGrid, digit: Int, skin: Skin, styleName: Str
 {
 	init
 	{
-		onChange {
-			grid.typedDigit(digit, true)
-			isChecked = false
-		}
+		onChange { grid.typedDigit(digit, true) }
 	}
 }
