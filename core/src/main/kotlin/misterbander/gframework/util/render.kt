@@ -77,3 +77,18 @@ fun ShapeDrawer.dashedLine(x1: Float, y1: Float, x2: Float, y2: Float, color: Co
 	}
 }
 
+/**
+ * Blends two colors and stores the result in this color. If the destination color is not specified, then
+ * it defaults to this color.
+ * @param dest destination color
+ * @param src source color
+ * @return This color set to the result of blending the source color with the destination color.
+ */
+fun Color.blend(src: Color, dest: Color = this): Color
+{
+	r = src.r*src.a + dest.r*(1 - src.a)
+	g = src.g*src.a + dest.g*(1 - src.a)
+	b = src.b*src.a + dest.b*(1 - src.a)
+	a = src.a + dest.a*(1 - src.a)
+	return clamp()
+}

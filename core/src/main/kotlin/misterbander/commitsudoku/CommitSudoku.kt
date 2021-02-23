@@ -58,6 +58,9 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 		7 to Color(0x9114FF50.toInt()), // Purple
 		8 to Color(0xB4B4B450.toInt()) // Gray
 	)
+	private val markColor = Color(0x7F92FFFF)
+	private val selectedColor = Color(0xFFF27F78.toInt())
+	private val defaultDecorationColor = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
 	val lightSkin by lazy {
 		skin {
 			add(Color.BLACK, "primarycolor")
@@ -65,11 +68,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color.WHITE, "backgroundcolor")
 			add(Color(0xF0F0F0FF.toInt()), "toolbarbackgroundcolor")
 			add(Color(0x00DB15FF), "nongivencolor")
-			add(Color(0x7F92FFFF), "markcolor")
-			add(Color(0xFFF27F78.toInt()), "selectedcolor")
+			add(markColor, "markcolor")
+			add(selectedColor, "selectedcolor")
 			add(highlightColors, "highlightcolors")
-			add(Color(0xDCDCDCFF.toInt()), "thermocolor")
-			add(Color(0xFFF9C3FF.toInt()), "selectedthermocolor")
+			add(defaultDecorationColor, "defaultdecorationcolor")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -171,11 +173,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0x252525FF), "backgroundcolor")
 			add(Color(0x0F0F0FFF), "toolbarbackgroundcolor")
 			add(Color(0x00DB15FF), "nongivencolor")
-			add(Color(0x7F92FFFF), "markcolor")
-			add(Color(0xFFF27F78.toInt()), "selectedcolor")
+			add(markColor, "markcolor")
+			add(selectedColor, "selectedcolor")
 			add(highlightColors, "highlightcolors")
-			add(Color(0x3C3C3CFF), "thermocolor")
-			add(Color(0x8C854FFF.toInt()), "selectedthermocolor")
+			add(defaultDecorationColor, "defaultdecorationcolor")
 			
 			// Style bases
 			addRegions(guiAtlas)
