@@ -17,7 +17,7 @@ private val vec2 = vec2()
  * @param text the text
  * @return A [Vector2] containing the dimensions of the text, in pixels. The returned `Vector2` is not safe for reuse.
  */
-fun BitmapFont.getTextSize(text: String): Vector2
+fun BitmapFont.textSize(text: String): Vector2
 {
 	glyph.setText(this, text)
 	vec2.set(glyph.width, glyph.height)
@@ -40,7 +40,7 @@ fun BitmapFont.wrap(text: String, targetWidth: Int): String
 	for (word in words)
 	{
 		peeker.append(if (isFirstWord) word else " $word") // Have the peeker check if the next word fits
-		if (getTextSize(peeker.toString()).x <= targetWidth) // It fits
+		if (textSize(peeker.toString()).x <= targetWidth) // It fits
 			builder.append(if (isFirstWord) word else " $word")
 		else  // It doesn't fit, move on to the next line
 		{
@@ -54,6 +54,6 @@ fun BitmapFont.wrap(text: String, targetWidth: Int): String
 
 fun BitmapFont.drawCenter(batch: Batch, str: CharSequence, x: Float, y: Float)
 {
-	val textSize = getTextSize(str.toString())
+	val textSize = textSize(str.toString())
 	draw(batch, str, x - textSize.x/2, y + textSize.y/2, textSize.x, Align.center, false)
 }
