@@ -15,7 +15,7 @@ class TextDecoration(
 	var text: String
 ) : Decoration(grid)
 {
-	var color: Color? = null
+	override var color: Color? = null
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("i" to i, "j" to j, "text" to text)
 	

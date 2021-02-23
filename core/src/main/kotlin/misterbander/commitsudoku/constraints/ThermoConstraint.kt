@@ -93,11 +93,11 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	override fun drawConstraint(batch: Batch)
 	{
-		bulb.color = if (isHighlighted) grid.game.skin["selectedthermocolor"] else grid.game.skin["thermocolor"]
+		bulb.color = if (isHighlighted) grid.game.skin["selectedcolor"] else null
 		bulb.draw(batch)
 		for (line in thermoLines)
 		{
-			line.color = if (isHighlighted) grid.game.skin["selectedthermocolor"] else null
+			line.color = if (isHighlighted) grid.game.skin["selectedcolor"] else null
 			line.draw(batch)
 		}
 	}
