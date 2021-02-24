@@ -16,6 +16,7 @@ import ktx.style.get
 import misterbander.commitsudoku.scene2d.InputWindow
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
+import misterbander.commitsudoku.scene2d.ToolbarMultibuttonMenu
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.MBTextField
 import misterbander.gframework.util.LayoutSizeChangeListener
@@ -53,6 +54,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 			actor(panel).cell(expand = true)
 		}
 		stage.keyboardFocus = panel.grid
+		stage += toolbar.thermoMultibuttonMenu
 		stage += textInputWindow
 		
 		if (mapper.read())
@@ -78,13 +80,18 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 				actor.closeButton.style = game.skin[otherSkin.find(actor.closeButton.style)]
 			}
 			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
+			is ToolbarMultibuttonMenu ->
+			{
+				actor.updateStyle()
+				actor.children.forEach { updateActorStyle(it, otherSkin, *exclude) }
+			}
 			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin, *exclude) }
 		}
 	}
 	
 	fun updateStyles()
 	{
-		val otherSkin = if (game.skin == game.lightSkin) game.darkSkin else game.lightSkin
+		val otherSkin = if (game.isDarkMode) game.lightSkin else game.darkSkin
 		stage.actors.forEach {
 			updateActorStyle(
 				it, otherSkin,

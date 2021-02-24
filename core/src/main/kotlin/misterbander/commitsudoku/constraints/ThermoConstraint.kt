@@ -8,11 +8,18 @@ import ktx.style.get
 import misterbander.commitsudoku.decorations.CircleDecoration
 import misterbander.commitsudoku.decorations.LineDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import java.io.Serializable
 
 
 class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint
 {
 	var thermoStatement: CompoundStatement = CompoundStatement(grid.cells)
+	var operator = when (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex)
+	{
+		0 -> "<"
+		1 -> "<="
+		else -> ""
+	}
 	
 	private val bulb: CircleDecoration = CircleDecoration(
 		grid,
@@ -30,8 +37,11 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		get() = thermoCells.size
 	private var isHighlighted = true
 	
-	val dataObject: Array<Pair<Int, Int>>
-		get() = thermoCells.map { cell -> Pair(cell.i, cell.j) }.toTypedArray()
+	val dataObject: HashMap<String, Serializable>
+		get() = hashMapOf(
+			"cells" to thermoCells.map { cell -> Pair(cell.i, cell.j) }.toTypedArray(),
+			"operator" to operator
+		)
 	
 	fun addThermoCell(endI: Int, endJ: Int)
 	{
@@ -61,16 +71,19 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	fun generateThermoStatement()
 	{
-		val statementStrs: GdxArray<String> = GdxArray()
-		for (i in 0 until thermoCells.size)
+		if (operator != "")
 		{
-			for (j in 0 until i)
+			val statementStrs: GdxArray<String> = GdxArray()
+			for (i in 0 until thermoCells.size)
 			{
-				val statement = "[r${(thermoCells[j].j + 1)}c${(thermoCells[j].i + 1)}]<[r${(thermoCells[i].j + 1)}c${(thermoCells[i].i + 1)}]"
-				statementStrs.add(statement)
+				for (j in 0 until i)
+				{
+					val statement = "[r${(thermoCells[j].j + 1)}c${(thermoCells[j].i + 1)}]$operator[r${(thermoCells[i].j + 1)}c${(thermoCells[i].i + 1)}]"
+					statementStrs.add(statement)
+				}
 			}
+			thermoStatement = CompoundStatement(grid.cells, *statementStrs.toArray(String::class.java))
 		}
-		thermoStatement = CompoundStatement(grid.cells, *statementStrs.toArray(String::class.java))
 		isHighlighted = false
 		grid.constraintsChecker.check()
 	}
