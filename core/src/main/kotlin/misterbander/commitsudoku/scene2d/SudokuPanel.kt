@@ -213,7 +213,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 				actor(playButton)
 				imageButton("clearbuttonstyle", game.skin) { onChange { grid.clearGrid() } }
 				imageButton("darkmodebuttonstyle", game.skin) {
-					isChecked = game.skin == game.darkSkin
+					isChecked = game.isDarkMode
 					onChange {
 						game.skin = if (isChecked) game.darkSkin else game.lightSkin
 						screen.updateStyles()

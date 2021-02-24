@@ -9,6 +9,7 @@ import ktx.math.vec2
 import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
+import java.io.Serializable
 import kotlin.math.abs
 
 
@@ -106,10 +107,12 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 		thermoConstraints.clear()
 	}
 	
+	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val thermometers: Array<Array<Pair<Int, Int>>>? = mapper["thermometers"]
-		thermometers?.forEach { thermoCells ->
+		val thermometers: Array<HashMap<String, Serializable>>? = mapper["thermoConstraints"]
+		thermometers?.forEach {
+			val thermoCells = it["cells"] as Array<Pair<Int, Int>>
 			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second)
 			thermoConstraints.insert(0, thermoConstraint)
 			grid.constraintsChecker += thermoConstraint
@@ -118,13 +121,14 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 					return@forEachIndexed
 				thermoConstraint.addThermoCell(pair.first, pair.second)
 			}
+			thermoConstraint.operator = it["operator"] as String
 			thermoConstraint.generateThermoStatement()
 		}
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["thermometers"] = thermoConstraints.map { thermoConstraint -> thermoConstraint.dataObject }.toTypedArray()
+		mapper["thermoConstraints"] = thermoConstraints.map { thermoConstraint -> thermoConstraint.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch) {}

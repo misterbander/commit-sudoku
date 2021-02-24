@@ -21,6 +21,15 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	private val constraintsChecker
 		get() = grid.constraintsChecker
 	
+	private val thermoMultibutton = ToolbarMultibutton(screen, game.skin, "addthermobuttonstyle")
+	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
+		game,
+		thermoMultibutton,
+		scene2d.imageButton("addthermobuttonstyle", game.skin),
+		scene2d.imageButton("softthermobuttonstyle", game.skin),
+		scene2d.imageButton("emptythermobuttonstyle", game.skin)
+	)
+	
 	val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
@@ -65,7 +74,8 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				isChecked = true
 				onChange { grid.modifier = null }
 			}
-			imageButton("addthermobuttonstyle", game.skin) {
+			actor(thermoMultibutton) {
+				multibuttonMenu = thermoMultibuttonMenu
 				onChange { grid.modifier = grid.modifiers.thermoAdder }
 			}
 			row()

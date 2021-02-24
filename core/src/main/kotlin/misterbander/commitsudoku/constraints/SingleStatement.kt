@@ -12,11 +12,11 @@ import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val statementStr: String) : Statement
 {
 	private val operatorPredicateMap: GdxMap<Regex, (Double, Double) -> Boolean> = gdxMapOf(
-		"(^=|[^!><]=)".toRegex() to { x, y -> x.compareTo(y) == 0 },
+		"(^|[^!><])=".toRegex() to { x, y -> x.compareTo(y) == 0 },
 		"!=".toRegex() to { x, y -> x.compareTo(y) != 0 },
-		">[^=]?".toRegex() to { x, y -> x > y },
+		">([^=]|$)".toRegex() to { x, y -> x > y },
 		">=".toRegex() to { x, y -> x >= y },
-		"<[^=]?".toRegex() to { x, y -> x < y },
+		"<([^=]|$)".toRegex() to { x, y -> x < y },
 		"<=".toRegex() to { x, y -> x <= y }
 	)
 	private val evaluator = DoubleEvaluator()
@@ -87,7 +87,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 			"Statement must contain only 1 comparison operator but found $operatorCount in statement \"$statementStr\""
 		}
 		
-		val expressions: Array<String> = statementStr2.split("(=|!=|>|>=|<|<=)".toRegex()).toTypedArray()
+		val expressions: Array<String> = statementStr2.split("(!=|>=|<=|=|>|<)".toRegex()).toTypedArray()
 		require(expressions.size == 2) {
 			"Must compare 2 expressions but found ${expressions.size} in statement: \"$statementStr\""
 		}

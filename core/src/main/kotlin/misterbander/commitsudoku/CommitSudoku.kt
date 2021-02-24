@@ -131,6 +131,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
 			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["setgivensicon"] }
 			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addthermoicon"] }
+			imageButton("softthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["softthermoicon"] }
+			imageButton("emptythermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["emptythermoicon"] }
 			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsandwichicon"] }
 			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addtextdecorationicon"] }
 			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsmalltextdecorationicon"] }
@@ -236,6 +238,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
 			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darksetgivensicon"] }
 			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddthermoicon"] }
+			imageButton("softthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darksoftthermoicon"] }
+			imageButton("emptythermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkemptythermoicon"] }
 			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsandwichicon"] }
 			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddtextdecorationicon"] }
 			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsmalltextdecorationicon"] }
@@ -270,6 +274,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			}
 		}
 	}
+	val isDarkMode
+		get() = skin == darkSkin
 	lateinit var skin: Skin
 	
 	override fun create()
