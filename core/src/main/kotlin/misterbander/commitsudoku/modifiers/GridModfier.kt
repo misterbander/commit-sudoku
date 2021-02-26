@@ -16,5 +16,5 @@ abstract class GridModfier(protected val grid: SudokuGrid) : PersistentState
 	open fun enter() {}
 	open fun typedDigit(digit: Int) {}
 	abstract fun clear()
-	abstract fun draw(batch: Batch)
+	open fun draw(batch: Batch) {}
 }

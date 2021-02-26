@@ -1,7 +1,6 @@
 package misterbander.commitsudoku.modifiers
 
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxArray
 import ktx.collections.minusAssign
@@ -130,6 +129,4 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 	{
 		mapper["thermoConstraints"] = thermoConstraints.map { thermoConstraint -> thermoConstraint.dataObject }.toTypedArray()
 	}
-	
-	override fun draw(batch: Batch) {}
 }
