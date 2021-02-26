@@ -48,7 +48,9 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		{
 			field = value
 			unselect()
-			if (value == modifiers.sandwichConstraintSetter)
+			if (value != modifiers.cageSetter)
+				modifiers.cageSetter.unselect()
+			if (value == modifiers.sandwichConstraintSetter || value == modifiers.cageSetter)
 			{
 				panel.keypadButtonGroup.buttonGroup.apply {
 					buttons[0].isChecked = true
@@ -112,9 +114,19 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		return floor((x - this.x)/cellSize).toInt()
 	}
 	
+	fun xToI(x: Float, precision: Float): Float
+	{
+		return floor((x - this.x)/(cellSize*precision))/precision
+	}
+	
 	fun yToJ(y: Float): Int
 	{
 		return floor((y - this.y)/cellSize).toInt()
+	}
+	
+	fun yToJ(y: Float, precision: Float): Float
+	{
+		return floor((y - this.y)/(cellSize*precision))/precision
 	}
 	
 	fun select(i: Int, j: Int, toggleUnselect: Boolean)
