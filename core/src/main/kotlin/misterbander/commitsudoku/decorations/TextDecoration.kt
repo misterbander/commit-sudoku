@@ -8,7 +8,7 @@ import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 
 
-class TextDecoration(
+open class TextDecoration(
 	grid: SudokuGrid,
 	val i: Int,
 	val j: Int,

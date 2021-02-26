@@ -135,7 +135,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("emptythermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["emptythermoicon"] }
 			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsandwichicon"] }
 			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addtextdecorationicon"] }
-			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addsmalltextdecorationicon"] }
+			imageButton("addcornertextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addcornertextdecorationicon"] }
 			imageButton("addcircledecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addcircledecorationicon"] }
 			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addlinedecorationicon"] }
 			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addarrowdecorationicon"] }
@@ -242,7 +242,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("emptythermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkemptythermoicon"] }
 			imageButton("addsandwichbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsandwichicon"] }
 			imageButton("addtextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddtextdecorationicon"] }
-			imageButton("addsmalltextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddsmalltextdecorationicon"] }
+			imageButton("addcornertextdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddcornertextdecorationicon"] }
 			imageButton("addcircledecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddcircledecorationicon"] }
 			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddlinedecorationicon"] }
 			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddarrowdecorationicon"] }
