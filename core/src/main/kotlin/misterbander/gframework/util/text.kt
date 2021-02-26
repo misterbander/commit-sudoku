@@ -5,12 +5,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
-import ktx.math.vec2
 import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 private val glyph = GlyphLayout()
-private val vec2 = vec2()
-
 
 /**
  * Returns the dimensions of a text in pixels based on the BitmapFont.
@@ -20,8 +17,8 @@ private val vec2 = vec2()
 fun BitmapFont.textSize(text: String): Vector2
 {
 	glyph.setText(this, text)
-	vec2.set(glyph.width, glyph.height)
-	return vec2
+	temp.set(glyph.width, glyph.height)
+	return temp
 }
 
 /**

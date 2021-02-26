@@ -10,6 +10,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 	val sandwichConstraintSetter = SandwichConstraintSetter(grid)
 	val textDecorationAdder = TextDecorationAdder(grid)
 	val cornerTextDecorationAdder = CornerTextDecorationAdder(grid)
+	val circleDecorationAdder = CircleDecorationAdder(grid)
 	val cageSetter = CageSetter(grid)
 	
 	override fun readState(mapper: PersistentStateMapper)
@@ -18,6 +19,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 		sandwichConstraintSetter.readState(mapper)
 		textDecorationAdder.readState(mapper)
 		cornerTextDecorationAdder.readState(mapper)
+		circleDecorationAdder.readState(mapper)
 		cageSetter.readState(mapper)
 	}
 	
@@ -27,6 +29,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 		sandwichConstraintSetter.writeState(mapper)
 		textDecorationAdder.writeState(mapper)
 		cornerTextDecorationAdder.writeState(mapper)
+		circleDecorationAdder.writeState(mapper)
 		cageSetter.writeState(mapper)
 	}
 }
