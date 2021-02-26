@@ -95,7 +95,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier(grid)
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val cageDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["cagedecorations"]
+		val cageDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["cageDecorations"]
 		cageDecorationDataObjects?.forEach { dataObject ->
 			var cageDecoration: CageDecoration? = null
 			val cageMask = dataObject["cageMask"] as Array<BooleanArray>
@@ -128,6 +128,6 @@ class CageSetter(grid: SudokuGrid) : GridModfier(grid)
 					cageDecorations += cage
 			}
 		}
-		mapper["cagedecorations"] = cageDecorations.map { it.dataObject }.toTypedArray()
+		mapper["cageDecorations"] = cageDecorations.map { it.dataObject }.toTypedArray()
 	}
 }

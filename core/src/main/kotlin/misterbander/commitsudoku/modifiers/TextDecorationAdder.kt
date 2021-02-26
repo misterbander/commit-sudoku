@@ -100,7 +100,7 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val textDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["textdecorations"]
+		val textDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["textDecorations"]
 		textDecorationDataObjects?.forEach { dataObject ->
 			val i = dataObject["i"] as Int
 			val j = dataObject["j"] as Int
@@ -113,7 +113,7 @@ open class TextDecorationAdder(grid: SudokuGrid): GridModfier(grid)
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["textdecorations"] = textDecorations.map { it.dataObject }.toTypedArray()
+		mapper["textDecorations"] = textDecorations.map { it.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch)

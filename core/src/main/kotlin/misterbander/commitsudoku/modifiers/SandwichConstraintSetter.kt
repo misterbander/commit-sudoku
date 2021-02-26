@@ -93,7 +93,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val sandwichConstraintDataObjects: Array<HashMap<String, Serializable>>? = mapper["sandwichconstraints"]
+		val sandwichConstraintDataObjects: Array<HashMap<String, Serializable>>? = mapper["sandwichConstraints"]
 		sandwichConstraintDataObjects?.forEach { dataObject ->
 			val index = dataObject["index"] as Int
 			val isColumn = dataObject["isColumn"] as Boolean
@@ -107,7 +107,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["sandwichconstraints"] = sandwichConstraints.values().map { it.dataObject }.toTypedArray()
+		mapper["sandwichConstraints"] = sandwichConstraints.values().map { it.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch)

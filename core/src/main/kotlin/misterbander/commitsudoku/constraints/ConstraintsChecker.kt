@@ -85,8 +85,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		toolbar.antiKnightButton.isChecked = mapper["antiKnight"] ?: false
 		toolbar.nonconsecutiveButton.isChecked = mapper["nonconsecutive"] ?: false
 		
-		val globalStatementStrs: Array<Array<String>>? = mapper["globalstatements"]
-		val staticStatementStrs: Array<Array<String>>? = mapper["staticstatements"]
+		val globalStatementStrs: Array<Array<String>>? = mapper["globalStatements"]
+		val staticStatementStrs: Array<Array<String>>? = mapper["staticStatements"]
 		globalStatementStrs?.forEach { statementStrGroup ->
 			if (statementStrGroup.size == 1)
 				globalStatements += SingleStatement(grid.cells, statementStrGroup[0])
