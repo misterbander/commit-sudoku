@@ -2,12 +2,9 @@ package misterbander.gframework.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
-import ktx.math.vec2
 import space.earlygrey.shapedrawer.ShapeDrawer
 import kotlin.math.min
 
-
-private val temp = vec2()
 
 /**
  * Draws a line with rounded caps.
@@ -20,7 +17,7 @@ private val temp = vec2()
  */
 fun ShapeDrawer.roundedLine(x1: Float, y1: Float, x2: Float, y2: Float, color: Color, lineWidth: Float)
 {
-	val dir = temp.set(x2 - x1, y2 - y1).angle()
+	val dir = angle(x1, y1, x2, y2)
 	line(x1, y1, x2, y2, color, lineWidth)
 	sector(x1, y1, lineWidth/2, (dir + 90)*MathUtils.degreesToRadians, 180*MathUtils.degreesToRadians, color, color)
 	sector(x2, y2, lineWidth/2, (dir - 90)*MathUtils.degreesToRadians, 180*MathUtils.degreesToRadians, color, color)

@@ -1,13 +1,14 @@
 package misterbander.commitsudoku.constraints
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 import ktx.collections.plusAssign
 import ktx.style.get
-import misterbander.commitsudoku.decorations.CircleDecoration
 import misterbander.commitsudoku.decorations.LineDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.blend
 import java.io.Serializable
 
 
@@ -20,21 +21,15 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		1 -> "<="
 		else -> ""
 	}
-	
-	private val bulb: CircleDecoration = CircleDecoration(
-		grid,
-		bulbI,
-		bulbJ,
-		grid.cellSize*0.3F,
-	)
 	private val thermoCells: GdxArray<SudokuGrid.Cell> = gdxArrayOf(grid.cells[bulbI][bulbJ])
 	private var lastJointCell: SudokuGrid.Cell = thermoCells[0]
 	private var lastJointDI = 0
 	private var lastJointDJ = 0
 	private val thermoLines: GdxArray<LineDecoration> = GdxArray()
-	
 	val length
 		get() = thermoCells.size
+	
+	private val internalColor = Color()
 	private var isHighlighted = true
 	
 	val dataObject: HashMap<String, Serializable>
@@ -90,7 +85,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	fun isOver(i: Int, j: Int): Boolean
 	{
-		if (bulb.i == i && bulb.j == j)
+		if (thermoCells[0].i == i && thermoCells[0].j == j)
 			return true
 		thermoLines.forEach { line ->
 			if (line.isOver(i, j))
@@ -106,8 +101,14 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	override fun drawConstraint(batch: Batch)
 	{
-		bulb.color = if (isHighlighted) grid.game.skin["selectedcolor"] else null
-		bulb.draw(batch)
+		val shapeDrawer = grid.game.shapeDrawer
+		val x = grid.iToX(thermoCells[0].i + 0.5F)
+		val y = grid.jToY(thermoCells[0].j + 0.5F)
+		internalColor.blend(
+			if (isHighlighted) grid.game.skin["selectedcolor"] else grid.game.skin["defaultdecorationcolor"],
+			grid.game.skin["backgroundcolor"]
+		)
+		shapeDrawer.filledCircle(x, y, grid.cellSize*0.3F, internalColor)
 		for (line in thermoLines)
 		{
 			line.color = if (isHighlighted) grid.game.skin["selectedcolor"] else null
