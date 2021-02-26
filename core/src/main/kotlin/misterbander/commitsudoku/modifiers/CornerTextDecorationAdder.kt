@@ -63,7 +63,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : TextDecorationAdder(grid)
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val cornerTextDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["cornertextdecorations"]
+		val cornerTextDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["cornerTextDecorations"]
 		cornerTextDecorationDataObjects?.forEach { dataObject ->
 			val i = dataObject["i"] as Int
 			val j = dataObject["j"] as Int
@@ -76,7 +76,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : TextDecorationAdder(grid)
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["cornertextdecorations"] = cornerTextDecorations.map { it.dataObject }.toTypedArray()
+		mapper["cornerTextDecorations"] = cornerTextDecorations.map { it.dataObject }.toTypedArray()
 	}
 	
 	override fun draw(batch: Batch) {}
