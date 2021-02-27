@@ -2,7 +2,7 @@ package misterbander.commitsudoku.modifiers
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import ktx.collections.GdxArray
+import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.decorations.CornerTextDecoration
@@ -13,7 +13,7 @@ import java.io.Serializable
 
 class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecoration>(grid)
 {
-	private val cornerTextDecorations: GdxArray<CornerTextDecoration> = GdxArray()
+	private val cornerTextDecorations: GdxSet<CornerTextDecoration> = GdxSet()
 	
 	override val isValidIndex
 		get() = selectI in 0..8 && selectJ in 0..8
