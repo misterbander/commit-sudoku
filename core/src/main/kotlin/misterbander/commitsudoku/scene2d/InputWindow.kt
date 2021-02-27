@@ -5,14 +5,13 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.Window
 import ktx.actors.*
-import ktx.math.vec2
 import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.gframework.scene2d.AccessibleInputWindow
 import misterbander.gframework.scene2d.MBTextField
 
 class InputWindow(
@@ -20,7 +19,7 @@ class InputWindow(
 	isModal: Boolean = false,
 	digitsOnly: Boolean = false,
 	maxLength: Int = 0
-) : Window("", screen.game.skin, "windowstyle")
+) : AccessibleInputWindow("", screen.game.skin, "windowstyle")
 {
 	val game = screen.game
 	
@@ -28,11 +27,6 @@ class InputWindow(
 	private val messageLabel = Label("", game.skin, "infolabelstyle")
 	private val textField = MBTextField("", game.skin, "textfieldstyle")
 	var onSuccess: (String) -> Unit = {}
-	
-	private val prevWindowPos = vec2()
-	private val windowScreenPos = vec2()
-	private val textFieldScreenPos = vec2()
-	private var shouldShift = false
 	
 	init
 	{
@@ -89,31 +83,6 @@ class InputWindow(
 		this.onSuccess = onSuccess
 		pack()
 		centerPosition()
-	}
-	
-	fun adjustPosition(screenHeight: Int)
-	{
-		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
-		localToScreenCoordinates(textFieldScreenPos.set(textField.x, textField.y))
-		
-		if (screenHeight < Gdx.graphics.height - 160) // Keyboard up, 160 is an arbitrary keyboard height
-		{
-			prevWindowPos.set(x, y)
-			if (textFieldScreenPos.y > screenHeight) // TextField is off screen
-			{
-				val diff = textFieldScreenPos.y - screenHeight
-				windowScreenPos.y -= diff
-				stage.screenToStageCoordinates(windowScreenPos)
-				setPosition(windowScreenPos.x, windowScreenPos.y)
-				shouldShift = true
-			}
-		}
-		else if (shouldShift)
-		{
-			setPosition(x, prevWindowPos.y)
-			shouldShift = false
-		}
-		Gdx.graphics.requestRendering()
 	}
 	
 	private fun close()

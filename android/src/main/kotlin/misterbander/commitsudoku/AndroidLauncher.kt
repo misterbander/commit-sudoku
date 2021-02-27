@@ -38,7 +38,7 @@ class AndroidLauncher : AndroidApplication()
 			{
 				prevWidth = rect1.width()
 				prevHeight = rect1.height()
-				commitSudoku.notifyLayoutSizeChange(prevWidth, prevHeight)
+				commitSudoku.notifyLayoutSizeChange(prevHeight)
 			}
 		}
 	}
