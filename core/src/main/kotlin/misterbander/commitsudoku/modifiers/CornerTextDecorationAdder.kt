@@ -11,38 +11,30 @@ import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
 
-class CornerTextDecorationAdder(grid: SudokuGrid) : TextDecorationAdder(grid)
+class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecoration>(grid)
 {
 	private val cornerTextDecorations: GdxArray<CornerTextDecoration> = GdxArray()
 	
 	override val isValidIndex
-		get() = highlightI in 0..8 && highlightJ in 0..8
+		get() = selectI in 0..8 && selectJ in 0..8
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		grid.unselect()
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
+		updateSelect(x, y)
 		if (!isValidIndex)
 			return
 		
-		grid.select(highlightI, highlightJ, false)
-		val existingCornerTextDecoration = findTextDecoration(highlightI, highlightJ)
+		grid.select(selectI, selectJ, false)
+		val existingCornerTextDecoration = findTextDecoration(selectI, selectJ)
 		if (existingCornerTextDecoration != null)
-		{
-			cornerTextDecorations -= existingCornerTextDecoration
-			grid.decorations -= existingCornerTextDecoration
-			grid.cells[highlightI][highlightJ].hasCornerTextDecoration = false
-		}
+			removeModification(existingCornerTextDecoration)
 		else
 		{
 			grid.panel.screen.textInputWindow.show("Add Corner Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
 					return@show
-				val cornerTextDecoration = CornerTextDecoration(grid, highlightI, highlightJ, result)
-				cornerTextDecorations += cornerTextDecoration
-				grid.decorations += cornerTextDecoration
-				grid.cells[highlightI][highlightJ].hasCornerTextDecoration = true
+				addModification(CornerTextDecoration(grid, selectI, selectJ, result))
 			}
 		}
 	}
@@ -54,6 +46,20 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : TextDecorationAdder(grid)
 				return it
 		}
 		return null
+	}
+	
+	override fun addModification(modification: CornerTextDecoration)
+	{
+		cornerTextDecorations += modification
+		grid.decorations += modification
+		grid.cells[selectI][selectJ].hasCornerTextDecoration = true
+	}
+	
+	override fun removeModification(modification: CornerTextDecoration)
+	{
+		cornerTextDecorations -= modification
+		grid.decorations -= modification
+		grid.cells[selectI][selectJ].hasCornerTextDecoration = false
 	}
 	
 	override fun clear()
@@ -68,9 +74,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : TextDecorationAdder(grid)
 			val i = dataObject["i"] as Int
 			val j = dataObject["j"] as Int
 			val text = dataObject["text"] as String
-			val cornerTextDecoration = CornerTextDecoration(grid, i, j, text)
-			cornerTextDecorations += cornerTextDecoration
-			grid.decorations += cornerTextDecoration
+			addModification(CornerTextDecoration(grid, i, j, text))
 		}
 	}
 	

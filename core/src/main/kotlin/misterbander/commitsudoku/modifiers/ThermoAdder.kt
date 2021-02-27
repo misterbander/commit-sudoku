@@ -1,10 +1,10 @@
 package misterbander.commitsudoku.modifiers
 
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.Vector2.dst2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxArray
 import ktx.collections.minusAssign
-import ktx.math.vec2
 import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
@@ -12,24 +12,19 @@ import java.io.Serializable
 import kotlin.math.abs
 
 
-class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
+class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 {
 	private val thermoConstraints: GdxArray<ThermoConstraint> = GdxArray()
 	private var currentThermoConstraint: ThermoConstraint? = null
 	
-	private var highlightI = 0
-	private var highlightJ = 0
 	private var prevI = -1
 	private var prevJ = -1
-	private val isValidIndex
-		get() = highlightI in 0..8 && highlightJ in 0..8
-	
-	private val distVector = vec2()
+	override val isValidIndex
+		get() = selectI in 0..8 && selectJ in 0..8
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
+		updateSelect(x, y)
 		if (!isValidIndex)
 			return
 		if (button == Input.Buttons.RIGHT)
@@ -38,12 +33,10 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 			return
 		}
 		
-		val thermoConstraint = ThermoConstraint(grid, highlightI, highlightJ)
-		thermoConstraints.insert(0, thermoConstraint)
-		grid.constraintsChecker += thermoConstraint
-		currentThermoConstraint = thermoConstraint
-		prevI = highlightI
-		prevJ = highlightJ
+		currentThermoConstraint = ThermoConstraint(grid, selectI, selectJ)
+		addModification(currentThermoConstraint!!)
+		prevI = selectI
+		prevJ = selectJ
 	}
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
@@ -62,19 +55,19 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
-		if (!isValidIndex || !(abs(highlightI - prevI) <= 1 && abs(highlightJ - prevJ) <= 1))
+		updateSelect(x, y)
+		if (!isValidIndex || !(abs(selectI - prevI) <= 1 && abs(selectJ - prevJ) <= 1))
 			return
-		distVector.set(grid.iToX(highlightI.toFloat() + 0.5F), grid.jToY(highlightJ.toFloat() + 0.5F))
-		if (distVector.dst2(x, y) > grid.cellSize*grid.cellSize*0.16F)
+		val cellCenterX = grid.iToX(selectI.toFloat() + 0.5F)
+		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
+		if (dst2(x, y, cellCenterX, cellCenterY) > grid.cellSize*grid.cellSize*0.16F)
 			return
 		
 		if (currentThermoConstraint != null)
 		{
-			currentThermoConstraint!!.addThermoCell(highlightI, highlightJ)
-			prevI = highlightI
-			prevJ = highlightJ
+			currentThermoConstraint!!.addThermoCell(selectI, selectJ)
+			prevI = selectI
+			prevJ = selectJ
 		}
 	}
 	
@@ -82,23 +75,33 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 	{
 		if (count > 1)
 		{
-			highlightI = grid.xToI(x)
-			highlightJ = grid.yToJ(y)
+			updateSelect(x, y)
 			tryDeleteThermo()
 		}
 	}
 	
 	private fun tryDeleteThermo()
 	{
-		thermoConstraints.forEach { thermoConstraint ->
-			if (thermoConstraint.isOver(highlightI, highlightJ))
+		thermoConstraints.forEach {
+			if (it.isOver(selectI, selectJ))
 			{
-				thermoConstraints -= thermoConstraint
-				grid.constraintsChecker -= thermoConstraint
-				grid.constraintsChecker.check()
+				removeModification(it)
 				return
 			}
 		}
+	}
+	
+	override fun addModification(modification: ThermoConstraint)
+	{
+		thermoConstraints.insert(0, modification)
+		grid.constraintsChecker += modification
+	}
+	
+	override fun removeModification(modification: ThermoConstraint)
+	{
+		thermoConstraints -= modification
+		grid.constraintsChecker -= modification
+		grid.constraintsChecker.check()
 	}
 	
 	override fun clear()
@@ -113,8 +116,6 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 		thermometers?.forEach {
 			val thermoCells = it["cells"] as Array<Pair<Int, Int>>
 			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second)
-			thermoConstraints.insert(0, thermoConstraint)
-			grid.constraintsChecker += thermoConstraint
 			thermoCells.forEachIndexed { index, pair ->
 				if (index == 0)
 					return@forEachIndexed
@@ -122,6 +123,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier(grid)
 			}
 			thermoConstraint.operator = it["operator"] as String
 			thermoConstraint.generateThermoStatement()
+			addModification(thermoConstraint)
 		}
 	}
 	

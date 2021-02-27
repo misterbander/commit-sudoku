@@ -13,43 +13,36 @@ import java.io.Serializable
 import kotlin.math.abs
 
 
-class CircleDecorationAdder(grid: SudokuGrid) : GridModfier(grid)
+class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(grid)
 {
 	private val circleDecorations: GdxArray<CircleDecoration> = GdxArray()
 	private var currentCircleDecoration: CircleDecoration? = null
 	private var justRemovedCircle = false
 	
-	private var highlightI = 0
-	private var highlightJ = 0
 	private var prevI = -1
 	private var prevJ = -1
-	private val isValidIndex
-		get() = highlightI in -1..9 && highlightJ in -1..9
-	
+	override val isValidIndex
+		get() = selectI in -1..9 && selectJ in -1..9
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
+		updateSelect(x, y)
 		currentCircleDecoration = null
 		if (!isValidIndex)
 			return
 		val existingCircleDecoration = findCircleDecoration()
 		if (existingCircleDecoration != null)
 		{
-			circleDecorations -= existingCircleDecoration
-			grid.decorations -= existingCircleDecoration
+			removeModification(existingCircleDecoration)
 			justRemovedCircle = true
 		}
 		else
 		{
-			val circleDecoration = CircleDecoration(grid, highlightI, highlightJ, 28F)
-			circleDecoration.color = Color.ORANGE
-			circleDecorations.insert(0, circleDecoration)
-			grid.decorations += circleDecoration
-			currentCircleDecoration = circleDecoration
-			prevI = highlightI
-			prevJ = highlightJ
+			currentCircleDecoration = CircleDecoration(grid, selectI, selectJ, 28F)
+			currentCircleDecoration!!.color = Color.ORANGE
+			addModification(currentCircleDecoration!!)
+			prevI = selectI
+			prevJ = selectJ
 		}
 	}
 	
@@ -63,24 +56,35 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier(grid)
 	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
-		if (!isValidIndex || !(abs(highlightI - prevI) <= 1 && abs(highlightJ - prevJ) <= 1))
+		updateSelect(x, y)
+		if (!isValidIndex || !(abs(selectI - prevI) <= 1 && abs(selectJ - prevJ) <= 1))
 			return
 		if (findCircleDecoration() == null)
 		{
-			currentCircleDecoration?.i2 = highlightI
-			currentCircleDecoration?.j2 = highlightJ
+			currentCircleDecoration?.i2 = selectI
+			currentCircleDecoration?.j2 = selectJ
 		}
 	}
 	
 	private fun findCircleDecoration(): CircleDecoration?
 	{
 		circleDecorations.forEach {
-			if (it.i1 == highlightI && it.j1 == highlightJ || it.i2 == highlightI && it.j2 == highlightJ)
+			if (it.i1 == selectI && it.j1 == selectJ || it.i2 == selectI && it.j2 == selectJ)
 				return it
 		}
 		return null
+	}
+	
+	override fun addModification(modification: CircleDecoration)
+	{
+		circleDecorations.insert(0, modification)
+		grid.decorations += modification
+	}
+	
+	override fun removeModification(modification: CircleDecoration)
+	{
+		circleDecorations -= modification
+		grid.decorations -= modification
 	}
 	
 	override fun clear()

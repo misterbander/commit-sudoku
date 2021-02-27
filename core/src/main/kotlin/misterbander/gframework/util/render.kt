@@ -56,17 +56,17 @@ fun ShapeDrawer.dashedLine(x1: Float, y1: Float, x2: Float, y2: Float, color: Co
 	}
 	
 	// Draw the dashed line
-	temp.set(x2 - x1, y2 - y1)
+	tempVec.set(x2 - x1, y2 - y1)
 	var drawX = x1
 	var drawY = y1
-	var distLeft = temp.len()
+	var distLeft = tempVec.len()
 	while (distLeft > 0)
 	{
-		temp.setLength(min(segmentLength, distLeft))
+		tempVec.setLength(min(segmentLength, distLeft))
 		if (visible)
-			line(drawX, drawY, drawX + temp.x, drawY + temp.y, color, lineWidth)
-		drawX += temp.x
-		drawY += temp.y
+			line(drawX, drawY, drawX + tempVec.x, drawY + tempVec.y, color, lineWidth)
+		drawX += tempVec.x
+		drawY += tempVec.y
 		distLeft -= segmentLength
 		index = (index + 1)%dashSegmentLengths.size
 		segmentLength = dashSegmentLengths[index]

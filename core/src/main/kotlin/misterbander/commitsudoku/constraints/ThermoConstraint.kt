@@ -7,12 +7,13 @@ import ktx.collections.gdxArrayOf
 import ktx.collections.plusAssign
 import ktx.style.get
 import misterbander.commitsudoku.decorations.LineDecoration
+import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import java.io.Serializable
 
 
-class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint
+class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint, GridModification
 {
 	var thermoStatement: CompoundStatement = CompoundStatement(grid.cells)
 	var operator = when (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex)
