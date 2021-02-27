@@ -11,7 +11,7 @@ import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
 
-class CageSetter(grid: SudokuGrid) : GridModfier(grid)
+class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 {
 	private val cageMap: Array<Array<CageDecoration?>> = Array(9) { arrayOfNulls(9) }
 	private var currentCage: CageDecoration? = null
@@ -23,54 +23,42 @@ class CageSetter(grid: SudokuGrid) : GridModfier(grid)
 		}
 	private var justRemovedCage = false
 	
-	private var highlightI = 0
-	private var highlightJ = 0
-	private val isValidIndex
-		get() = highlightI in 0..8 && highlightJ in 0..8
+	override val isValidIndex
+		get() = selectI in 0..8 && selectJ in 0..8
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
+		updateSelect(x, y)
 		currentCage = null
 		if (!isValidIndex)
 			return
-		val cage = cageMap[highlightI][highlightJ]
+		val cage = cageMap[selectI][selectJ]
 		if (cage != null)
 		{
-			for (i in cage.mask.indices)
-			{
-				for (j in cage.mask[i].indices)
-				{
-					if (cage.mask[i][j])
-						cageMap[i][j] = null
-				}
-			}
-			grid.decorations -= cage
+			removeModification(cage)
 			justRemovedCage = true
 		}
-		else if (cageMap[highlightI][highlightJ] == null && !justRemovedCage)
+		else if (cageMap[selectI][selectJ] == null && !justRemovedCage)
 		{
 			if (currentCage == null)
 			{
-				currentCage = CageDecoration(grid, highlightI, highlightJ)
+				currentCage = CageDecoration(grid, selectI, selectJ)
 				currentCage!!.color = Color.ORANGE
-				grid.decorations += currentCage!!
+				addModification(currentCage!!)
 			}
 			else
-				currentCage!!.addCell(highlightI, highlightJ)
-			cageMap[highlightI][highlightJ] = currentCage
+				currentCage!!.addCell(selectI, selectJ)
+			cageMap[selectI][selectJ] = currentCage
 		}
 	}
 	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
-		if (!isValidIndex || justRemovedCage || currentCage == null || cageMap[highlightI][highlightJ] != null)
+		updateSelect(x, y)
+		if (!isValidIndex || justRemovedCage || currentCage == null || cageMap[selectI][selectJ] != null)
 			return
-		currentCage!!.addCell(highlightI, highlightJ)
-		cageMap[highlightI][highlightJ] = currentCage
+		currentCage!!.addCell(selectI, selectJ)
+		cageMap[selectI][selectJ] = currentCage
 	}
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
@@ -81,6 +69,24 @@ class CageSetter(grid: SudokuGrid) : GridModfier(grid)
 	fun unselect()
 	{
 		currentCage = null
+	}
+	
+	override fun addModification(modification: CageDecoration)
+	{
+		grid.decorations += modification
+	}
+	
+	override fun removeModification(modification: CageDecoration)
+	{
+		for (i in modification.mask.indices)
+		{
+			for (j in modification.mask[i].indices)
+			{
+				if (modification.mask[i][j])
+					cageMap[i][j] = null
+			}
+		}
+		grid.decorations -= modification
 	}
 	
 	override fun clear()
@@ -108,7 +114,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier(grid)
 						if (cageDecoration == null)
 						{
 							cageDecoration = CageDecoration(grid, i, j)
-							grid.decorations += cageDecoration
+							addModification(cageDecoration)
 						}
 						else
 							cageDecoration.addCell(i, j)

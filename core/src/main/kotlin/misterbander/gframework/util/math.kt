@@ -3,7 +3,7 @@ package misterbander.gframework.util
 import ktx.math.vec2
 
 
-internal val temp = vec2()
+val tempVec = vec2()
 
 /**
  * @param x1 x-component of the first point
@@ -25,7 +25,7 @@ fun angle(x1: Int, y1: Int, x2: Int, y2: Int): Float = angle(x1.toFloat(), y1.to
  */
 fun angle(x1: Float, y1: Float, x2: Float, y2: Float): Float
 {
-	return temp.set(x2 - x1, y2 - y1).angle()
+	return tempVec.set(x2 - x1, y2 - y1).angle()
 }
 
 /**

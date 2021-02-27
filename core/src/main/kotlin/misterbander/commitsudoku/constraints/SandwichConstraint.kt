@@ -3,6 +3,7 @@ package misterbander.commitsudoku.constraints
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.decorations.TextDecoration
+import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import java.io.Serializable
 
@@ -11,7 +12,7 @@ class SandwichConstraint(
 	private val index: Int,
 	private val isColumn: Boolean,
 	sandwichValue: Int
-) : Constraint
+) : Constraint, GridModification
 {
 	var sandwichValue = sandwichValue
 		set(value)

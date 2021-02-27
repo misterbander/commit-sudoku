@@ -17,8 +17,8 @@ private val glyph = GlyphLayout()
 fun BitmapFont.textSize(text: String): Vector2
 {
 	glyph.setText(this, text)
-	temp.set(glyph.width, glyph.height)
-	return temp
+	tempVec.set(glyph.width, glyph.height)
+	return tempVec
 }
 
 /**

@@ -43,7 +43,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	val decorations: GdxArray<Decoration> = GdxArray()
 	val modifiers = GridModifiers(this)
-	var modifier: GridModfier? = null
+	var modifier: GridModfier<*>? = null
 		set(value)
 		{
 			field = value
@@ -338,8 +338,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	{
 		val shapeDrawer = game.shapeDrawer
 		
-		decorations.forEach { it.draw(batch) }
 		constraintsChecker.drawAdditionalConstraints(batch)
+		decorations.forEach { it.draw(batch) }
 		
 		val lineColor: Color = game.skin["secondarycolor"]
 		shapeDrawer.rectangle(x, y, gridSize, gridSize, lineColor, 3F)

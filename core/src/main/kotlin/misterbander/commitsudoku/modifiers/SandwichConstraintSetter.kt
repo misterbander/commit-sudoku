@@ -1,9 +1,11 @@
 package misterbander.commitsudoku.modifiers
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxMap
 import ktx.collections.set
+import ktx.style.get
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
@@ -11,40 +13,43 @@ import misterbander.gframework.util.cycle
 import java.io.Serializable
 
 
-class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
+class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstraint>(grid)
 {
 	private val sandwichConstraints: GdxMap<Int, SandwichConstraint> = GdxMap()
 	
+	private val key
+		get() = if (selectI == -1) selectJ + 9 else selectI
 	override val isValidIndex
-		get() = highlightI == -1 && highlightJ in 0..8 || highlightJ == 9 && highlightI in 0..8
+		get() = selectI == -1 && selectJ in 0..8 || selectJ == 9 && selectI in 0..8
+	
+	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		highlightI = grid.xToI(x)
-		highlightJ = grid.yToJ(y)
+		updateSelect(x, y)
 	}
 	
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
 		if (!isValidIndex)
 		{
-			highlightI = 0
-			highlightJ = 9
+			selectI = 0
+			selectJ = 9
 		}
 		
 		val di = right - left
 		val dj = up - down
 		if (di != 0)
 		{
-			highlightI += di
-			highlightI = highlightI cycle -1..8
-			highlightJ = if (highlightI == -1) 8 else 9
+			selectI += di
+			selectI = selectI cycle -1..8
+			selectJ = if (selectI == -1) 8 else 9
 		}
 		else if (dj != 0)
 		{
-			highlightJ += dj
-			highlightJ = highlightJ cycle 0..9
-			highlightI = if (highlightJ == 9) 0 else -1
+			selectJ += dj
+			selectJ = selectJ cycle 0..9
+			selectI = if (selectJ == 9) 0 else -1
 		}
 	}
 	
@@ -55,17 +60,13 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 		if (!isValidIndex)
 			return
 		
-		val key = if (highlightI == -1) highlightJ + 9 else highlightI
 		val sandwichConstraint: SandwichConstraint? = sandwichConstraints[key]
 		if (sandwichConstraint != null)
 		{
 			if (digit == -1) // Backspace
 			{
 				if (sandwichConstraint.sandwichValue < 10)
-				{
-					sandwichConstraints.remove(key)
-					grid.constraintsChecker -= sandwichConstraint
-				}
+					removeModification(sandwichConstraint)
 				else
 					sandwichConstraint.sandwichValue/=10
 			}
@@ -76,14 +77,25 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 		{
 			val newSandwichConstraint = SandwichConstraint(
 				grid,
-				if (highlightI == -1) highlightJ else highlightI,
-				highlightJ == 9,
+				if (selectI == -1) selectJ else selectI,
+				selectJ == 9,
 				digit
 			)
-			sandwichConstraints[key] = newSandwichConstraint
-			grid.constraintsChecker += newSandwichConstraint
+			addModification(newSandwichConstraint)
 		}
 		grid.constraintsChecker.check()
+	}
+	
+	override fun addModification(modification: SandwichConstraint)
+	{
+		sandwichConstraints[key] = modification
+		grid.constraintsChecker += modification
+	}
+	
+	override fun removeModification(modification: SandwichConstraint)
+	{
+		sandwichConstraints.remove(key)
+		grid.constraintsChecker -= modification
 	}
 	
 	override fun clear()
@@ -116,5 +128,13 @@ class SandwichConstraintSetter(grid: SudokuGrid) : TextDecorationAdder(grid)
 			drawClickableArea(i, 9)
 		for (j in 0..8)
 			drawClickableArea(-1, j)
+	}
+	
+	private fun drawClickableArea(i: Int, j: Int)
+	{
+		val x = grid.iToX(i.toFloat())
+		val y = grid.jToY(j.toFloat())
+		val isSelected = i == selectI && j == selectJ
+		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) game.skin["selectedcolor"] else gray)
 	}
 }

@@ -1,0 +1,3 @@
+package misterbander.commitsudoku.modifiers
+
+interface GridModification
