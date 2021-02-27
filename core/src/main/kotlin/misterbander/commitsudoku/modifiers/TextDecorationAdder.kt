@@ -3,7 +3,7 @@ package misterbander.commitsudoku.modifiers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import ktx.collections.GdxArray
+import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import ktx.style.get
@@ -16,7 +16,7 @@ import java.io.Serializable
 
 class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 {
-	private val textDecorations: GdxArray<TextDecoration> = GdxArray()
+	private val textDecorations: GdxSet<TextDecoration> = GdxSet()
 	
 	override val isValidIndex
 		get() = selectI in -1..9 && selectJ in -1..9 && (selectI == -1 || selectI == 9 || selectJ == -1 || selectJ == 9)

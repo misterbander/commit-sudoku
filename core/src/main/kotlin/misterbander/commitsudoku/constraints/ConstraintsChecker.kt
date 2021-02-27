@@ -2,6 +2,7 @@ package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.collections.GdxArray
+import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.scene2d.SudokuGrid
@@ -10,8 +11,8 @@ import misterbander.gframework.util.PersistentStateMapper
 
 class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 {
-	private val globalStatements: GdxArray<Statement> = GdxArray()
-	private val staticStatements: GdxArray<Statement> = GdxArray()
+	private val globalStatements: GdxSet<Statement> = GdxSet()
+	private val staticStatements: GdxSet<Statement> = GdxSet()
 	private val additionalConstraints: GdxArray<Constraint> = GdxArray()
 	
 	// Preset constraints
