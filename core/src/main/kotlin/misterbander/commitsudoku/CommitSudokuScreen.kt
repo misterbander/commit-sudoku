@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
+import ktx.collections.plusAssign
 import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
@@ -19,10 +20,9 @@ import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.commitsudoku.scene2d.ToolbarMultibuttonMenu
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.MBTextField
-import misterbander.gframework.util.LayoutSizeChangeListener
 import misterbander.gframework.util.PersistentStateMapper
 
-class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), LayoutSizeChangeListener
+class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
 	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	
@@ -31,6 +31,11 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 	val textInputWindow = InputWindow(this, isModal = true)
 	
 	private val mapper = PersistentStateMapper("commit_sudoku_state")
+	
+	init
+	{
+		accessibleInputWindows += textInputWindow
+	}
 	
 	override fun show()
 	{
@@ -116,11 +121,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game), Layo
 		println("Pause! Saving game state...")
 		panel.writeState(mapper)
 		mapper.write()
-	}
-	
-	override fun onLayoutSizeChange(screenWidth: Int, screenHeight: Int)
-	{
-		textInputWindow.adjustPosition(screenHeight)
 	}
 	
 	override fun clearScreen()

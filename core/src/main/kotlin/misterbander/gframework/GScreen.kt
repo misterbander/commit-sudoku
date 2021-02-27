@@ -12,6 +12,7 @@ import ktx.actors.plusAssign
 import ktx.app.KtxScreen
 import ktx.collections.GdxSet
 import ktx.collections.plusAssign
+import misterbander.gframework.scene2d.AccessibleInputWindow
 import misterbander.gframework.scene2d.GContactListener
 import misterbander.gframework.scene2d.GObject
 
@@ -35,6 +36,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
 	open val viewport: Viewport by lazy { ExtendViewport(1000F, 600F, camera) }
 	val stage by lazy { Stage(viewport, game.batch) }
+	val accessibleInputWindows = GdxSet<AccessibleInputWindow>()
 	
 	open val world: World? = null
 	open val mpp = 0.25F
@@ -62,9 +64,34 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		scheduledAddingGObjects += gObject
 	}
 	
+	override fun beginContact(contact: Contact)
+	{
+		if (contact.fixtureA.body?.userData is GContactListener)
+			(contact.fixtureA.body.userData as GContactListener).beginContact(contact.fixtureB)
+		if (contact.fixtureB.body?.userData is GContactListener)
+			(contact.fixtureB.body.userData as GContactListener).beginContact(contact.fixtureA)
+	}
+	
+	override fun endContact(contact: Contact)
+	{
+		if (contact.fixtureA.body?.userData is GContactListener)
+			(contact.fixtureA.body.userData as GContactListener).endContact(contact.fixtureB)
+		if (contact.fixtureB.body?.userData is GContactListener)
+			(contact.fixtureB.body.userData as GContactListener).endContact(contact.fixtureA)
+	}
+	
+	override fun preSolve(contact: Contact, oldManifold: Manifold) {}
+	
+	override fun postSolve(contact: Contact, impulse: ContactImpulse) {}
+	
 	override fun resize(width: Int, height: Int)
 	{
 		viewport.update(width, height, true)
+	}
+	
+	fun onLayoutSizeChange(screenHeight: Int)
+	{
+		accessibleInputWindows.forEach { it.adjustPosition(screenHeight) }
 	}
 	
 	override fun render(delta: Float)
@@ -100,26 +127,6 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		Gdx.gl.glClearColor(0F, 0F, 0F, 1F)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 	}
-	
-	override fun beginContact(contact: Contact)
-	{
-		if (contact.fixtureA.body?.userData is GContactListener)
-			(contact.fixtureA.body.userData as GContactListener).beginContact(contact.fixtureB)
-		if (contact.fixtureB.body?.userData is GContactListener)
-			(contact.fixtureB.body.userData as GContactListener).beginContact(contact.fixtureA)
-	}
-	
-	override fun endContact(contact: Contact)
-	{
-		if (contact.fixtureA.body?.userData is GContactListener)
-			(contact.fixtureA.body.userData as GContactListener).endContact(contact.fixtureB)
-		if (contact.fixtureB.body?.userData is GContactListener)
-			(contact.fixtureB.body.userData as GContactListener).endContact(contact.fixtureA)
-	}
-	
-	override fun preSolve(contact: Contact, oldManifold: Manifold) {}
-	
-	override fun postSolve(contact: Contact, impulse: ContactImpulse) {}
 	
 	override fun dispose()
 	{
