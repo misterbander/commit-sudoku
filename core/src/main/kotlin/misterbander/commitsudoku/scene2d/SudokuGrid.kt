@@ -267,6 +267,15 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		actionController.addActions(modifyCellActions)
 	}
 	
+	fun reset()
+	{
+		cells.forEach { it.forEach { cell -> cell.reset() } }
+		decorations.clear()
+		actionController.clearHistory()
+		constraintsChecker.clear()
+		modifiers.clear()
+	}
+	
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		actionController.readState(mapper)
@@ -383,6 +392,14 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			val i2 = i + iOffset cycle 0..8
 			val j2 = j + jOffset cycle 0..8
 			return cells[i2][j2]
+		}
+		
+		fun reset()
+		{
+			digit = 0
+			colorCode = 0
+			cornerMarks.fill(false)
+			centerMarks.fill(false)
 		}
 		
 		fun draw(batch: Batch)

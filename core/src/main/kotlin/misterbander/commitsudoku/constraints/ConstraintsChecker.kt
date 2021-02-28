@@ -78,6 +78,13 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		return constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
 	}
 	
+	fun clear()
+	{
+		globalStatements.clear()
+		staticStatements.clear()
+		additionalConstraints.clear()
+	}
+	
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val toolbar = grid.panel.screen.toolbar

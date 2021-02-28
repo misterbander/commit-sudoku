@@ -29,15 +29,15 @@ class SudokuTimer(private val panel: SudokuPanel) : PersistentState
 	var isRunning = false
 		set(value)
 		{
-			field = value
 			panel.playButton.style = panel.screen.game.skin[if (value) "pausebuttonstyle" else "playbuttonstyle"]
-			if (value)
+			if (value && !field)
 				Timer.schedule(incrementSeconds, 1 - (stopTimerMillis - lastSecondMillis)/1000F, 1F)
 			else
 			{
 				stopTimerMillis = System.currentTimeMillis()
 				incrementSeconds.cancel()
 			}
+			field = value
 		}
 	
 	fun reset()

@@ -1,7 +1,6 @@
 package misterbander.gframework.util
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.files.FileHandle
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
@@ -12,9 +11,8 @@ import kotlin.collections.set
  * Maps string keys to serializable objects that can be saved to file storage. Useful for saving game state.
  * @author Mister_Bander
  */
-class PersistentStateMapper(filePath: String)
+class PersistentStateMapper
 {
-	private val stateFile: FileHandle = Gdx.files.local(filePath)
 	val stateMap: HashMap<String, Serializable> = HashMap()
 	
 	inline operator fun <reified T : Serializable> get(key: String): T?
@@ -32,11 +30,13 @@ class PersistentStateMapper(filePath: String)
 	 * @return True if state is successfully read, false if file does not exist.
 	 */
 	@Suppress("UNCHECKED_CAST")
-	fun read(): Boolean
+	fun read(filePath: String): Boolean
 	{
+		val stateFile = Gdx.files.local(filePath)
 		if (stateFile.exists())
 		{
 			val inputStream = ObjectInputStream(stateFile.read())
+			stateMap.clear()
 			stateMap.putAll(inputStream.readObject() as HashMap<String, Serializable>)
 			inputStream.close()
 			return true
@@ -45,12 +45,28 @@ class PersistentStateMapper(filePath: String)
 	}
 	
 	/**
+	 * Reads state from stream.
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun read(inputStream: ObjectInputStream)
+	{
+		stateMap.clear()
+		stateMap.putAll(inputStream.readObject() as HashMap<String, Serializable>)
+	}
+	
+	/**
 	 * Writes state to file storage.
 	 */
-	fun write()
+	fun write(filePath: String)
 	{
+		val stateFile = Gdx.files.local(filePath)
 		val outputStream = ObjectOutputStream(stateFile.write(false))
 		outputStream.writeObject(stateMap)
 		outputStream.close()
+	}
+	
+	fun write(outputStream: ObjectOutputStream)
+	{
+		outputStream.writeObject(stateMap)
 	}
 }

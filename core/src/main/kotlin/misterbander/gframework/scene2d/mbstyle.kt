@@ -12,7 +12,7 @@ import ktx.style.get
  * @param extend optional name of an _existing_ style of the same type. Its values will be copied and used as base for
  * this style.
  * @param init will be applied to the style instance. Inlined.
- * @return a new instance of [MBTextField.MBTextFieldStyle] added to the [Skin] with the selected name.
+ * @return A new instance of [MBTextField.MBTextFieldStyle] added to the [Skin] with the selected name.
  */
 @SkinDsl
 inline fun Skin.mbTextField(

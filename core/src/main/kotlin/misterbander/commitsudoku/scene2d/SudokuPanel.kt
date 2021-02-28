@@ -219,6 +219,11 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 						screen.updateStyles()
 					}
 				}
+				imageButton("connectbuttonstyle", game.skin) {
+					onChange {
+						screen.connectWindow.show()
+					}
+				}
 			}.inCell.left()
 			row()
 			table {
