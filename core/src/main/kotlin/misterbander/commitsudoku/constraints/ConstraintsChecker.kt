@@ -107,7 +107,6 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 			else
 				staticStatements += CompoundStatement(grid.cells, *statementStrGroup)
 		}
-		check()
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)

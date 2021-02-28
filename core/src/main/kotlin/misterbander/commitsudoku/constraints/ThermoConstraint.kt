@@ -15,15 +15,15 @@ import java.io.Serializable
 
 class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint, GridModification
 {
-	var thermoStatement: CompoundStatement = CompoundStatement(grid.cells)
+	private var thermoStatement: CompoundStatement = CompoundStatement(grid.cells)
 	var operator = when (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex)
 	{
 		0 -> "<"
 		1 -> "<="
 		else -> ""
 	}
-	private val thermoCells: GdxArray<SudokuGrid.Cell> = gdxArrayOf(grid.cells[bulbI][bulbJ])
-	private var lastJointCell: SudokuGrid.Cell = thermoCells[0]
+	private val thermoCells: GdxArray<Pair<Int, Int>> = gdxArrayOf(Pair(bulbI, bulbJ))
+	private var lastJointPos = thermoCells[0]
 	private var lastJointDI = 0
 	private var lastJointDJ = 0
 	private val thermoLines: GdxArray<LineDecoration> = GdxArray()
@@ -35,33 +35,33 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf(
-			"cells" to thermoCells.map { cell -> Pair(cell.i, cell.j) }.toTypedArray(),
+			"cells" to thermoCells.toArray(Pair::class.java),
 			"operator" to operator
 		)
 	
 	fun addThermoCell(endI: Int, endJ: Int)
 	{
-		val lastThermoCell: SudokuGrid.Cell = thermoCells[thermoCells.size - 1]
-		if (endI == lastThermoCell.i && endJ == lastThermoCell.j)
+		val lastThermoCell: Pair<Int, Int> = thermoCells[thermoCells.size - 1]
+		if (endI == lastThermoCell.first && endJ == lastThermoCell.second)
 			return
-		thermoCells += grid.cells[endI][endJ]
+		thermoCells += Pair(endI, endJ)
 		
 		// Check if new cell forms a line with the last thermometer line
-		val di = endI.compareTo(lastThermoCell.i)
-		val dj = endJ.compareTo(lastThermoCell.j)
+		val di = endI.compareTo(lastThermoCell.first)
+		val dj = endJ.compareTo(lastThermoCell.second)
 		
 		thermoLines += if (di == lastJointDI && dj == lastJointDJ
-			&& (endI == lastJointCell.i || endJ == lastJointCell.j || endI - lastJointCell.i == endJ - lastJointCell.j))
+			&& (endI == lastJointPos.first || endJ == lastJointPos.second || endI - lastJointPos.first == endJ - lastJointPos.second))
 		{
 			thermoLines.pop()
-			LineDecoration(grid, lastJointCell.i, lastJointCell.j, endI, endJ)
+			LineDecoration(grid, lastJointPos.first, lastJointPos.second, endI, endJ)
 		}
 		else
 		{
-			lastJointDI = endI.compareTo(lastThermoCell.i)
-			lastJointDJ = endJ.compareTo(lastThermoCell.j)
-			lastJointCell = lastThermoCell
-			LineDecoration(grid, lastThermoCell.i, lastThermoCell.j, endI, endJ)
+			lastJointDI = endI.compareTo(lastThermoCell.first)
+			lastJointDJ = endJ.compareTo(lastThermoCell.second)
+			lastJointPos = lastThermoCell
+			LineDecoration(grid, lastThermoCell.first, lastThermoCell.second, endI, endJ)
 		}
 	}
 	
@@ -74,7 +74,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 			{
 				for (j in 0 until i)
 				{
-					val statement = "[r${(thermoCells[j].j + 1)}c${(thermoCells[j].i + 1)}]$operator[r${(thermoCells[i].j + 1)}c${(thermoCells[i].i + 1)}]"
+					val statement = "[r${(thermoCells[j].second + 1)}c${(thermoCells[j].first + 1)}]$operator[r${(thermoCells[i].second + 1)}c${(thermoCells[i].first + 1)}]"
 					statementStrs.add(statement)
 				}
 			}
@@ -86,7 +86,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	fun isOver(i: Int, j: Int): Boolean
 	{
-		if (thermoCells[0].i == i && thermoCells[0].j == j)
+		if (thermoCells[0].first == i && thermoCells[0].second == j)
 			return true
 		thermoLines.forEach { line ->
 			if (line.isOver(i, j))
@@ -103,8 +103,8 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	override fun drawConstraint(batch: Batch)
 	{
 		val shapeDrawer = grid.game.shapeDrawer
-		val x = grid.iToX(thermoCells[0].i + 0.5F)
-		val y = grid.jToY(thermoCells[0].j + 0.5F)
+		val x = grid.iToX(thermoCells[0].first + 0.5F)
+		val y = grid.jToY(thermoCells[0].second + 0.5F)
 		internalColor.blend(
 			if (isHighlighted) grid.game.skin["selectedcolor"] else grid.game.skin["defaultdecorationcolor"],
 			grid.game.skin["backgroundcolor"]

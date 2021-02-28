@@ -36,7 +36,7 @@ fun ShapeDrawer.roundedLine(x1: Float, y1: Float, x2: Float, y2: Float, color: C
  * @param phaseShift positive value that shifts the current phase of the dash drawn
  */
 fun ShapeDrawer.dashedLine(x1: Float, y1: Float, x2: Float, y2: Float, color: Color, lineWidth: Float,
-						   dashSegmentLengths: Array<Float>, phaseShift: Float = 0F)
+						   dashSegmentLengths: FloatArray, phaseShift: Float = 0F)
 {
 	// Account for phase shifting
 	var index = 0
