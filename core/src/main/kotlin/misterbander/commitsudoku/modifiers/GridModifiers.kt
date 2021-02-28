@@ -13,6 +13,16 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 	val circleDecorationAdder = CircleDecorationAdder(grid)
 	val cageSetter = CageSetter(grid)
 	
+	fun clear()
+	{
+		thermoAdder.clear()
+		sandwichConstraintSetter.clear()
+		textDecorationAdder.clear()
+		cornerTextDecorationAdder.clear()
+		circleDecorationAdder.clear()
+		cageSetter.clear()
+	}
+	
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		thermoAdder.readState(mapper)

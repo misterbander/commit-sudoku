@@ -1,11 +1,15 @@
 package misterbander.commitsudoku
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Net
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL30
+import com.badlogic.gdx.net.ServerSocket
+import com.badlogic.gdx.net.ServerSocketHints
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.utils.GdxRuntimeException
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
@@ -14,13 +18,12 @@ import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
 import ktx.style.get
-import misterbander.commitsudoku.scene2d.InputWindow
-import misterbander.commitsudoku.scene2d.SudokuPanel
-import misterbander.commitsudoku.scene2d.Toolbar
-import misterbander.commitsudoku.scene2d.ToolbarMultibuttonMenu
+import misterbander.commitsudoku.scene2d.*
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.MBTextField
 import misterbander.gframework.util.PersistentStateMapper
+import java.io.ObjectInputStream
+import kotlin.concurrent.thread
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
@@ -28,13 +31,25 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
-	val textInputWindow = InputWindow(this, isModal = true)
+	val textInputWindow = SingleInputWindow(this, isModal = true)
+	val connectWindow = ConnectWindow(this)
+	val messageDialog = MessageDialog(this)
 	
-	private val mapper = PersistentStateMapper("commit_sudoku_state")
+	val mapper = PersistentStateMapper()
+	
+	lateinit var serverSocket: ServerSocket
+	@Volatile var shouldCloseServer = false
+		set(value)
+		{
+			field = value
+			if (value)
+				serverSocket.dispose()
+		}
 	
 	init
 	{
 		accessibleInputWindows += textInputWindow
+		accessibleInputWindows += connectWindow
 	}
 	
 	override fun show()
@@ -61,9 +76,45 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		stage.keyboardFocus = panel.grid
 		stage += toolbar.thermoMultibuttonMenu
 		stage += textInputWindow
+		stage += connectWindow
+		stage += messageDialog
 		
-		if (mapper.read())
+		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
+		
+		runServer()
+	}
+	
+	private fun runServer()
+	{
+		shouldCloseServer = false
+		thread(isDaemon = true) {
+			val hints = ServerSocketHints()
+			hints.acceptTimeout = 0
+			serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 11530, hints)
+			println("Running server...")
+			while (true)
+			{
+				try
+				{
+					val socket = serverSocket.accept(null)
+					println("Accepting connection from ${socket.remoteAddress}")
+					val objectInputStream = ObjectInputStream(socket.inputStream)
+					mapper.read(objectInputStream)
+					objectInputStream.close()
+					socket.dispose()
+					panel.grid.reset()
+					panel.readState(mapper)
+				}
+				catch (e: GdxRuntimeException)
+				{
+					if (shouldCloseServer)
+						break
+					else
+						e.printStackTrace()
+				}
+			}
+		}
 	}
 	
 	private fun updateActorStyle(actor: Actor, otherSkin: Skin, vararg exclude: Actor)
@@ -78,7 +129,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
 			is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
 			is MBTextField -> actor.style = game.skin[otherSkin.find(actor.style)]
-			is InputWindow ->
+			is CommitSudokuWindow ->
 			{
 				actor.style = game.skin[otherSkin.find(actor.style)]
 				actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
@@ -120,7 +171,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		println("Pause! Saving game state...")
 		panel.writeState(mapper)
-		mapper.write()
+		mapper.write("commit_sudoku_state")
+		shouldCloseServer = true // Stop the thread
+	}
+	
+	override fun resume()
+	{
+		runServer()
 	}
 	
 	override fun clearScreen()
