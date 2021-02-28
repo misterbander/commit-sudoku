@@ -13,7 +13,7 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 {
 	object Default
 	{
-		val dashSegmentLengths = arrayOf(4F, 4F)
+		val dashSegmentLengths = floatArrayOf(4F, 4F)
 	}
 	
 	val mask = Array(9) { BooleanArray(9) }

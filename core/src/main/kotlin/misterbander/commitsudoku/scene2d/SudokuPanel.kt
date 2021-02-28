@@ -249,6 +249,8 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		isFinished = mapper["isFinished"] ?: isFinished
 		timer.readState(mapper)
 		grid.readState(mapper)
+		grid.constraintsChecker.check()
+		Gdx.graphics.requestRendering()
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)

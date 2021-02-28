@@ -285,11 +285,14 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		actionController.readState(mapper)
-		val digits: Array<Int> = mapper["digits"] ?: return
-		val colors: Array<Int> = mapper["colors"] ?: return
-		val isGiven: Array<Boolean> = mapper["isGiven"] ?: return
-		val cornerMarks: Array<Boolean> = mapper["cornerMarks"] ?: return
-		val centerMarks: Array<Boolean> = mapper["centerMarks"] ?: return
+		modifiers.readState(mapper)
+		constraintsChecker.readState(mapper)
+		
+		val digits: IntArray = mapper["digits"] ?: return
+		val colors: IntArray = mapper["colors"] ?: return
+		val isGiven: BooleanArray = mapper["isGiven"] ?: return
+		val cornerMarks: BooleanArray = mapper["cornerMarks"] ?: return
+		val centerMarks: BooleanArray = mapper["centerMarks"] ?: return
 		
 		for (i in 0..8)
 		{
@@ -308,18 +311,19 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				}
 			}
 		}
-		modifiers.readState(mapper)
-		constraintsChecker.readState(mapper)
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		actionController.writeState(mapper)
-		val digits = Array(81) { 0 }
-		val colors = Array(81) { 0 }
-		val isGiven = Array(81) { false }
-		val cornerMarks = Array(81*9) { false }
-		val centerMarks = Array(81*9) { false }
+		modifiers.writeState(mapper)
+		constraintsChecker.writeState(mapper)
+		
+		val digits = IntArray(81)
+		val colors = IntArray(81)
+		val isGiven = BooleanArray(81)
+		val cornerMarks = BooleanArray(81*9)
+		val centerMarks = BooleanArray(81*9)
 		
 		for (i in 0..8)
 		{
@@ -345,8 +349,6 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		mapper["isGiven"] = isGiven
 		mapper["cornerMarks"] = cornerMarks
 		mapper["centerMarks"] = centerMarks
-		modifiers.writeState(mapper)
-		constraintsChecker.writeState(mapper)
 	}
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
