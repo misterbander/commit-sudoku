@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align
 import ktx.actors.onChange
 import ktx.actors.txt
 import ktx.scene2d.*
+import ktx.style.get
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
@@ -23,9 +24,13 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 	private val buttonSize = 80F
 	val modeLabel = Label("Edit Mode", game.skin, "infolabelstyle")
 	val timerLabel = Label("0 : 00", game.skin, "infolabelstyle").apply { isVisible = false }
-	private val editButton = ImageButton(game.skin, "editbuttonstyle").apply {
-		isDisabled = true
-		onChange { isEditing = true }
+	private val editButton = ImageButton(game.skin, "newbuttonstyle").apply {
+		onChange {
+			if (!isEditing)
+				isEditing = true
+			else
+				grid.reset()
+		}
 	}
 	val playButton = ImageButton(game.skin, "playbuttonstyle").apply {
 		onChange {
@@ -157,7 +162,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			field = value
 			modeLabel.txt = if (value) "Edit Mode" else "Playing"
 			timerLabel.isVisible = !value
-			editButton.isDisabled = value
+			editButton.style = if (value) game.skin["newbuttonstyle"] else game.skin["editbuttonstyle"]
 			grid.setGivens(!value)
 			timer.isRunning = !value
 			grid.actionController.clearHistory()

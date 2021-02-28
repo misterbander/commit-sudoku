@@ -274,6 +274,12 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		actionController.clearHistory()
 		constraintsChecker.clear()
 		modifiers.clear()
+		panel.screen.toolbar.apply {
+			xButton.isChecked = false
+			antiKingButton.isChecked = false
+			antiKnightButton.isChecked = false
+			nonconsecutiveButton.isChecked = false
+		}
 	}
 	
 	override fun readState(mapper: PersistentStateMapper)

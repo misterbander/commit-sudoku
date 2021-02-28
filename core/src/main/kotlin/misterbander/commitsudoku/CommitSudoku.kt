@@ -102,10 +102,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			}
 			
 			// Light derived styles
-			imageButton("editbuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["editicon"]
-				imageDisabled = this@skin["editdisabledicon"]
-			}
+			imageButton("newbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["newicon"] }
+			imageButton("editbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["editicon"] }
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["playicon"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pauseicon"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["clearicon"] }
@@ -210,10 +208,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			}
 			
 			// Dark derived styles
-			imageButton("editbuttonstyle", "imagebuttonstylebase") {
-				imageUp = this@skin["darkediticon"]
-				imageDisabled = this@skin["editdisabledicon"]
-			}
+			imageButton("newbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darknewicon"] }
+			imageButton("editbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkediticon"] }
 			imageButton("playbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkplayicon"] }
 			imageButton("pausebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkpauseicon"] }
 			imageButton("clearbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkclearicon"] }
