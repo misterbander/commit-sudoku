@@ -34,8 +34,7 @@ fun BitmapFont.wrap(text: String, targetWidth: Int): String
 	val words = text.split(" ").toTypedArray()
 	var isFirstWord = true
 	// Add each word one by one, moving on to the next line if there's not enough space
-	for (word in words)
-	{
+	words.forEach { word ->
 		peeker.append(if (isFirstWord) word else " $word") // Have the peeker check if the next word fits
 		if (textSize(peeker.toString()).x <= targetWidth) // It fits
 			builder.append(if (isFirstWord) word else " $word")

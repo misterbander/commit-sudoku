@@ -42,8 +42,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 					if (!evaluate(i, j))
 					{
 						cells[i][j].isCorrect = false
-						for (involvingCell in involvingCells)
-							involvingCell.isCorrect = false
+						involvingCells.forEach { it.isCorrect = false }
 						correctFlag = false
 					}
 				}
@@ -51,8 +50,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 		}
 		else if (!evaluate(0, 0))
 		{
-			for (involvingCell in involvingCells)
-				involvingCell.isCorrect = false
+			involvingCells.forEach { it.isCorrect = false }
 			correctFlag = false
 		}
 		return correctFlag
