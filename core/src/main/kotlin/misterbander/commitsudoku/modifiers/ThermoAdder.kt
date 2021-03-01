@@ -17,7 +17,10 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 	private var currentThermoConstraint: ThermoConstraint? = null
 	
 	override val isValidIndex
-		get() = selectI in 0..8 && selectJ in 0..8
+		get() = if (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex == 2)
+			selectI in -1..9 && selectJ in -1..9
+		else
+			selectI in 0..8 && selectJ in 0..8
 	
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
