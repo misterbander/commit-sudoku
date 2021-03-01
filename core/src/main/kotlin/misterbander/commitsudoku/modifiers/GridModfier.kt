@@ -21,7 +21,7 @@ abstract class GridModfier<T : GridModification>(protected val grid: SudokuGrid)
 	
 	open fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int) {}
 	
-	protected fun updateSelect(x: Float, y: Float)
+	protected open fun updateSelect(x: Float, y: Float)
 	{
 		selectI = grid.xToI(x)
 		selectJ = grid.yToJ(y)

@@ -13,6 +13,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 	val arrowDecorationAdder = ArrowDecorationAdder(grid)
 	val circleDecorationAdder = CircleDecorationAdder(grid)
 	val cageSetter = CageSetter(grid)
+	val borderDecorationSetter = BorderDecorationSetter(grid)
 	
 	private val modifiers = arrayOf(
 		thermoAdder,
@@ -21,7 +22,8 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 		cornerTextDecorationAdder,
 		arrowDecorationAdder,
 		circleDecorationAdder,
-		cageSetter
+		cageSetter,
+		borderDecorationSetter
 	)
 	
 	fun clear()
