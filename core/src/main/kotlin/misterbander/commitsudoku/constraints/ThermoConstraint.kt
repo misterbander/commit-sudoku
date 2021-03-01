@@ -110,8 +110,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 			grid.game.skin["backgroundcolor"]
 		)
 		shapeDrawer.filledCircle(x, y, grid.cellSize*0.3F, internalColor)
-		for (line in thermoLines)
-		{
+		thermoLines.forEach { line ->
 			line.color = if (isHighlighted) grid.game.skin["selectedcolor"] else null
 			line.draw(batch)
 		}

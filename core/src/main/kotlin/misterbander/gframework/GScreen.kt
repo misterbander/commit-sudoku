@@ -103,8 +103,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		game.shapeRenderer.projectionMatrix = camera.combined
 		game.shapeDrawer.update()
 		
-		for (gObject in scheduledAddingGObjects)
-			spawnGObject(gObject)
+		scheduledAddingGObjects.forEach { spawnGObject(it) }
 		scheduledAddingGObjects.clear()
 		
 		stage.act(delta)
@@ -112,8 +111,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		
 		world?.step(1/60F, 6, 4)
 		
-		for (gObject in scheduledRemovalGObjects)
-			gObject.remove()
+		scheduledRemovalGObjects.forEach { it.remove() }
 		scheduledRemovalGObjects.clear()
 	}
 	

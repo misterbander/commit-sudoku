@@ -18,8 +18,7 @@ class CompoundStatement(
 	override fun check(): Boolean
 	{
 		var correctFlag = true
-		for (s in statements)
-			correctFlag = s.check() && correctFlag
+		statements.forEach { correctFlag = it.check() && correctFlag }
 		return correctFlag
 	}
 }

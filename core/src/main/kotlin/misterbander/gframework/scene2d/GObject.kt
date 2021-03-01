@@ -30,8 +30,7 @@ abstract class GObject<T : GFramework>(val screen: GScreen<T>) : Group()
 	override fun act(delta: Float)
 	{
 		super.act(delta)
-		for (module in modules)
-			module.update(delta)
+		modules.forEach { it.update(delta) }
 	}
 	
 	/**
