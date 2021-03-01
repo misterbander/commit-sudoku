@@ -36,7 +36,7 @@ class LineDecoration(
 		
 		shapeDrawer.roundedLine(
 			x1, y1, x2, y2,
-			internalColor.blend(src = color ?: game.skin["defaultdecorationcolor"], dest = game.skin["backgroundcolor"]),
+			internalColor.blend(src = color ?: game.skin["decorationcolor1"], dest = game.skin["backgroundcolor"]),
 			16F
 		)
 	}

@@ -11,6 +11,8 @@ import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import java.io.Serializable
+import kotlin.math.abs
+import kotlin.math.max
 
 
 class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint, GridModification
@@ -23,10 +25,10 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		else -> ""
 	}
 	private val thermoCells: GdxArray<Pair<Int, Int>> = gdxArrayOf(Pair(bulbI, bulbJ))
+	private val thermoLines: GdxArray<LineDecoration> = GdxArray()
 	private var lastJointPos = thermoCells[0]
 	private var lastJointDI = 0
 	private var lastJointDJ = 0
-	private val thermoLines: GdxArray<LineDecoration> = GdxArray()
 	val length
 		get() = thermoCells.size
 	
@@ -41,8 +43,10 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 	
 	fun addThermoCell(endI: Int, endJ: Int)
 	{
-		val lastThermoCell: Pair<Int, Int> = thermoCells[thermoCells.size - 1]
-		if (endI == lastThermoCell.first && endJ == lastThermoCell.second)
+		val lastThermoCell: Pair<Int, Int> = thermoCells.peek()
+		val nextToLastThermoCell: Pair<Int, Int>? = if (thermoCells.size > 1) thermoCells[thermoCells.size - 2] else null
+		if (max(abs(endI - lastThermoCell.first), abs(endJ - lastThermoCell.second)) != 1
+			|| nextToLastThermoCell != null && endI == nextToLastThermoCell.first && endJ == nextToLastThermoCell.second)
 			return
 		thermoCells += Pair(endI, endJ)
 		
@@ -106,7 +110,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		val x = grid.iToX(thermoCells[0].first + 0.5F)
 		val y = grid.jToY(thermoCells[0].second + 0.5F)
 		internalColor.blend(
-			if (isHighlighted) grid.game.skin["selectedcolor"] else grid.game.skin["defaultdecorationcolor"],
+			if (isHighlighted) grid.game.skin["selectedcolor"] else grid.game.skin["decorationcolor1"],
 			grid.game.skin["backgroundcolor"]
 		)
 		shapeDrawer.filledCircle(x, y, grid.cellSize*0.3F, internalColor)

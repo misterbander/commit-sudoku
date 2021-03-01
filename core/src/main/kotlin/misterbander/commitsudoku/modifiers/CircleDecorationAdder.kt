@@ -9,8 +9,10 @@ import ktx.style.get
 import misterbander.commitsudoku.decorations.CircleDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
+import misterbander.gframework.util.angle
 import java.io.Serializable
 import kotlin.math.abs
+import kotlin.math.max
 
 
 class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(grid)
@@ -19,8 +21,8 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 	private var currentCircleDecoration: CircleDecoration? = null
 	private var justRemovedCircle = false
 	
-	private var prevI = -1
-	private var prevJ = -1
+	private var startI = -1
+	private var startJ = -1
 	override val isValidIndex
 		get() = selectI in -1..9 && selectJ in -1..9
 	
@@ -41,35 +43,81 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 			currentCircleDecoration = CircleDecoration(grid, selectI, selectJ, 28F)
 			currentCircleDecoration!!.color = Color.ORANGE
 			addModification(currentCircleDecoration!!)
-			prevI = selectI
-			prevJ = selectJ
+			startI = selectI
+			startJ = selectJ
 		}
 	}
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		currentCircleDecoration?.color = game.skin["secondarycolor"]
+		currentCircleDecoration?.color = game.skin["decorationcolor2"]
 		currentCircleDecoration = null
-		prevI = -1
-		prevJ = -1
+		startI = -1
+		startJ = -1
 	}
 	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
-		if (!isValidIndex || !(abs(selectI - prevI) <= 1 && abs(selectJ - prevJ) <= 1))
+		if (!isValidIndex || currentCircleDecoration == null)
 			return
-		if (findCircleDecoration() == null)
+		val d: Int = max(abs(selectI - startI), abs(selectJ - startJ))
+		val angleFromStart: Float = angle(startI, startJ, selectI, selectJ)
+		val snappedI: Int
+		val snappedJ: Int
+		
+		if (angleFromStart < 22.5F || angleFromStart >= 337.5F)
 		{
-			currentCircleDecoration?.i2 = selectI
-			currentCircleDecoration?.j2 = selectJ
+			snappedI = startI + d
+			snappedJ = startJ
+		}
+		else if (angleFromStart < 67.5F)
+		{
+			snappedI = startI + d
+			snappedJ = startJ + d
+		}
+		else if (angleFromStart < 112.5F)
+		{
+			snappedI = startI
+			snappedJ = startJ + d
+		}
+		else if (angleFromStart < 157.5F)
+		{
+			snappedI = startI - d
+			snappedJ = startJ + d
+		}
+		else if (angleFromStart < 202.5F)
+		{
+			snappedI = startI - d
+			snappedJ = startJ
+		}
+		else if (angleFromStart < 247.5F)
+		{
+			snappedI = startI - d
+			snappedJ = startJ - d
+		}
+		else if (angleFromStart < 292.5F)
+		{
+			snappedI = startI
+			snappedJ = startJ - d
+		}
+		else
+		{
+			snappedI = startI + d
+			snappedJ = startJ - d
+		}
+		
+		if (snappedI in -1..9 && snappedJ in -1..9)
+		{
+			currentCircleDecoration!!.i2 = snappedI
+			currentCircleDecoration!!.j2 = snappedJ
 		}
 	}
 	
 	private fun findCircleDecoration(): CircleDecoration?
 	{
 		circleDecorations.forEach {
-			if (it.i1 == selectI && it.j1 == selectJ || it.i2 == selectI && it.j2 == selectJ)
+			if (it.isOver(selectI, selectJ))
 				return it
 		}
 		return null

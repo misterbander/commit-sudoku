@@ -59,7 +59,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	)
 	private val markColor = Color(0x7F92FFFF)
 	private val selectedColor = Color(0xFFF27F78.toInt())
-	private val defaultDecorationColor = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
+	private val decorationColor1 = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
+	private val decorationColor2 = Color(0.39875F, 0.39875F, 0.39875F, 0.417431F)
 	val lightSkin by lazy {
 		skin {
 			add(Color.BLACK, "primarycolor")
@@ -70,7 +71,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(markColor, "markcolor")
 			add(selectedColor, "selectedcolor")
 			add(highlightColors, "highlightcolors")
-			add(defaultDecorationColor, "defaultdecorationcolor")
+			add(decorationColor1, "decorationcolor1")
+			add(decorationColor2, "decorationcolor2")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -176,7 +178,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(markColor, "markcolor")
 			add(selectedColor, "selectedcolor")
 			add(highlightColors, "highlightcolors")
-			add(defaultDecorationColor, "defaultdecorationcolor")
+			add(decorationColor1, "decorationcolor1")
+			add(decorationColor2, "decorationcolor2")
 			
 			// Style bases
 			addRegions(guiAtlas)

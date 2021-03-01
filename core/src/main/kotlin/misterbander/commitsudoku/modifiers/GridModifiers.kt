@@ -10,36 +10,32 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 	val sandwichConstraintSetter = SandwichConstraintSetter(grid)
 	val textDecorationAdder = TextDecorationAdder(grid)
 	val cornerTextDecorationAdder = CornerTextDecorationAdder(grid)
+	val arrowDecorationAdder = ArrowDecorationAdder(grid)
 	val circleDecorationAdder = CircleDecorationAdder(grid)
 	val cageSetter = CageSetter(grid)
 	
+	private val modifiers = arrayOf(
+		thermoAdder,
+		sandwichConstraintSetter,
+		textDecorationAdder,
+		cornerTextDecorationAdder,
+		arrowDecorationAdder,
+		circleDecorationAdder,
+		cageSetter
+	)
+	
 	fun clear()
 	{
-		thermoAdder.clear()
-		sandwichConstraintSetter.clear()
-		textDecorationAdder.clear()
-		cornerTextDecorationAdder.clear()
-		circleDecorationAdder.clear()
-		cageSetter.clear()
+		modifiers.forEach { it.clear() }
 	}
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		thermoAdder.readState(mapper)
-		sandwichConstraintSetter.readState(mapper)
-		textDecorationAdder.readState(mapper)
-		cornerTextDecorationAdder.readState(mapper)
-		circleDecorationAdder.readState(mapper)
-		cageSetter.readState(mapper)
+		modifiers.forEach { it.readState(mapper) }
 	}
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		thermoAdder.writeState(mapper)
-		sandwichConstraintSetter.writeState(mapper)
-		textDecorationAdder.writeState(mapper)
-		cornerTextDecorationAdder.writeState(mapper)
-		circleDecorationAdder.writeState(mapper)
-		cageSetter.writeState(mapper)
+		modifiers.forEach { it.writeState(mapper) }
 	}
 }

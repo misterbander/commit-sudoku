@@ -9,7 +9,6 @@ import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
-import kotlin.math.abs
 
 
 class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
@@ -17,8 +16,6 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 	private val thermoConstraints: GdxArray<ThermoConstraint> = GdxArray()
 	private var currentThermoConstraint: ThermoConstraint? = null
 	
-	private var prevI = -1
-	private var prevJ = -1
 	override val isValidIndex
 		get() = selectI in 0..8 && selectJ in 0..8
 	
@@ -35,28 +32,27 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 		
 		currentThermoConstraint = ThermoConstraint(grid, selectI, selectJ)
 		addModification(currentThermoConstraint!!)
-		prevI = selectI
-		prevJ = selectJ
 	}
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		if (currentThermoConstraint != null)
 		{
-			if (currentThermoConstraint!!.length > 1)
+			if (currentThermoConstraint!!.length >= 2)
 				currentThermoConstraint!!.generateThermoStatement()
 			else
+			{
+				removeModification(currentThermoConstraint!!)
 				tryDeleteThermo()
+			}
 		}
 		currentThermoConstraint = null
-		prevI = -1
-		prevJ = -1
 	}
 	
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
-		if (!isValidIndex || !(abs(selectI - prevI) <= 1 && abs(selectJ - prevJ) <= 1))
+		if (!isValidIndex)
 			return
 		val cellCenterX = grid.iToX(selectI.toFloat() + 0.5F)
 		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
@@ -64,11 +60,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 			return
 		
 		if (currentThermoConstraint != null)
-		{
 			currentThermoConstraint!!.addThermoCell(selectI, selectJ)
-			prevI = selectI
-			prevJ = selectJ
-		}
 	}
 	
 	override fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int)
@@ -129,6 +121,6 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 	
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		mapper["thermoConstraints"] = thermoConstraints.map { thermoConstraint -> thermoConstraint.dataObject }.toTypedArray()
+		mapper["thermoConstraints"] = thermoConstraints.map { it.dataObject }.toTypedArray()
 	}
 }
