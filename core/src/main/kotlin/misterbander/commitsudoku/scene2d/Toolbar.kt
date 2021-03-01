@@ -101,6 +101,9 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 			imageButton("addcagedecorationbuttonstyle", game.skin) {
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
+			imageButton("addborderdecorationbuttonstyle", game.skin) {
+				onChange { grid.modifier = grid.modifiers.borderDecorationSetter }
+			}
 		}
 		this += Image(game.skin["divider"], Scaling.none, Align.center)
 		this += scene2d.table {

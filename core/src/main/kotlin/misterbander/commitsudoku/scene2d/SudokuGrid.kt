@@ -42,6 +42,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		private set
 	
 	val decorations: GdxArray<Decoration> = GdxArray()
+	val foreDecorations: GdxArray<Decoration> = GdxArray()
 	val modifiers = GridModifiers(this)
 	var modifier: GridModfier<*>? = null
 		set(value)
@@ -116,7 +117,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	fun xToI(x: Float, precision: Float): Float
 	{
-		return floor((x - this.x)/(cellSize*precision))/precision
+		return floor((x - this.x)/(cellSize*precision))*precision
 	}
 	
 	fun yToJ(y: Float): Int
@@ -126,7 +127,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	fun yToJ(y: Float, precision: Float): Float
 	{
-		return floor((y - this.y)/(cellSize*precision))/precision
+		return floor((y - this.y)/(cellSize*precision))*precision
 	}
 	
 	fun select(i: Int, j: Int, toggleUnselect: Boolean)
@@ -271,6 +272,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	{
 		cells.forEach { it.forEach { cell -> cell.reset() } }
 		decorations.clear()
+		foreDecorations.clear()
 		actionController.clearHistory()
 		constraintsChecker.clear()
 		modifiers.clear()
@@ -369,6 +371,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			shapeDrawer.line(x, y + i*cellSize, x + 9*cellSize, y + i*cellSize, if (i%3 == 0) 3F else 1F, true, lineColor, lineColor)
 		}
 		
+		foreDecorations.forEach { it.draw(batch) }
+		
 		modifier?.draw(batch)
 	}
 	
@@ -417,7 +421,6 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			val segoeui2 = game.segoeui2
 			
 			val highlightColorsMap: GdxMap<Int, Color> = game.skin["highlightcolors"]
-			
 			
 			if (constraintsChecker.xConstraint in constraintsChecker && (i == j || i == 8 - j)) // Color X
 			{
