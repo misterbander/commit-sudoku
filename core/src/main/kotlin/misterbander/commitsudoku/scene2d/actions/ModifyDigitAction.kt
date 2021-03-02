@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d.actions
 
+import ktx.log.info
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import java.io.Serializable
 
@@ -23,7 +24,7 @@ class ModifyDigitAction(
 		runnable = Runnable {
 			val from = if (inverse) this.to else this.from
 			val to = if (inverse) this.from else this.to
-			println("Set cell (${cell.i}, ${cell.j}) digit from $from to $to")
+			info("ModifyDigitAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) digit from $from to $to" }
 			cell.digit = to
 		}
 	}

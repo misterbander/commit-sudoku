@@ -82,8 +82,6 @@ class ArrowDecorationAdder(grid: SudokuGrid) : GridModfier<ArrowDecoration>(grid
 			if (it.isOver(selectI, selectJ))
 			{
 				removeModification(it)
-				println(arrowDecorations.size
-				)
 				return
 			}
 		}

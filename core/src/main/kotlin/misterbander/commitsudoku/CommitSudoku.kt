@@ -1,5 +1,6 @@
 package misterbander.commitsudoku
 
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -12,6 +13,7 @@ import ktx.async.KtxAsync
 import ktx.collections.GdxMap
 import ktx.collections.gdxMapOf
 import ktx.freetype.generateFont
+import ktx.log.info
 import ktx.style.*
 import misterbander.gframework.GFramework
 import misterbander.gframework.scene2d.mbTextField
@@ -284,13 +286,13 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	{
 		KtxAsync.initiate()
 		Gdx.graphics.isContinuousRendering = false
-		
+		Gdx.app.logLevel = Application.LOG_DEBUG
 		assetManager.finishLoading()
-		println("Finished loading assets!")
+		info("CommitSudoku          | INFO") { "Finished loading assets!" }
 		
 		skin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 		
-		println("Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}")
+		info("CommitSudoku          | INFO") { "Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}" }
 		
 		addScreen(CommitSudokuScreen(this))
 		setScreen<CommitSudokuScreen>()
@@ -299,7 +301,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 	override fun resize(width: Int, height: Int)
 	{
 		super.resize(width, height)
-		println("Resizing to = ${width}x${height}")
+		info("CommitSudoku          | INFO") { "Resizing to = ${width}x${height}" }
 	}
 	
 	override fun dispose()

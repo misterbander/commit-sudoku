@@ -1,6 +1,7 @@
 package misterbander.gframework.util
 
 import com.badlogic.gdx.Gdx
+import ktx.log.debug
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
@@ -17,11 +18,17 @@ class PersistentStateMapper
 	
 	inline operator fun <reified T : Serializable> get(key: String): T?
 	{
-		return stateMap[key] as? T?
+		val value = stateMap[key] as? T?
+		if (stateMap[key] !is T)
+			debug("PersistentStateMapper | DEBUG") { "Mapping for \"$key\" is not an instance of ${T::class.java.name}" }
+		else if (value == null)
+			debug("PersistentStateMapper | DEBUG") { "Mapping for \"$key\" does not exist" }
+		return value
 	}
 	
 	operator fun set(key: String, value: Serializable)
 	{
+		debug("PersistentStateMapper | DEBUG") { "Mapping $key to $value" }
 		stateMap[key] = value
 	}
 	

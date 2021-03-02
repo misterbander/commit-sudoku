@@ -1,5 +1,6 @@
 package misterbander.commitsudoku.scene2d.actions
 
+import ktx.log.info
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import java.io.Serializable
 
@@ -30,7 +31,7 @@ class ModifyMarkAction(
 		runnable = Runnable {
 			val from = if (inverse) this.to else this.from
 			val to = if (inverse) this.from else this.to
-			println("Set cell (${cell.i}, ${cell.j}) ${type.name} mark from $from to $to")
+			info("ModifyMarkAction      | INFO") { "Set cell (${cell.i}, ${cell.j}) ${type.name} mark from $from to $to" }
 			if (type == Type.CORNER)
 				cell.cornerMarks[digit - 1] = to
 			else if (type == Type.CENTER)
