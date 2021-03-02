@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.collections.plusAssign
+import ktx.log.info
 import ktx.scene2d.actor
 import ktx.scene2d.scene2d
 import ktx.scene2d.table
@@ -55,7 +56,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override fun show()
 	{
 		super.show()
-		println("Show CommitSudokuScreen")
+		info("CommitSudokuScreen    | INFO") { "Show CommitSudokuScreen" }
 		stage += object : Actor() // Fallback actor
 		{
 			init
@@ -92,13 +93,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			val hints = ServerSocketHints()
 			hints.acceptTimeout = 0
 			serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 11530, hints)
-			println("Running server...")
+			info("CommitSudokuScreen    | INFO") { "Running server..." }
 			while (true)
 			{
 				try
 				{
 					val socket = serverSocket.accept(null)
-					println("Accepting connection from ${socket.remoteAddress}")
+					info("CommitSudokuScreen    | INFO") { "Accepting connection from ${socket.remoteAddress}" }
 					val objectInputStream = ObjectInputStream(socket.inputStream)
 					mapper.read(objectInputStream)
 					objectInputStream.close()
@@ -169,7 +170,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	override fun pause()
 	{
-		println("Pause! Saving game state...")
+		info("CommitSudokuScreen    | INFO") { "Pause! Saving game state..." }
 		panel.writeState(mapper)
 		mapper.write("commit_sudoku_state")
 		shouldCloseServer = true // Stop the thread

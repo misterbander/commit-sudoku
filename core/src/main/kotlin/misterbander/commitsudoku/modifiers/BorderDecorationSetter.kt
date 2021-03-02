@@ -22,7 +22,6 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x + grid.cellSize/4, y + grid.cellSize/4)
-		println("hi $selectIF, $selectJF")
 		if (!isValidIndex)
 			return
 		val existingBorderDecoration = findBorderDecoration()

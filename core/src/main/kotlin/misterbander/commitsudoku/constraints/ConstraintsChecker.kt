@@ -5,6 +5,7 @@ import ktx.collections.GdxArray
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
+import ktx.log.info
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
@@ -36,7 +37,7 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 	
 	fun check()
 	{
-		println("Checking constraints")
+		info("ConstraintsChecker    | INFO") { "Checking constraints" }
 		grid.cells.forEach { it.forEach { cell -> cell.isCorrect = true } }
 		var correctFlag = true
 		globalStatements.forEach { correctFlag = it.check() && correctFlag }
@@ -139,8 +140,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 					staticStatementStrs += statement.statementStrs
 			}
 		}
-		mapper["globalStatements"] = globalStatementStrs.toArray(Array<Array<String>>::class.java)
-		mapper["staticStatements"] = staticStatementStrs.toArray(Array<Array<String>>::class.java)
+		mapper["globalStatements"] = globalStatementStrs.toArray(Array<String>::class.java)
+		mapper["staticStatements"] = staticStatementStrs.toArray(Array<String>::class.java)
 	}
 	
 	fun drawAdditionalConstraints(batch: Batch)
