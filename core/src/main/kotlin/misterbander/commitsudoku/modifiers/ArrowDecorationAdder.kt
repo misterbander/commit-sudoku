@@ -107,8 +107,8 @@ class ArrowDecorationAdder(grid: SudokuGrid) : GridModfier<ArrowDecoration>(grid
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
-		val arrowDataObjects: Array<HashMap<String, Serializable>>? = mapper["arrowDecorations"]
-		arrowDataObjects?.forEach {
+		val arrowDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["arrowDecorations"]
+		arrowDecorationDataObjects?.forEach {
 			val arrowCells = it["cells"] as Array<Pair<Int, Int>>
 			val arrowDecoration = ArrowDecoration(grid, arrowCells[0].first, arrowCells[0].second)
 			arrowCells.forEachIndexed { index, pair ->

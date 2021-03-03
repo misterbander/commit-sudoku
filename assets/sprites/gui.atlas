@@ -6,35 +6,35 @@ filter: Linear,Linear
 repeat: none
 addarrowdecorationicon
   rotate: false
-  xy: 1126, 38
+  xy: 1162, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addborderdecorationicon
   rotate: false
-  xy: 2006, 54
+  xy: 1118, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addcagedecorationicon
   rotate: false
-  xy: 1306, 38
+  xy: 110, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addcircledecorationicon
   rotate: false
-  xy: 1198, 38
+  xy: 1234, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addcornertextdecorationicon
   rotate: false
-  xy: 1970, 54
+  xy: 1082, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -46,37 +46,44 @@ addlinedecorationicon
   orig: 32, 32
   offset: 0, 0
   index: -1
+addlittlearrowdecorationicon
+  rotate: false
+  xy: 1934, 90
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 addsandwichicon
   rotate: false
-  xy: 1234, 38
+  xy: 1270, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addtextdecorationicon
   rotate: false
-  xy: 506, 22
+  xy: 578, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 addthermoicon
   rotate: false
-  xy: 866, 22
+  xy: 938, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 antikingicon
   rotate: false
-  xy: 146, 22
+  xy: 182, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 antiknighticon
   rotate: false
-  xy: 434, 22
+  xy: 470, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -122,7 +129,7 @@ buttonover
   index: -1
 clearicon
   rotate: false
-  xy: 902, 22
+  xy: 974, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -171,7 +178,7 @@ cursor
   index: -1
 darkaddarrowdecorationicon
   rotate: false
-  xy: 398, 22
+  xy: 434, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -185,42 +192,49 @@ darkaddborderdecorationicon
   index: -1
 darkaddcagedecorationicon
   rotate: false
-  xy: 542, 22
+  xy: 614, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkaddcircledecorationicon
   rotate: false
-  xy: 1754, 54
+  xy: 1826, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkaddcornertextdecorationicon
   rotate: false
-  xy: 1790, 54
+  xy: 1862, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkaddlinedecorationicon
   rotate: false
-  xy: 1046, 22
+  xy: 1754, 54
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+darkaddlittlearrowdecorationicon
+  rotate: false
+  xy: 506, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkaddsandwichicon
   rotate: false
-  xy: 1826, 54
+  xy: 1898, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkaddtextdecorationicon
   rotate: false
-  xy: 218, 22
+  xy: 254, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -234,14 +248,14 @@ darkaddthermoicon
   index: -1
 darkantikingicon
   rotate: false
-  xy: 938, 22
+  xy: 1010, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkantiknighticon
   rotate: false
-  xy: 1162, 38
+  xy: 1198, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -287,7 +301,7 @@ darkbuttonover
   index: -1
 darkclearicon
   rotate: false
-  xy: 2006, 90
+  xy: 74, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -301,7 +315,7 @@ darkclosebutton
   index: -1
 darkconnecticon
   rotate: false
-  xy: 830, 22
+  xy: 902, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -322,21 +336,21 @@ darkdeleteicon
   index: -1
 darkediticon
   rotate: false
-  xy: 470, 22
+  xy: 542, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkemptythermoicon
   rotate: false
-  xy: 1862, 54
+  xy: 1934, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkmoonicon
   rotate: false
-  xy: 1934, 54
+  xy: 2006, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -350,49 +364,49 @@ darkmultibuttonicon
   index: -1
 darknewicon
   rotate: false
-  xy: 686, 22
+  xy: 758, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darknonconsecutiveicon
   rotate: false
-  xy: 650, 22
+  xy: 722, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkpauseicon
   rotate: false
-  xy: 1270, 38
+  xy: 1306, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkplayicon
   rotate: false
-  xy: 1118, 2
+  xy: 1190, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darkredoicon
   rotate: false
-  xy: 1082, 2
+  xy: 1154, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darksetgivensicon
   rotate: false
-  xy: 1718, 54
+  xy: 1790, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 darksoftthermoicon
   rotate: false
-  xy: 362, 22
+  xy: 398, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -415,7 +429,7 @@ darktoolbarmultibuttonmenubackground
   index: -1
 darkundoicon
   rotate: false
-  xy: 254, 22
+  xy: 290, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -431,7 +445,7 @@ darkwindow
   index: -1
 darkxicon
   rotate: false
-  xy: 1898, 54
+  xy: 1970, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -452,21 +466,21 @@ divider
   index: -1
 editdisabledicon
   rotate: false
-  xy: 974, 22
+  xy: 1046, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 editicon
   rotate: false
-  xy: 1010, 22
+  xy: 1718, 54
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 emptythermoicon
   rotate: false
-  xy: 110, 22
+  xy: 146, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -487,7 +501,7 @@ greenicon
   index: -1
 moonicon
   rotate: false
-  xy: 794, 22
+  xy: 866, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -501,14 +515,14 @@ multibuttonicon
   index: -1
 newicon
   rotate: false
-  xy: 182, 22
+  xy: 218, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 nonconsecutiveicon
   rotate: false
-  xy: 722, 22
+  xy: 794, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -522,21 +536,21 @@ orangeicon
   index: -1
 pausedisabledicon
   rotate: false
-  xy: 578, 22
+  xy: 650, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 pauseicon
   rotate: false
-  xy: 326, 22
+  xy: 362, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 playicon
   rotate: false
-  xy: 1090, 38
+  xy: 1126, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -564,7 +578,7 @@ redodisabledicon
   index: -1
 redoicon
   rotate: false
-  xy: 758, 22
+  xy: 830, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -578,7 +592,7 @@ setgivensicon
   index: -1
 softthermoicon
   rotate: false
-  xy: 614, 22
+  xy: 686, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -593,7 +607,7 @@ textfield
   index: -1
 textselection
   rotate: false
-  xy: 290, 22
+  xy: 326, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -622,14 +636,14 @@ toolbarmultibuttonmenubackground
   index: -1
 undodisabledicon
   rotate: false
-  xy: 1934, 90
+  xy: 1970, 90
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 undoicon
   rotate: false
-  xy: 1970, 90
+  xy: 2006, 90
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -645,7 +659,7 @@ window
   index: -1
 xicon
   rotate: false
-  xy: 74, 2
+  xy: 1090, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

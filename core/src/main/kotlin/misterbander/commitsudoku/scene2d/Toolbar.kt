@@ -98,9 +98,13 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				onChange { grid.modifier = grid.modifiers.arrowDecorationAdder }
 			}
 			row()
+			imageButton("addlittlearrowdecorationbuttonstyle", game.skin) {
+				onChange { grid.modifier = grid.modifiers.littleArrowDecorationAdder }
+			}
 			imageButton("addcagedecorationbuttonstyle", game.skin) {
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
+			row()
 			imageButton("addborderdecorationbuttonstyle", game.skin) {
 				onChange { grid.modifier = grid.modifiers.borderDecorationSetter }
 			}
