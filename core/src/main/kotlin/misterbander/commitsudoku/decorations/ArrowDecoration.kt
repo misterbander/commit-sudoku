@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 import ktx.collections.plusAssign
+import ktx.math.minusAssign
 import ktx.math.vec2
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuGrid
@@ -24,9 +25,8 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decoration(g
 {
 	private val arrowCells: GdxArray<Pair<Int, Int>> = gdxArrayOf(Pair(startX, startY))
 	private val arrowJoints: GdxArray<Pair<Int, Int>> = gdxArrayOf(Pair(startX, startY))
-	private val arrowVertices = GdxArray<Vector2>().apply {
-		this += vec2()
-	}
+	private val arrowVertices = GdxArray<Vector2>().apply { this += vec2() }
+	private val arrowHeadVertices = GdxArray<Vector2>().apply { repeat(3) { this += vec2() } }
 	private var lastJointPos = arrowCells[0]
 	private var lastJointDI = 0
 	private var lastJointDJ = 0
@@ -102,9 +102,11 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decoration(g
 		shapeDrawer.path(arrowVertices, 2F, JoinType.SMOOTH, true)
 		
 		// Draw arrow head
-		tempVec.set(16F, 0F).setAngle(endDirection + 135F)
-		shapeDrawer.line(arrowVertices.peek().x, arrowVertices.peek().y, arrowVertices.peek().x + tempVec.x, arrowVertices.peek().y + tempVec.y, 2F)
-		tempVec.set(16F, 0F).setAngle(endDirection - 135F)
-		shapeDrawer.line(arrowVertices.peek().x, arrowVertices.peek().y, arrowVertices.peek().x + tempVec.x, arrowVertices.peek().y + tempVec.y, 2F)
+		tempVec.set(16F, 0F).setAngle(endDirection + 45F)
+		arrowHeadVertices[0].set(arrowVertices.peek()) -= tempVec
+		arrowHeadVertices[1].set(arrowVertices.peek())
+		tempVec.set(16F, 0F).setAngle(endDirection - 45F)
+		arrowHeadVertices[2].set(arrowVertices.peek()) -= tempVec
+		shapeDrawer.path(arrowHeadVertices, 2F, JoinType.POINTY, true)
 	}
 }

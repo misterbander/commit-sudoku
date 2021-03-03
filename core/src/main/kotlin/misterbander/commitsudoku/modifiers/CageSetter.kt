@@ -91,11 +91,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 	
 	override fun clear()
 	{
-		for (i in cageMap.indices)
-		{
-			for (j in cageMap[i].indices)
-				cageMap[i][j] = null
-		}
+		cageMap.forEach { it.fill(null) }
 	}
 	
 	@Suppress("UNCHECKED_CAST")
