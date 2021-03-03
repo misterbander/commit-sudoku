@@ -25,6 +25,7 @@ import misterbander.gframework.util.cycle
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 import kotlin.math.floor
+import kotlin.math.min
 import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 
@@ -92,7 +93,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		super.act(delta)
 		if (panel.isFinished)
 		{
-			completionCharmT += delta
+			completionCharmT += min(delta, 1/60F)
 			if (completionCharmT > 2)
 				Gdx.graphics.isContinuousRendering = false
 		}
