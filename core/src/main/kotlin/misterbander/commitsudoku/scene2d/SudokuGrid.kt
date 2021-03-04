@@ -413,6 +413,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			colorCode = 0
 			cornerMarks.fill(false)
 			centerMarks.fill(false)
+			hasCornerTextDecoration = false
 		}
 		
 		fun draw(batch: Batch)
