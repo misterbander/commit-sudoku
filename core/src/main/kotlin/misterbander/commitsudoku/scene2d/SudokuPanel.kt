@@ -22,7 +22,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 	val grid = SudokuGrid(this)
 	
 	private val buttonSize = 80F
-	val modeLabel = Label("Edit Mode", game.skin, "infolabelstyle")
+	private val modeLabel = Label("Edit Mode", game.skin, "infolabelstyle")
 	val timerLabel = Label("0 : 00", game.skin, "infolabelstyle").apply { isVisible = false }
 	private val editButton = ImageButton(game.skin, "newbuttonstyle").apply {
 		onChange {
@@ -132,7 +132,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 			actor(undoRedoTray).cell(width = buttonSize*2 + 6, height = buttonSize)
 		}
 	}
-	val keypadButtonGroup = scene2d.buttonGroup(1, 1, game.skin) {
+	private val keypadButtonGroup = scene2d.buttonGroup(1, 1, game.skin) {
 		defaults().size(buttonSize, buttonSize).pad(4F)
 		textButton("#", "checkabletextbuttonstyle2", game.skin) {
 			isChecked = true
@@ -201,6 +201,13 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		{
 			field = value
 			((keypad.cells[1].actor as Table).cells[1] as Cell<*>).setActor(if (value) zeroButton else undoRedoTray)
+			if (value)
+				keypadButtonGroup.buttonGroup.apply {
+					buttons[0].isChecked = true
+					buttons.forEach { it.isDisabled = true }
+				}
+			else
+				keypadButtonGroup.buttonGroup.buttons.forEach { it.isDisabled = false }
 		}
 	
 	init

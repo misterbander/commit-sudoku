@@ -142,6 +142,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addlinedecorationicon"] }
 			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addarrowdecorationicon"] }
 			imageButton("addlittlearrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addlittlearrowdecorationicon"] }
+			imageButton("addkillercagebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addkillercageicon"] }
 			imageButton("addcagedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addcagedecorationicon"] }
 			imageButton("addborderdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addborderdecorationicon"] }
 			imageButton("xbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["xicon"] }
@@ -251,6 +252,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("addlinedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddlinedecorationicon"] }
 			imageButton("addarrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddarrowdecorationicon"] }
 			imageButton("addlittlearrowdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddlittlearrowdecorationicon"] }
+			imageButton("addkillercagebuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddkillercageicon"] }
 			imageButton("addcagedecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddcagedecorationicon"] }
 			imageButton("addborderdecorationbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddborderdecorationicon"] }
 			imageButton("xbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkxicon"] }
