@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
+import misterbander.commitsudoku.constraints.KillerConstraint
 import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
@@ -64,11 +65,31 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		justRemovedCage = false
+		if (grid.panel.screen.toolbar.cageMultibuttonMenu.checkedIndex == 0 && currentCage != null)
+		{
+			val killerConstraint = KillerConstraint(grid, currentCage!!)
+			currentCage!!.killerConstraint = killerConstraint
+			grid.constraintsChecker += killerConstraint
+			grid.decorations += killerConstraint.cornerTextDecoration
+			grid.cells[currentCage!!.topLeftI][currentCage!!.topLeftJ].cornerTextDecorationCount++
+		}
 	}
 	
 	fun unselect()
 	{
 		currentCage = null
+	}
+	
+	override fun typedDigit(digit: Int)
+	{
+		if (grid.panel.screen.toolbar.cageMultibuttonMenu.checkedIndex == 0 && currentCage?.killerConstraint != null)
+		{
+			val killerConstraint = currentCage!!.killerConstraint!!
+			if (digit == -1) // Backspace
+				killerConstraint.killerSum/=10
+			else
+				killerConstraint.killerSum = killerConstraint.killerSum*10 + digit
+		}
 	}
 	
 	override fun addModification(modification: CageDecoration)
@@ -87,6 +108,12 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 			}
 		}
 		grid.decorations -= modification
+		if (modification.killerConstraint != null)
+		{
+			grid.constraintsChecker -= modification.killerConstraint!!
+			grid.decorations -= modification.killerConstraint!!.cornerTextDecoration
+			grid.cells[modification.topLeftI][modification.topLeftJ].cornerTextDecorationCount--
+		}
 	}
 	
 	override fun clear()
@@ -101,6 +128,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 		cageDecorationDataObjects?.forEach { dataObject ->
 			var cageDecoration: CageDecoration? = null
 			val cageMask = dataObject["cageMask"] as Array<BooleanArray>
+			val killerSum = dataObject["killerSum"] as Int
 			for (i in cageMask.indices)
 			{
 				for (j in cageMask[i].indices)
@@ -117,6 +145,15 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 						cageMap[i][j] = cageDecoration
 					}
 				}
+			}
+			if (killerSum != -1)
+			{
+				val killerConstraint = KillerConstraint(grid, cageDecoration!!)
+				cageDecoration.killerConstraint = killerConstraint
+				killerConstraint.killerSum = killerSum
+				grid.constraintsChecker += killerConstraint
+				grid.decorations += killerConstraint.cornerTextDecoration
+				grid.cells[cageDecoration.topLeftI][cageDecoration.topLeftJ].cornerTextDecorationCount++
 			}
 		}
 	}

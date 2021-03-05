@@ -130,7 +130,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 			val tildeIndex = builder.indexOf("~")
 			if (end - start == 5 && builder[start + 1] == 'r' && builder[start + 3] == 'c') // [rxcy] notation, absolute cell reference
 			{
-				val r = builder[start + 2].toString().toInt() - 1
+				val r = 8 - builder[start + 2].toString().toInt() + 1
 				val c = builder[start + 4].toString().toInt() - 1
 				if (!isValidCell(r, c))
 					return null
@@ -147,7 +147,7 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 					"Malformed variable string in statement: \" $statementStr\"! Expecting [~x~y] notation."
 				}
 				val x = builder.substring(tildeIndex + 1, secondTildeIndex).toInt()
-				val y = builder.substring(secondTildeIndex + 1, end).toInt()
+				val y = -builder.substring(secondTildeIndex + 1, end).toInt()
 				if (!isValidCell(i + x, j + y))
 					return null
 				val cell = cells[i][j].offset(x, y)

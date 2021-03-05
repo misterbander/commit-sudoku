@@ -74,11 +74,15 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		if (operator != "")
 		{
 			val statementStrs: GdxArray<String> = GdxArray()
-			for (i in 0 until thermoCells.size)
+			for (k in 0 until thermoCells.size)
 			{
-				for (j in 0 until i)
+				for (l in 0 until k)
 				{
-					val statement = "[r${(thermoCells[j].second + 1)}c${(thermoCells[j].first + 1)}]$operator[r${(thermoCells[i].second + 1)}c${(thermoCells[i].first + 1)}]"
+					val i1 = thermoCells[l].first
+					val j1 = thermoCells[l].second
+					val i2 = thermoCells[k].first
+					val j2 = thermoCells[k].second
+					val statement = "[r${(9 - j1)}c${(i1 + 1)}]$operator[r${(9 - j2)}c${(i2 + 1)}]"
 					statementStrs.add(statement)
 				}
 			}

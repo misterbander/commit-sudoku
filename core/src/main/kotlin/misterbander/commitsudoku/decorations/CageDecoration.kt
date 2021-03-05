@@ -3,10 +3,12 @@ package misterbander.commitsudoku.decorations
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.style.get
+import misterbander.commitsudoku.constraints.KillerConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.dashedLine
 import java.io.Serializable
+import kotlin.math.min
 
 
 class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
@@ -17,10 +19,13 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 	}
 	
 	val mask = Array(9) { BooleanArray(9) }
+	var topLeftI = i
+	var topLeftJ = j
+	var killerConstraint: KillerConstraint? = null
 	override var color: Color? = null
 	private val internalColor = Color()
 	override val dataObject: HashMap<String, Serializable>
-		get() = hashMapOf("cageMask" to mask)
+		get() = hashMapOf("cageMask" to mask, "killerSum" to (killerConstraint?.killerSum ?: -1))
 	
 	init
 	{
@@ -32,6 +37,13 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 		if (mask[i][j])
 			return
 		mask[i][j] = true
+		if (j > topLeftJ)
+		{
+			topLeftI = i
+			topLeftJ = j
+		}
+		else if (j == topLeftJ)
+			topLeftI = min(topLeftI, i)
 	}
 	
 	override fun draw(batch: Batch)

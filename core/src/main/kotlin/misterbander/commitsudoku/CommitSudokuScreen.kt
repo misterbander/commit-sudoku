@@ -76,6 +76,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		}
 		stage.keyboardFocus = panel.grid
 		stage += toolbar.thermoMultibuttonMenu
+		stage += toolbar.cageMultibuttonMenu
 		stage += textInputWindow
 		stage += connectWindow
 		stage += messageDialog

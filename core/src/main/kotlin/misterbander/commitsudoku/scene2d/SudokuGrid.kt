@@ -52,19 +52,10 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			unselect()
 			if (value != modifiers.cageSetter)
 				modifiers.cageSetter.unselect()
-			if (value == modifiers.sandwichConstraintSetter || value == modifiers.cageSetter)
-			{
-				panel.keypadButtonGroup.buttonGroup.apply {
-					buttons[0].isChecked = true
-					buttons.forEach { it.isDisabled = true }
-				}
-				panel.showZero = true
-			}
+			if (value == modifiers.cageSetter)
+				panel.showZero = panel.screen.toolbar.cageMultibuttonMenu.checkedIndex == 0
 			else
-			{
-				panel.keypadButtonGroup.buttonGroup.buttons.forEach { it.isDisabled = false }
-				panel.showZero = false
-			}
+				panel.showZero = value == modifiers.sandwichConstraintSetter
 		}
 	val constraintsChecker = ConstraintsChecker(this)
 	val actionController = ActionController(this)
@@ -390,7 +381,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		var isSelected = false
 		val cornerMarks = Array(9) { false }
 		val centerMarks = Array(9) { false }
-		var hasCornerTextDecoration = false
+		var cornerTextDecorationCount = 0
 		private val white: Color = Color.WHITE.cpy()
 		private val lightGray: Color = Color.LIGHT_GRAY.cpy()
 		
@@ -413,7 +404,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			colorCode = 0
 			cornerMarks.fill(false)
 			centerMarks.fill(false)
-			hasCornerTextDecoration = false
+			cornerTextDecorationCount = 0
 		}
 		
 		fun draw(batch: Batch)
@@ -453,7 +444,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 				segoeui.color = game.skin["markcolor"]
 				// Corner marks
 				var markCount = 0
-				if (hasCornerTextDecoration)
+				if (cornerTextDecorationCount != 0)
 					markCount++
 				for (k in 0..8)
 				{

@@ -52,14 +52,14 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 	{
 		cornerTextDecorations += modification
 		grid.decorations += modification
-		grid.cells[modification.i][modification.j].hasCornerTextDecoration = true
+		grid.cells[modification.i][modification.j].cornerTextDecorationCount++
 	}
 	
 	override fun removeModification(modification: CornerTextDecoration)
 	{
 		cornerTextDecorations -= modification
 		grid.decorations -= modification
-		grid.cells[modification.i][modification.j].hasCornerTextDecoration = false
+		grid.cells[modification.i][modification.j].cornerTextDecorationCount--
 	}
 	
 	override fun clear()

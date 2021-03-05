@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import ktx.actors.onChange
+import ktx.actors.onClick
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.get
@@ -28,6 +29,13 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 		scene2d.imageButton("addthermobuttonstyle", game.skin),
 		scene2d.imageButton("softthermobuttonstyle", game.skin),
 		scene2d.imageButton("emptythermobuttonstyle", game.skin)
+	)
+	private val cageMultibutton = ToolbarMultibutton(screen, game.skin, "addkillercagebuttonstyle")
+	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
+		game,
+		cageMultibutton,
+		scene2d.imageButton("addkillercagebuttonstyle", game.skin) { onClick { screen.panel.showZero = true } },
+		scene2d.imageButton("addcagedecorationbuttonstyle", game.skin) { onClick { screen.panel.showZero = false } }
 	)
 	
 	val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
@@ -101,7 +109,8 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 			imageButton("addlittlearrowdecorationbuttonstyle", game.skin) {
 				onChange { grid.modifier = grid.modifiers.littleArrowDecorationAdder }
 			}
-			imageButton("addcagedecorationbuttonstyle", game.skin) {
+			actor(cageMultibutton) {
+				multibuttonMenu = cageMultibuttonMenu
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
 			row()
