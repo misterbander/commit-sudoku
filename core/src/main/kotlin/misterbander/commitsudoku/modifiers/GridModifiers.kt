@@ -13,6 +13,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 	val arrowDecorationAdder = ArrowDecorationAdder(grid)
 	val littleArrowDecorationAdder = LittleArrowDecorationAdder(grid)
 	val circleDecorationAdder = CircleDecorationAdder(grid)
+	val lineDecorationAdder = LineDecorationAdder(grid)
 	val cageSetter = CageSetter(grid)
 	val borderDecorationSetter = BorderDecorationSetter(grid)
 	
@@ -24,6 +25,7 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 		arrowDecorationAdder,
 		littleArrowDecorationAdder,
 		circleDecorationAdder,
+		lineDecorationAdder,
 		cageSetter,
 		borderDecorationSetter
 	)
