@@ -34,7 +34,7 @@ class ConnectWindow(screen: CommitSudokuScreen) : CommitSudokuWindow(screen, "Sy
 				onChange {
 					try
 					{
-						print("${hostAddressTextField.text}, ${portTextField.text.toString()}")
+						print("${hostAddressTextField.text}, ${portTextField.text}")
 						val socket = Gdx.net.newClientSocket(
 							Net.Protocol.TCP,
 							hostAddressTextField.text,

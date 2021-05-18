@@ -24,7 +24,6 @@ open class LineDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decorati
 	val length
 		get() = lineCells.size
 	
-	override var color: Color? = game.skin["decorationcolor1"]
 	protected val internalColor = Color()
 	var isHighlighted = false
 	
@@ -84,7 +83,7 @@ open class LineDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decorati
 			
 			shapeDrawer.roundedLine(
 				x1, y1, x2, y2,
-				internalColor.blend(src = if (isHighlighted) game.skin["selectedcolor"] else color!!, dest = game.skin["backgroundcolor"]),
+				internalColor.blend(src = if (isHighlighted) game.skin["selectedcolor"] else color ?: game.skin["decorationcolor1"], dest = game.skin["backgroundcolor"]),
 				16F
 			)
 		}

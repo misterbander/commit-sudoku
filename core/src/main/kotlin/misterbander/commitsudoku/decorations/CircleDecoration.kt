@@ -1,6 +1,5 @@
 package misterbander.commitsudoku.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils.cosDeg
@@ -23,7 +22,6 @@ class CircleDecoration(
 {
 	var i2: Int = i1
 	var j2: Int = j1
-	override var color: Color? = game.skin["decorationcolor2"]
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("i1" to i1, "j1" to j1, "i2" to i2, "j2" to j2, "radius" to radius)
 	
@@ -57,7 +55,7 @@ class CircleDecoration(
 				vertices[i].set(x2 + radius*cosDeg(theta), y2 + radius*sinDeg(theta))
 			}
 		}
-		shapeDrawer.setColor(color)
+		shapeDrawer.setColor(color ?: game.skin["decorationcolor2"])
 		shapeDrawer.path(vertices, 2F, false)
 	}
 }

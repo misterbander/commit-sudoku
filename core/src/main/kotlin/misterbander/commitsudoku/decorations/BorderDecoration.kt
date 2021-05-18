@@ -23,7 +23,6 @@ class BorderDecoration(
 				Type.WHITE_DOT -> Color.WHITE
 			}
 		}
-	override var color: Color? = Color.BLACK
 	
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf(
@@ -35,6 +34,7 @@ class BorderDecoration(
 	init
 	{
 		this.type = type
+		color = Color.BLACK
 	}
 	
 	override fun draw(batch: Batch)

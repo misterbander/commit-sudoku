@@ -22,8 +22,6 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecorati
 	private val arrowVertices = GdxArray<Vector2>().apply { this += vec2() }
 	private val arrowHeadVertices = GdxArray<Vector2>().apply { repeat(3) { this += vec2() } }
 	
-	override var color: Color? = game.skin["decorationcolor2"]
-	
 	override fun addLineCell(endI: Int, endJ: Int)
 	{
 		super.addLineCell(endI, endJ)
@@ -51,7 +49,7 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecorati
 				grid.jToY(arrowJoint.second + 0.5F) + if (index == 0) offsetY else 0F
 			)
 		}
-		shapeDrawer.setColor(if (isHighlighted) Color.ORANGE else internalColor.blend(src = color!!, dest = game.skin["backgroundcolor"]))
+		shapeDrawer.setColor(if (isHighlighted) Color.ORANGE else internalColor.blend(src = color ?: game.skin["decorationcolor2"], dest = game.skin["backgroundcolor"]))
 		shapeDrawer.path(arrowVertices, 2F, JoinType.SMOOTH, true)
 		
 		// Draw arrow head

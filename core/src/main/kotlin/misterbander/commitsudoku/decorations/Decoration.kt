@@ -9,7 +9,7 @@ import java.io.Serializable
 abstract class Decoration(protected val grid: SudokuGrid) : GridModification
 {
 	protected val game = grid.game
-	abstract var color: Color?
+	var color: Color? = null
 	abstract val dataObject: HashMap<String, Serializable>
 	
 	abstract fun draw(batch: Batch)
