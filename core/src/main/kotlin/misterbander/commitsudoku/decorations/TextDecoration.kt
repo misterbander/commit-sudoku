@@ -1,6 +1,5 @@
 package misterbander.commitsudoku.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.style.get
 import misterbander.commitsudoku.scene2d.SudokuGrid
@@ -15,7 +14,6 @@ open class TextDecoration(
 	var text: String
 ) : Decoration(grid)
 {
-	override var color: Color? = null
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("i" to i, "j" to j, "text" to text)
 	

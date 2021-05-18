@@ -13,7 +13,7 @@ import kotlin.math.min
 
 class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 {
-	object Default
+	object Defaults
 	{
 		val dashSegmentLengths = floatArrayOf(4F, 4F)
 	}
@@ -22,7 +22,6 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 	var topLeftI = i
 	var topLeftJ = j
 	var killerConstraint: KillerConstraint? = null
-	override var color: Color? = null
 	private val internalColor = Color()
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("cageMask" to mask, "killerSum" to (killerConstraint?.killerSum ?: -1))
@@ -67,41 +66,41 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 				val topLeftConnected = topConnected && leftConnected && mask[i - 1][j + 1]
 				val topRightConnected = topConnected && rightConnected && mask[i + 1][j + 1]
 				
-				internalColor.set(game.skin["secondarycolor", Color::class.java])
+				internalColor.set(game.skin["primarycolor", Color::class.java])
 				if (color != null)
 					internalColor.blend(color!!, game.skin["backgroundcolor"])
 				
 				if (!bottomConnected)
 					shapeDrawer.dashedLine(
 						x + 4, y + 4, x + size - 4, y + 4,
-						internalColor, 1F, Default.dashSegmentLengths, 2F
+						internalColor, 1F, Defaults.dashSegmentLengths, 2F
 					)
 				if (!topConnected)
 					shapeDrawer.dashedLine(
 						x + 4, y + size - 4, x + size - 4, y + size - 4,
-						internalColor, 1F, Default.dashSegmentLengths, 2F
+						internalColor, 1F, Defaults.dashSegmentLengths, 2F
 					)
 				if (!leftConnected)
 					shapeDrawer.dashedLine(
 						x + 4, y + 4, x + 4, y + size - 4,
-						internalColor, 1F, Default.dashSegmentLengths, 2F
+						internalColor, 1F, Defaults.dashSegmentLengths, 2F
 					)
 				if (!rightConnected)
 					shapeDrawer.dashedLine(
 						x + size - 4, y + 4, x + size - 4, y + size - 4,
-						internalColor, 1F, Default.dashSegmentLengths, 2F
+						internalColor, 1F, Defaults.dashSegmentLengths, 2F
 					)
 				if (!bottomLeftConnected)
 				{
 					if (leftConnected)
 						shapeDrawer.dashedLine(
 							x, y + 4, x + 4, y + 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 					if (bottomConnected)
 						shapeDrawer.dashedLine(
 							x + 4, y, x + 4, y + 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 				}
 				if (!bottomRightConnected)
@@ -109,12 +108,12 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 					if (rightConnected)
 						shapeDrawer.dashedLine(
 							x + size, y + 4, x + size - 4, y + 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 					if (bottomConnected)
 						shapeDrawer.dashedLine(
 							x + size - 4, y, x + size - 4, y + 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 				}
 				if (!topLeftConnected)
@@ -122,12 +121,12 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 					if (leftConnected)
 						shapeDrawer.dashedLine(
 							x, y + size - 4, x + 4, y + size - 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 					if (topConnected)
 						shapeDrawer.dashedLine(
 							x + 4, y + size, x + 4, y + size - 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 				}
 				if (!topRightConnected)
@@ -135,12 +134,12 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 					if (rightConnected)
 						shapeDrawer.dashedLine(
 							x + size, y + size - 4, x + size - 4, y + size - 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 					if (topConnected)
 						shapeDrawer.dashedLine(
 							x + size - 4, y + size, x + size - 4, y + size - 4,
-							internalColor, 1F, Default.dashSegmentLengths, 6F
+							internalColor, 1F, Defaults.dashSegmentLengths, 6F
 						)
 				}
 			}

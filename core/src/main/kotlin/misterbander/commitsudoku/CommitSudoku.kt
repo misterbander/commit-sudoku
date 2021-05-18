@@ -52,7 +52,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 		0 to Color.CLEAR,
 		1 to Color(0xFF000050.toInt()), // Red
 		2 to Color(0xFF911450.toInt()), // Orange
-		3 to Color(0xF7FF1450.toInt()), // Yellow
+		3 to Color(0xFFFF1450.toInt()), // Yellow
 		4 to Color(0x81FF1450.toInt()), // Green
 		5 to Color(0x14F7FF50), // Blue
 		6 to Color(0x1481FF50), // Dark blue
@@ -60,9 +60,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 		8 to Color(0xB4B4B450.toInt()) // Gray
 	)
 	private val markColor = Color(0x7F92FFFF)
-	private val selectedColor = Color(0xFFF27F78.toInt())
 	private val decorationColor1 = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
-	private val decorationColor2 = Color(0.39875F, 0.39875F, 0.39875F, 0.417431F)
 	val lightSkin by lazy {
 		skin {
 			add(Color.BLACK, "primarycolor")
@@ -71,10 +69,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0xF0F0F0FF.toInt()), "toolbarbackgroundcolor")
 			add(Color(0x00DB15FF), "nongivencolor")
 			add(markColor, "markcolor")
-			add(selectedColor, "selectedcolor")
+			add(Color(0xFFF27F78.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			add(decorationColor1, "decorationcolor1")
-			add(decorationColor2, "decorationcolor2")
+			add(Color(0.39875F, 0.39875F, 0.39875F, 0.417431F), "decorationcolor2")
 			
 			// Style bases
 			addRegions(guiAtlas)
@@ -181,10 +179,10 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			add(Color(0x0F0F0FFF), "toolbarbackgroundcolor")
 			add(Color(0x00DB15FF), "nongivencolor")
 			add(markColor, "markcolor")
-			add(selectedColor, "selectedcolor")
+			add(Color(0xFFF27F60.toInt()), "selectedcolor")
 			add(highlightColors, "highlightcolors")
 			add(decorationColor1, "decorationcolor1")
-			add(decorationColor2, "decorationcolor2")
+			add(Color(0.6F, 0.6F, 0.6F, 0.5F), "decorationcolor2")
 			
 			// Style bases
 			addRegions(guiAtlas)

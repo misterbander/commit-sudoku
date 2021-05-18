@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxArray
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
-import ktx.style.get
 import misterbander.commitsudoku.decorations.CircleDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
@@ -50,7 +49,7 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		currentCircleDecoration?.color = game.skin["decorationcolor2"]
+		currentCircleDecoration?.color = null
 		currentCircleDecoration = null
 		startI = -1
 		startJ = -1

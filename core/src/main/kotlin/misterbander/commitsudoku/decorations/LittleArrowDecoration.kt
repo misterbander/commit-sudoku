@@ -1,6 +1,5 @@
 package misterbander.commitsudoku.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.MathUtils.cosDeg
@@ -30,7 +29,6 @@ class LittleArrowDecoration(
 		{
 			field = value cycle 0F..360F
 		}
-	override var color: Color? = null
 	
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("i" to i, "j" to j, "pointingDirection" to pointingDirection)
