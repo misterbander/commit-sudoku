@@ -122,21 +122,33 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		return floor((y - this.y)/(cellSize*precision))*precision
 	}
 	
-	fun select(i: Int, j: Int, toggleUnselect: Boolean)
+	fun select(i: Int, j: Int)
 	{
 		if (i in 0..8 && j in 0..8)
-			select(cells[i][j], toggleUnselect)
+			select(cells[i][j])
 	}
 	
-	fun select(cell: Cell, toggleUnselect: Boolean)
+	fun select(cell: Cell)
 	{
 		mainSelectedCell = cell
-		cell.isSelected = if (toggleUnselect) !cell.isSelected else true
+		cell.isSelected = true
 	}
 	
 	fun unselect()
 	{
 		cells.forEach { it.forEach { cell -> cell.isSelected = false } }
+	}
+	
+	fun unselect(i: Int, j: Int)
+	{
+		if (i in 0..8 && j in 0..8)
+			unselect(cells[i][j])
+	}
+	
+	private fun unselect(cell: Cell)
+	{
+		mainSelectedCell = cell
+		cell.isSelected = false
 	}
 	
 	fun setGivens(isGiven: Boolean)

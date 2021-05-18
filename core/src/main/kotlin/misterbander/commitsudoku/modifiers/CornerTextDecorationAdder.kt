@@ -25,7 +25,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 		if (!isValidIndex)
 			return
 		
-		grid.select(selectI, selectJ, false)
+		grid.select(selectI, selectJ)
 		val existingCornerTextDecoration = findTextDecoration(selectI, selectJ)
 		if (existingCornerTextDecoration != null)
 			removeModification(existingCornerTextDecoration)
