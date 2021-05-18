@@ -90,8 +90,8 @@ class SudokuGridKeyListener(private val grid: SudokuGrid) : KtxInputListener()
 			return
 		}
 		if (grid.mainSelectedCell == null)
-			grid.select(grid.cells[0][8], false)
+			grid.select(grid.cells[0][8])
 		else
-			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down), false)
+			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down))
 	}
 }
