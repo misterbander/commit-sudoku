@@ -22,7 +22,7 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 	
 	fun adjustPosition(screenHeight: Int)
 	{
-		val focusedTextField: MBTextField = stage.keyboardFocus as? MBTextField ?: return
+		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return
 		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
 		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
 		
