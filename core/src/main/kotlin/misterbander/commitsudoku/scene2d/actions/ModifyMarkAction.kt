@@ -14,7 +14,7 @@ class ModifyMarkAction(
 		Type.CENTER -> cell.centerMarks[digit - 1]
 		else -> throw IllegalArgumentException("Invalid action type!")
 	},
-	private val to: Boolean = !from
+	private val to: Boolean
 ) : ModifyCellAction()
 {
 	override val dataObject: HashMap<String, Serializable> = hashMapOf(
