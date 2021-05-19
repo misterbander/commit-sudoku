@@ -57,7 +57,8 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 		5 to Color(0x14F7FF50), // Blue
 		6 to Color(0x1481FF50), // Dark blue
 		7 to Color(0x9114FF50.toInt()), // Purple
-		8 to Color(0xB4B4B450.toInt()) // Gray
+		8 to Color(0xFF00BB50.toInt()), // Pink
+		9 to Color(0xB4B4B450.toInt()) // Gray
 	)
 	private val markColor = Color(0x7F92FFFF)
 	private val decorationColor1 = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
@@ -128,6 +129,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blueicon"] }
 			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblueicon"] }
 			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purpleicon"] }
+			imageButton("pinkbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pinkicon"] }
 			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
 			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["setgivensicon"] }
 			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["addthermoicon"] }
@@ -238,6 +240,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 			imageButton("bluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["blueicon"] }
 			imageButton("darkbluebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["darkblueicon"] }
 			imageButton("purplebuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["purpleicon"] }
+			imageButton("pinkbuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["pinkicon"] }
 			imageButton("graybuttonstyle", "imagebuttonstylebase") { imageUp = this@skin["grayicon"] }
 			imageButton("setgivensbuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darksetgivensicon"] }
 			imageButton("addthermobuttonstyle", "toolbarbuttonstylebase") { imageUp = this@skin["darkaddthermoicon"] }

@@ -106,13 +106,8 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(screen.game.skin), Per
 		actor(ModifyColorButton(grid, 6, game.skin, "darkbluebuttonstyle"))
 		row()
 		actor(ModifyColorButton(grid, 7, game.skin, "purplebuttonstyle"))
-		actor(ModifyColorButton(grid, 8, game.skin, "graybuttonstyle"))
-		textButton("", "textbuttonstyle", game.skin) {
-			onChange {
-				grid.typedDigit(9, true)
-				isChecked = false
-			}
-		}
+		actor(ModifyColorButton(grid, 8, game.skin, "pinkbuttonstyle"))
+		actor(ModifyColorButton(grid, 9, game.skin, "graybuttonstyle"))
 	}
 	val zeroButton = ModifyCellButton(grid, 0, game.skin, "textbuttonstyle2")
 	val undoRedoTray = scene2d.table {
