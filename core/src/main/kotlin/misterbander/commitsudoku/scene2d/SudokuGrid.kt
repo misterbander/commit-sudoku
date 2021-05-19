@@ -178,14 +178,14 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		return selectedCells
 	}
 	
-	fun typedDigit(digit: Int, isKeypad: Boolean = false)
+	fun typedDigit(digitId: Int, isKeypad: Boolean = false)
 	{
 		if (modifier != null)
 		{
-			modifier!!.typedDigit(digit)
+			modifier!!.typedDigit(digitId)
 			return
 		}
-		val to = if (digit == -1) 0 else digit
+		val digit = if (digitId == -1) 0 else digitId
 		
 		val selectedCells = getSelectedCells()
 		if (selectedCells.isEmpty)
@@ -196,7 +196,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		when
 		{
 			// Clear cell except color
-			to == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
+			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
 			{
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
@@ -216,29 +216,47 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			// Insert corner mark
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CORNER_MARK || !isKeypad && UIUtils.shift() ->
 			{
+				// Only delete mark if all selected cells have the corner mark
+				var to = false
+				selectedCells.forEach { cell ->
+					if (cell.digit == 0 && !cell.cornerMarks[digit - 1])
+					{
+						to = true
+						return@forEach
+					}
+				}
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, to)
+						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, digit, to = to)
 				}
 			}
 			// Insert center mark
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.CENTER_MARK || !isKeypad && (UIUtils.ctrl()) ->
 			{
+				// Only delete mark if all selected cells have the center mark
+				var to = false
+				selectedCells.forEach { cell ->
+					if (cell.digit == 0 && !cell.centerMarks[digit - 1])
+					{
+						to = true
+						return@forEach
+					}
+				}
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, to)
+						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, digit, to = to)
 				}
 			}
 			// Highlight color
 			isKeypad && panel.keypadInputMode == SudokuPanel.InputMode.COLOR || !isKeypad && UIUtils.alt() ->
-				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = to) }
+				selectedCells.forEach { cell -> modifyCellActions += ModifyColorAction(cell, to = digit) }
 			// Insert digit
 			else ->
 			{
 				shouldCheck = true
 				selectedCells.forEach { cell ->
 					if (!cell.isGiven)
-						modifyCellActions += ModifyDigitAction(cell, to = to)
+						modifyCellActions += ModifyDigitAction(cell, to = digit)
 				}
 			}
 		}
