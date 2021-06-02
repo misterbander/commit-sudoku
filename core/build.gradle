@@ -20,6 +20,6 @@ dependencies {
 	api "io.github.libktx:ktx-math:$ktxMathVersion"
 	api "io.github.libktx:ktx-scene2d:$ktxScene2DVersion"
 	api "io.github.libktx:ktx-style:$ktxStyleVersion"
-	implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+	implementation "space.earlygrey:shapedrawer:$shapeDrawerVersion"
 	implementation files("D:\\user\\Desktop\\Java_Stuff\\Libraries\\javaluator-3.0.1.jar")
 }
