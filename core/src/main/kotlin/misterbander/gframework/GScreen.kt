@@ -34,7 +34,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
 	open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
 	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
-	open val viewport: Viewport by lazy { ExtendViewport(1000F, 600F, camera) }
+	open val viewport: Viewport by lazy { ExtendViewport(1280F, 720F, camera) }
 	val stage by lazy { Stage(viewport, game.batch) }
 	val accessibleInputWindows = GdxSet<AccessibleInputWindow>()
 	
@@ -86,7 +86,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	
 	override fun resize(width: Int, height: Int)
 	{
-		viewport.update(width, height, true)
+		viewport.update(width, height, false)
 	}
 	
 	fun onLayoutSizeChange(screenHeight: Int)
@@ -102,12 +102,11 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		game.batch.projectionMatrix = camera.combined
 		game.shapeRenderer.projectionMatrix = camera.combined
 		game.shapeDrawer.update()
+		stage.act(delta)
+		stage.draw()
 		
 		scheduledAddingGObjects.forEach { spawnGObject(it) }
 		scheduledAddingGObjects.clear()
-		
-		stage.act(delta)
-		stage.draw()
 		
 		world?.step(1/60F, 6, 4)
 		
