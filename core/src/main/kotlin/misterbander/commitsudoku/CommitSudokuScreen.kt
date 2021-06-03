@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.GdxRuntimeException
-import com.badlogic.gdx.utils.viewport.ExtendViewport
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.collections.plusAssign
@@ -28,8 +27,6 @@ import kotlin.concurrent.thread
 
 class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
-	override val viewport by lazy { ExtendViewport(1280F, 720F, camera) }
-	
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
 	val textInputWindow = SingleInputWindow(this, isModal = true)
@@ -167,6 +164,11 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		updateActorStyle(panel.colorKeypad, otherSkin)
 		updateActorStyle(panel.undoRedoTray, otherSkin)
 		updateActorStyle(panel.zeroButton, otherSkin)
+	}
+	
+	override fun resize(width: Int, height: Int)
+	{
+		viewport.update(width, height, true)
 	}
 	
 	override fun pause()
