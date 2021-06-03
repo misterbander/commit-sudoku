@@ -22,7 +22,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 {
 	// Assets
 	
-	private val guiAtlas by assetManager.load<TextureAtlas>("sprites/gui.atlas")
+	private val guiAtlas by assetManager.load<TextureAtlas>("textures/gui.atlas")
 	
 	// Fonts
 	private val generator by assetManager.load<FreeTypeFontGenerator>("fonts/segoeui.ttf")
