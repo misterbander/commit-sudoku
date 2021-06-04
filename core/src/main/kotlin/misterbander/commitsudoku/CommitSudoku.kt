@@ -167,7 +167,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				font = segoeui
 				fontColor = this@skin["primarycolor"]
 				selectionFontColor = Color.WHITE
-				cursor = this@skin["cursor"]
+				cursor = this@skin["textcursor"]
 				cursor.leftWidth = 32F
 				selection = this@skin["textselection"]
 			}
@@ -277,7 +277,7 @@ class CommitSudoku(private val darkModeSettingsProvider: DarkModeSettingsProvide
 				font = segoeui
 				fontColor = this@skin["primarycolor"]
 				selectionFontColor = Color.WHITE
-				cursor = this@skin["darkcursor"]
+				cursor = this@skin["darktextcursor"]
 				cursor.leftWidth = 32F
 				selection = this@skin["textselection"]
 			}

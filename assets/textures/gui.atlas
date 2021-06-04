@@ -176,13 +176,6 @@ connecticon
   orig: 32, 32
   offset: 0, 0
   index: -1
-cursor
-  rotate: false
-  xy: 1370, 4
-  size: 2, 30
-  orig: 2, 30
-  offset: 0, 0
-  index: -1
 darkaddarrowdecorationicon
   rotate: false
   xy: 578, 22
@@ -334,13 +327,6 @@ darkconnecticon
   orig: 32, 32
   offset: 0, 0
   index: -1
-darkcursor
-  rotate: false
-  xy: 2016, 92
-  size: 2, 30
-  orig: 2, 30
-  offset: 0, 0
-  index: -1
 darkdeleteicon
   rotate: false
   xy: 1944, 90
@@ -423,6 +409,13 @@ darksoftthermoicon
   xy: 542, 22
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+darktextcursor
+  rotate: false
+  xy: 2016, 92
+  size: 2, 30
+  orig: 2, 30
   offset: 0, 0
   index: -1
 darktextfield
@@ -616,6 +609,13 @@ softthermoicon
   xy: 830, 22
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+textcursor
+  rotate: false
+  xy: 1370, 4
+  size: 2, 30
+  orig: 2, 30
   offset: 0, 0
   index: -1
 textfield
