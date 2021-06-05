@@ -91,7 +91,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	
 	fun onLayoutSizeChange(screenHeight: Int)
 	{
-		accessibleInputWindows.forEach { it.adjustPosition(screenHeight) }
+		accessibleInputWindows.forEach { it.attemptAdjustPositionOnLayoutSizeChange(screenHeight) }
 	}
 	
 	override fun render(delta: Float)

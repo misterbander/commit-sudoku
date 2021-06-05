@@ -3,6 +3,7 @@ package misterbander.gframework.scene2d
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Window
+import ktx.actors.onKeyboardFocus
 import ktx.math.vec2
 import misterbander.gframework.GScreen
 
@@ -18,11 +19,18 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 	private val prevWindowPos = vec2()
 	private val windowScreenPos = vec2()
 	private val textFieldScreenPos = vec2()
+	private var prevScreenHeight = Gdx.graphics.height
 	private var shouldShift = false
 	
-	fun adjustPosition(screenHeight: Int)
+	fun addFocusListener(mbTextField: MBTextField)
+	{
+		mbTextField.onKeyboardFocus { focused -> if (focused && shouldShift) adjustPosition(prevScreenHeight) }
+	}
+	
+	fun attemptAdjustPositionOnLayoutSizeChange(screenHeight: Int)
 	{
 		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return
+		prevScreenHeight = screenHeight
 		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
 		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
 		
@@ -31,11 +39,8 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 			prevWindowPos.set(x, y)
 			if (textFieldScreenPos.y > screenHeight) // TextField is off screen
 			{
-				val diff = textFieldScreenPos.y - screenHeight
-				windowScreenPos.y -= diff
-				stage.screenToStageCoordinates(windowScreenPos)
-				setPosition(windowScreenPos.x, windowScreenPos.y)
-				shouldShift = true
+				if (adjustPosition(screenHeight))
+					shouldShift = true
 			}
 		}
 		else if (shouldShift)
@@ -44,5 +49,22 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 			shouldShift = false
 		}
 		Gdx.graphics.requestRendering()
+	}
+	
+	private fun adjustPosition(screenHeight: Int): Boolean
+	{
+		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return false
+		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
+		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
+		
+		if (textFieldScreenPos.y > screenHeight) // TextField is off screen
+		{
+			val diff = textFieldScreenPos.y - screenHeight
+			windowScreenPos.y -= diff
+			stage.screenToStageCoordinates(windowScreenPos)
+			setPosition(windowScreenPos.x, windowScreenPos.y)
+			return true
+		}
+		return false
 	}
 }

@@ -112,24 +112,43 @@ public class MBTextField extends Widget implements Disableable
 	final KeyRepeatTask keyRepeatTask = new KeyRepeatTask();
 	boolean programmaticChangeEvents;
 	
+	// ================ MODIFICATION START ================
 	public MBTextField(@Null String text, Skin skin)
 	{
-		this(text, skin.get(MBTextFieldStyle.class));
+		this(null, text, skin.get(MBTextFieldStyle.class));
 	}
 	
 	public MBTextField(@Null String text, Skin skin, String styleName)
 	{
-		this(text, skin.get(styleName, MBTextFieldStyle.class));
+		this(null, text, skin.get(styleName, MBTextFieldStyle.class));
 	}
 	
 	public MBTextField(@Null String text, MBTextFieldStyle style)
+	{
+		this(null, text, style);
+	}
+	
+	public MBTextField(@Null AccessibleInputWindow accessibleInputWindow, @Null String text, Skin skin)
+	{
+		this(accessibleInputWindow, text, skin.get(MBTextFieldStyle.class));
+	}
+	
+	public MBTextField(@Null AccessibleInputWindow accessibleInputWindow, @Null String text, Skin skin, String styleName)
+	{
+		this(accessibleInputWindow, text, skin.get(styleName, MBTextFieldStyle.class));
+	}
+	
+	public MBTextField(@Null AccessibleInputWindow accessibleInputWindow, @Null String text, MBTextFieldStyle style)
 	{
 		setStyle(style);
 		clipboard = Gdx.app.getClipboard();
 		initialize();
 		setText(text);
 		setSize(getPrefWidth(), getPrefHeight());
+		if (accessibleInputWindow != null)
+			accessibleInputWindow.addFocusListener(this);
 	}
+	// ================  MODIFICATION END  ================
 	
 	protected void initialize()
 	{
