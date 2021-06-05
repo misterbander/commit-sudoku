@@ -461,7 +461,7 @@ public class MBTextField extends Widget implements Disableable
 				}
 				
 				colorMarkupDisplayTextBuilder.insert(Math.min(Math.max(cursor, selectionStart), visibleTextEnd), "[]");
-				colorMarkupDisplayTextBuilder.insert(Math.min(cursor, selectionStart), "[#" + style.selectionFontColor.toString() + "]");
+				colorMarkupDisplayTextBuilder.insert(Math.min(cursor, selectionStart), "[#" + (style.selectionFontColor == null ? style.fontColor : style.selectionFontColor.toString()) + "]");
 				colorMarkupDisplayText = colorMarkupDisplayTextBuilder.toString();
 				
 				prevCursor = this.cursor;
