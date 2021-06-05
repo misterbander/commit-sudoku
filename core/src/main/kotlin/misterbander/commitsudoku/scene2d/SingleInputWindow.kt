@@ -1,7 +1,6 @@
 package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import ktx.actors.*
 import ktx.scene2d.actor
@@ -10,6 +9,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.scene2d.MBTextField
+import misterbander.gframework.scene2d.UnfocusListener
 
 class SingleInputWindow(
 	screen: CommitSudokuScreen,
@@ -19,7 +19,7 @@ class SingleInputWindow(
 ) : CommitSudokuWindow(screen, "", isModal)
 {
 	private val messageLabel = Label("", game.skin, "infolabelstyle")
-	private val textField = MBTextField("", game.skin, "textfieldstyle")
+	private val textField = MBTextField(this, "", game.skin, "textfieldstyle")
 	var onSuccess: (String) -> Unit = {}
 	
 	init
@@ -47,10 +47,7 @@ class SingleInputWindow(
 		left()
 		pack()
 		
-		onTouchEvent { event ->
-			if (event.type == InputEvent.Type.touchDown && event.target !is MBTextField)
-				stage.keyboardFocus = null
-		}
+		addListener(UnfocusListener(this))
 		onKeyDown { keycode ->
 			if (keycode == Input.Keys.ENTER)
 			{

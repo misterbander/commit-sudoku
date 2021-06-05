@@ -9,6 +9,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.scene2d.MBTextField
+import misterbander.gframework.scene2d.UnfocusListener
 import misterbander.gframework.scene2d.mbTextField
 import java.io.ObjectOutputStream
 
@@ -22,11 +23,11 @@ class ConnectWindow(screen: CommitSudokuScreen) : CommitSudokuWindow(screen, "Sy
 			defaults().left().space(16F)
 			label("Host Address:", "infolabelstyle", game.skin)
 			row()
-			val hostAddressTextField = mbTextField("192.168.", "textfieldstyle", game.skin).cell(colspan = 2, fillX = true)
+			val hostAddressTextField = mbTextField(this@ConnectWindow, "192.168.", "textfieldstyle", game.skin).cell(colspan = 2, fillX = true)
 			row()
 			label("Port", "infolabelstyle", game.skin)
 			row()
-			val portTextField = mbTextField("11530", "textfieldstyle", game.skin) {
+			val portTextField = mbTextField(this@ConnectWindow, "11530", "textfieldstyle", game.skin) {
 				textFieldFilter = MBTextField.MBTextFieldFilter.DigitsOnlyFilter()
 			}.cell(colspan = 2, fillX = true)
 			row()
@@ -57,5 +58,7 @@ class ConnectWindow(screen: CommitSudokuScreen) : CommitSudokuWindow(screen, "Sy
 			}.cell(width = 96F)
 			textButton("Cancel", "textbuttonstyle", game.skin) { onChange { close() } }.cell(width = 96F)
 		})
+		
+		addListener(UnfocusListener(this))
 	}
 }
