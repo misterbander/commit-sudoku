@@ -87,6 +87,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	override fun resize(width: Int, height: Int)
 	{
 		viewport.update(width, height, false)
+		Gdx.graphics.requestRendering()
 	}
 	
 	fun onLayoutSizeChange(screenHeight: Int)
