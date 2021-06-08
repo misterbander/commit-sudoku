@@ -1,6 +1,7 @@
 package misterbander.gframework
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -33,9 +34,14 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 {
 	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
 	open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
+	/** Secondary camera for UI on this GScreen. Also defaults to an `OrthographicCamera`. */
+	open val uiCamera = OrthographicCamera().apply { setToOrtho(false) }
 	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
 	open val viewport: Viewport by lazy { ExtendViewport(1280F, 720F, camera) }
+	/** Viewport to project UI contents. Also defaults to `ExtendViewport`. */
+	open val uiViewport by lazy { ExtendViewport(1280F, 720F, uiCamera) }
 	val stage by lazy { Stage(viewport, game.batch) }
+	val uiStage by lazy { Stage(uiViewport, game.batch) }
 	val accessibleInputWindows = GdxSet<AccessibleInputWindow>()
 	
 	open val world: World? = null
@@ -46,7 +52,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	
 	override fun show()
 	{
-		Gdx.input.inputProcessor = stage
+		Gdx.input.inputProcessor = InputMultiplexer(uiStage, stage)
 		world?.setContactListener(this)
 	}
 	
@@ -87,6 +93,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	override fun resize(width: Int, height: Int)
 	{
 		viewport.update(width, height, false)
+		uiViewport.update(width, height, true)
 		Gdx.graphics.requestRendering()
 	}
 	
@@ -105,6 +112,13 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		game.shapeDrawer.update()
 		stage.act(delta)
 		stage.draw()
+		
+		uiCamera.update()
+		game.batch.projectionMatrix = uiCamera.combined
+		game.shapeRenderer.projectionMatrix = uiCamera.combined
+		game.shapeDrawer.update()
+		uiStage.act(delta)
+		uiStage.draw()
 		
 		scheduledAddingGObjects.forEach { spawnGObject(it) }
 		scheduledAddingGObjects.clear()
