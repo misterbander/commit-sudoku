@@ -169,6 +169,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	override fun resize(width: Int, height: Int)
 	{
 		viewport.update(width, height, true)
+		Gdx.graphics.requestRendering()
 	}
 	
 	override fun pause()
