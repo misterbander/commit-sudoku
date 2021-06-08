@@ -46,7 +46,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	init
 	{
-		stage += object : Actor() // Fallback actor
+		uiStage += object : Actor() // Fallback actor
 		{
 			init
 			{
@@ -58,17 +58,17 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				return this
 			}
 		}
-		stage += scene2d.table {
+		uiStage += scene2d.table {
 			setFillParent(true)
 			actor(toolbar).cell(expandY = true).inCell.top()
 			actor(panel).cell(expand = true)
 		}
-		stage.keyboardFocus = panel.grid
-		stage += toolbar.thermoMultibuttonMenu
-		stage += toolbar.cageMultibuttonMenu
-		stage += textInputWindow
-		stage += connectWindow
-		stage += messageDialog
+		uiStage.keyboardFocus = panel.grid
+		uiStage += toolbar.thermoMultibuttonMenu
+		uiStage += toolbar.cageMultibuttonMenu
+		uiStage += textInputWindow
+		uiStage += connectWindow
+		uiStage += messageDialog
 		
 		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
@@ -147,7 +147,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	fun updateStyles()
 	{
 		val otherSkin = if (game.isDarkMode) game.lightSkin else game.darkSkin
-		stage.actors.forEach {
+		uiStage.actors.forEach {
 			updateActorStyle(
 				it, otherSkin,
 				panel.digitKeypad,
@@ -164,12 +164,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		updateActorStyle(panel.colorKeypad, otherSkin)
 		updateActorStyle(panel.undoRedoTray, otherSkin)
 		updateActorStyle(panel.zeroButton, otherSkin)
-	}
-	
-	override fun resize(width: Int, height: Int)
-	{
-		viewport.update(width, height, true)
-		Gdx.graphics.requestRendering()
 	}
 	
 	override fun pause()
