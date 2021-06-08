@@ -46,14 +46,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	init
 	{
-		accessibleInputWindows += textInputWindow
-		accessibleInputWindows += connectWindow
-	}
-	
-	override fun show()
-	{
-		super.show()
-		info("CommitSudokuScreen    | INFO") { "Show CommitSudokuScreen" }
 		stage += object : Actor() // Fallback actor
 		{
 			init
@@ -81,6 +73,14 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
 		
+		accessibleInputWindows += textInputWindow
+		accessibleInputWindows += connectWindow
+	}
+	
+	override fun show()
+	{
+		super.show()
+		info("CommitSudokuScreen    | INFO") { "Show CommitSudokuScreen" }
 		runServer()
 	}
 	
