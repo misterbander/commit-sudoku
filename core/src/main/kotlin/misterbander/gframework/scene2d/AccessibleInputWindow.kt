@@ -19,18 +19,18 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 	private val prevWindowPos = vec2()
 	private val windowScreenPos = vec2()
 	private val textFieldScreenPos = vec2()
-	private var prevScreenHeight = Gdx.graphics.height
+	private var screenHeight = Gdx.graphics.height
 	private var shouldShift = false
 	
 	fun addFocusListener(mbTextField: MBTextField)
 	{
-		mbTextField.onKeyboardFocus { focused -> if (focused && shouldShift) adjustPosition(prevScreenHeight) }
+		mbTextField.onKeyboardFocus { focused -> if (focused) adjustPosition(screenHeight) }
 	}
 	
 	fun attemptAdjustPositionOnLayoutSizeChange(screenHeight: Int)
 	{
 		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return
-		prevScreenHeight = screenHeight
+		this.screenHeight = screenHeight
 		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
 		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
 		
