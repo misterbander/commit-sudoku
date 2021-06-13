@@ -92,6 +92,11 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	
 	override fun resize(width: Int, height: Int)
 	{
+		if (viewport is ExtendViewport)
+		{
+			val extendViewport = viewport as ExtendViewport
+			camera.position.set(extendViewport.minWorldWidth/2, extendViewport.minWorldHeight /2, 0F)
+		}
 		viewport.update(width, height, false)
 		uiViewport.update(width, height, true)
 		Gdx.graphics.requestRendering()
