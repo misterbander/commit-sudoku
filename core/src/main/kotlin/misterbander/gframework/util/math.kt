@@ -25,7 +25,7 @@ fun angle(x1: Int, y1: Int, x2: Int, y2: Int): Float = angle(x1.toFloat(), y1.to
  */
 fun angle(x1: Float, y1: Float, x2: Float, y2: Float): Float
 {
-	return tempVec.set(x2 - x1, y2 - y1).angle()
+	return tempVec.set(x2 - x1, y2 - y1).angleDeg()
 }
 
 /**
