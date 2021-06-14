@@ -49,6 +49,8 @@ abstract class GFramework : KtxGame<KtxScreen>(clearScreen = false)
 	override fun dispose()
 	{
 		batch.dispose()
+		shapeRenderer.dispose()
+		assetManager.dispose()
 		super.dispose()
 	}
 }
