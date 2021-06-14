@@ -1,17 +1,18 @@
 package misterbander.commitsudoku
 
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import misterbander.gframework.GScreen
+import misterbander.gframework.scene2d.KeyboardHeightObserver
 
 
 /** Launches the Android application.  */
-class AndroidLauncher : AndroidApplication()
+class AndroidLauncher : AndroidApplication(), KeyboardHeightObserver
 {
-	private var prevWidth = 0
-	private var prevHeight = 0
+	private lateinit var commitSudoku: CommitSudoku
+	private lateinit var keyboardHeightProvider: KeyboardHeightProvider
 	
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -22,24 +23,40 @@ class AndroidLauncher : AndroidApplication()
 			override val defaultDarkModeEnabled
 				get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 		}
-		val commitSudoku = CommitSudoku(darkModeSettingsProvider)
+		commitSudoku = CommitSudoku(darkModeSettingsProvider)
 		initialize(commitSudoku, configuration)
 		
-		val rootView = window.decorView.rootView
-		val rect = Rect()
-		rootView.getWindowVisibleDisplayFrame(rect)
-		prevWidth = rect.width()
-		prevHeight = rect.height()
+		keyboardHeightProvider = KeyboardHeightProvider(this)
 		
-		rootView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-			val rect1 = Rect()
-			rootView.getWindowVisibleDisplayFrame(rect1)
-			if (!(prevWidth == rect1.width() && prevHeight == rect1.height()))
-			{
-				prevWidth = rect1.width()
-				prevHeight = rect1.height()
-				commitSudoku.notifyLayoutSizeChange(prevHeight)
-			}
-		}
+		// Make sure to start the keyboard height provider after the onResume
+		// of this activity. This is because a popup window must be initialised
+		// and attached to the activity root view
+		val rootView = window.decorView.rootView
+		rootView.post { keyboardHeightProvider.start() }
+	}
+	
+	override fun onPause()
+	{
+		super.onPause()
+		keyboardHeightProvider.setKeyboardHeightObserver(null)
+	}
+	
+	override fun onResume()
+	{
+		super.onResume()
+		keyboardHeightProvider.setKeyboardHeightObserver(this)
+	}
+	
+	override fun onDestroy()
+	{
+		super.onDestroy()
+		keyboardHeightProvider.close()
+	}
+	
+	override fun onKeyboardHeightChanged(height: Int, orientation: Int)
+	{
+		val gScreen = commitSudoku.shownScreen as? GScreen<*> ?: return
+		for (observer in gScreen.keyboardHeightObservers)
+			observer.onKeyboardHeightChanged(height, orientation)
 	}
 }

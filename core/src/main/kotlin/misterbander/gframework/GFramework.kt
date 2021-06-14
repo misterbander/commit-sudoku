@@ -46,12 +46,6 @@ abstract class GFramework : KtxGame<KtxScreen>(clearScreen = false)
 		assetManager
 	}
 	
-	fun notifyLayoutSizeChange(screenHeight: Int)
-	{
-		if (shownScreen is GScreen<*>)
-			(shownScreen as GScreen<*>).onLayoutSizeChange(screenHeight)
-	}
-	
 	override fun dispose()
 	{
 		batch.dispose()

@@ -13,9 +13,9 @@ import ktx.actors.plusAssign
 import ktx.app.KtxScreen
 import ktx.collections.GdxSet
 import ktx.collections.plusAssign
-import misterbander.gframework.scene2d.AccessibleInputWindow
 import misterbander.gframework.scene2d.GContactListener
 import misterbander.gframework.scene2d.GObject
+import misterbander.gframework.scene2d.KeyboardHeightObserver
 
 
 /**
@@ -42,7 +42,7 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	open val uiViewport by lazy { ExtendViewport(1280F, 720F, uiCamera) }
 	val stage by lazy { Stage(viewport, game.batch) }
 	val uiStage by lazy { Stage(uiViewport, game.batch) }
-	val accessibleInputWindows = GdxSet<AccessibleInputWindow>()
+	val keyboardHeightObservers = GdxSet<KeyboardHeightObserver>()
 	
 	open val world: World? = null
 	open val mpp = 0.25F
@@ -100,11 +100,6 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 		viewport.update(width, height, false)
 		uiViewport.update(width, height, true)
 		Gdx.graphics.requestRendering()
-	}
-	
-	fun onLayoutSizeChange(screenHeight: Int)
-	{
-		accessibleInputWindows.forEach { it.attemptAdjustPositionOnLayoutSizeChange(screenHeight) }
 	}
 	
 	override fun render(delta: Float)
