@@ -33,6 +33,6 @@ jar {
 		attributes 'Main-Class': project.mainClassName
 	}
 	doLast {
-		file(archivePath).setExecutable(true, false)
+		file(archiveFile).setExecutable(true, false)
 	}
 }
