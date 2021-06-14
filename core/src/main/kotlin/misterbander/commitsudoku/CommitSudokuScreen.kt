@@ -73,8 +73,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
 		
-		accessibleInputWindows += textInputWindow
-		accessibleInputWindows += connectWindow
+		keyboardHeightObservers += textInputWindow
+		keyboardHeightObservers += connectWindow
 	}
 	
 	override fun show()

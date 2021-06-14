@@ -14,34 +14,35 @@ import misterbander.gframework.GScreen
  * For this to work, a layout size listener should be attached in Android that calls `GFramework::notifySizeChange()`,
  * and the window must be added to the [GScreen]'s accessible window list.
  */
-abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: String) : Window(title, skin, styleName)
+abstract class AccessibleInputWindow(
+	title: String,
+	skin: Skin,
+	styleName: String
+) : Window(title, skin, styleName), KeyboardHeightObserver
 {
 	private val prevWindowPos = vec2()
 	private val windowScreenPos = vec2()
 	private val textFieldScreenPos = vec2()
-	private var screenHeight = Gdx.graphics.height
+	private var keyboardHeight = 0
 	private var shouldShift = false
 	
 	fun addFocusListener(mbTextField: MBTextField)
 	{
-		mbTextField.onKeyboardFocus { focused -> if (focused) adjustPosition(screenHeight) }
+		mbTextField.onKeyboardFocus { focused -> if (focused) adjustPosition(keyboardHeight) }
 	}
 	
-	fun attemptAdjustPositionOnLayoutSizeChange(screenHeight: Int)
+	override fun onKeyboardHeightChanged(height: Int, orientation: Int)
 	{
 		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return
-		this.screenHeight = screenHeight
+		this.keyboardHeight = height
 		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
 		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
 		
-		if (screenHeight < Gdx.graphics.height - 160) // Keyboard up, 160 is an arbitrary keyboard height
+		if (height > 0) // Keyboard up
 		{
 			prevWindowPos.set(x, y)
-			if (textFieldScreenPos.y > screenHeight) // TextField is off screen
-			{
-				if (adjustPosition(screenHeight))
-					shouldShift = true
-			}
+			if (adjustPosition(height))
+				shouldShift = true
 		}
 		else if (shouldShift)
 		{
@@ -51,12 +52,13 @@ abstract class AccessibleInputWindow(title: String, skin: Skin, styleName: Strin
 		Gdx.graphics.requestRendering()
 	}
 	
-	private fun adjustPosition(screenHeight: Int): Boolean
+	private fun adjustPosition(height: Int): Boolean
 	{
 		val focusedTextField: MBTextField = stage?.keyboardFocus as? MBTextField ?: return false
 		stage.stageToScreenCoordinates(windowScreenPos.set(x, y))
 		localToScreenCoordinates(textFieldScreenPos.set(focusedTextField.x, focusedTextField.y))
 		
+		val screenHeight =Gdx.graphics.height - height
 		if (textFieldScreenPos.y > screenHeight) // TextField is off screen
 		{
 			val diff = textFieldScreenPos.y - screenHeight
