@@ -118,10 +118,8 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	private fun updateActorStyle(actor: Actor, otherSkin: Skin, vararg exclude: Actor)
 	{
-		exclude.forEach {
-			if (actor == it)
-				return
-		}
+		if (exclude.any { actor == it })
+			return
 		when (actor)
 		{
 			is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
