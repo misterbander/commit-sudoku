@@ -105,21 +105,23 @@ abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
 	override fun render(delta: Float)
 	{
 		clearScreen()
-		
+		renderStage(camera, stage, delta)
+		renderStage(uiCamera, uiStage, delta)
+		updateWorld()
+	}
+	
+	protected fun renderStage(camera: Camera, stage: Stage, delta: Float)
+	{
 		camera.update()
 		game.batch.projectionMatrix = camera.combined
 		game.shapeRenderer.projectionMatrix = camera.combined
 		game.shapeDrawer.update()
 		stage.act(delta)
 		stage.draw()
-		
-		uiCamera.update()
-		game.batch.projectionMatrix = uiCamera.combined
-		game.shapeRenderer.projectionMatrix = uiCamera.combined
-		game.shapeDrawer.update()
-		uiStage.act(delta)
-		uiStage.draw()
-		
+	}
+	
+	protected fun updateWorld()
+	{
 		scheduledAddingGObjects.forEach { spawnGObject(it) }
 		scheduledAddingGObjects.clear()
 		
