@@ -3,12 +3,12 @@ buildscript {
 		mavenLocal()
 		mavenCentral()
 		google()
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		gradlePluginPortal()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 	}
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-		classpath "com.android.tools.build:gradle:${androidPluginVersion}"
+		classpath "com.android.tools.build:gradle:$androidPluginVersion"
 	}
 }
 
@@ -27,14 +27,14 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-	version = '0.0.1-SNAPSHOT'
+	version = '0.0.1'
 	ext.appName = 'CommitSudoku'
 	repositories {
 		mavenLocal()
 		mavenCentral()
+		gradlePluginPortal()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
-		gradlePluginPortal()
 	}
 }
 
