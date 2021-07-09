@@ -68,14 +68,14 @@ dependencies {
 	natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
 	natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
 	natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
-	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
-	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
-	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
 	natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
 	natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
 	natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
 	natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+	natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
 
 }
 
@@ -91,8 +91,8 @@ task copyAndroidNatives() {
 		
 		configurations.getByName("natives").copy().files.each { jar ->
     	    def outputDir = null
-    	    if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
     	    if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
+    	    if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
     	    if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
     	    if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
     	    if(outputDir != null) {
