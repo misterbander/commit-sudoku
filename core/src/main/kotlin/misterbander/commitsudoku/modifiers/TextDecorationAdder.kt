@@ -6,13 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.cycle
 import java.io.Serializable
-
 
 class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 {

@@ -1,11 +1,7 @@
 package misterbander.gframework.scene2d
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import ktx.style.SkinDsl
-import ktx.style.addStyle
-import ktx.style.defaultStyle
-import ktx.style.get
-
+import ktx.style.*
 
 /**
  * @param name name of the style as it will appear in the [Skin] instance.

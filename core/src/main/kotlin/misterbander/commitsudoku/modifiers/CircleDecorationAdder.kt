@@ -13,7 +13,6 @@ import java.io.Serializable
 import kotlin.math.abs
 import kotlin.math.max
 
-
 class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(grid)
 {
 	private val circleDecorations: GdxArray<CircleDecoration> = GdxArray()

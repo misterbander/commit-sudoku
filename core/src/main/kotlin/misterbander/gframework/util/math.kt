@@ -2,7 +2,6 @@ package misterbander.gframework.util
 
 import ktx.math.vec2
 
-
 val tempVec = vec2()
 
 /**

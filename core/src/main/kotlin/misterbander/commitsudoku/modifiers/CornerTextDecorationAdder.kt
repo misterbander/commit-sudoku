@@ -10,7 +10,6 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
-
 class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecoration>(grid)
 {
 	private val cornerTextDecorations: GdxSet<CornerTextDecoration> = GdxSet()

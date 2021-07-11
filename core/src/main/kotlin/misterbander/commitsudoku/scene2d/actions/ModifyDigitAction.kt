@@ -4,7 +4,6 @@ import ktx.log.info
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import java.io.Serializable
 
-
 class ModifyDigitAction(
 	private val cell: SudokuGrid.Cell,
 	private val from: Int = cell.digit,

@@ -3,10 +3,7 @@ package misterbander.commitsudoku.scene2d
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Net
 import ktx.actors.onChange
-import ktx.scene2d.label
-import ktx.scene2d.scene2d
-import ktx.scene2d.table
-import ktx.scene2d.textButton
+import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.scene2d.MBTextField
 import misterbander.gframework.scene2d.UnfocusListener

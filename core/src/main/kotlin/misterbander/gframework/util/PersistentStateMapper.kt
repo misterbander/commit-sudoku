@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream
 import java.io.Serializable
 import kotlin.collections.set
 
-
 /**
  * Maps string keys to serializable objects that can be saved to file storage. Useful for saving game state.
  * @author Mister_Bander

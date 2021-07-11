@@ -2,7 +2,7 @@ package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.utils.Timer
 import ktx.actors.txt
-import ktx.style.get
+import ktx.style.*
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.formatDuration

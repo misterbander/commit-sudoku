@@ -2,15 +2,17 @@ package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.Stack
 import ktx.actors.onClick
 import ktx.actors.onTouchEvent
 import ktx.actors.plusAssign
-import ktx.scene2d.container
-import ktx.scene2d.scene2d
-import ktx.style.get
+import ktx.scene2d.*
+import ktx.style.*
 import misterbander.commitsudoku.CommitSudoku
-
 
 class ToolbarMultibuttonMenu(
 	private val game: CommitSudoku,

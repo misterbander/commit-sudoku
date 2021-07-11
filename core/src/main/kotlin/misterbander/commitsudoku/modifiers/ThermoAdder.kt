@@ -10,7 +10,6 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
-
 class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 {
 	private val thermoConstraints: GdxArray<ThermoConstraint> = GdxArray()

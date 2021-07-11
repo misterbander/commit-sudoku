@@ -10,7 +10,6 @@ import ktx.math.vec2
 import misterbander.gframework.GFramework
 import misterbander.gframework.scene2d.GObject
 
-
 /**
  * Module that allows GObjects to move to a target while trying to avoid obstacles. It does this by attempting to
  * steer around the obstacle when it finds one via ray tracing. This does not guarantee that a path will always be

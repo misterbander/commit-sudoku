@@ -14,7 +14,6 @@ import ktx.app.KtxScreen
 import ktx.freetype.registerFreeTypeFontLoaders
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-
 /**
  * Framework built on top of LibKTX.
  *
