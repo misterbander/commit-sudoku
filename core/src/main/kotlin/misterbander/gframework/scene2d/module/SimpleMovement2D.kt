@@ -9,7 +9,6 @@ import misterbander.gframework.GFramework
 import misterbander.gframework.scene2d.GObject
 import kotlin.math.sqrt
 
-
 /**
  * Module that simplifies `Box2D` movement to intuitive mathematical properties like direction and speed.
  *

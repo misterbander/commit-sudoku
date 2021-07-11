@@ -3,13 +3,12 @@ package misterbander.commitsudoku.constraints
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.collections.GdxArray
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.decorations.LineDecoration
 import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import java.io.Serializable
-
 
 class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint, GridModification
 {

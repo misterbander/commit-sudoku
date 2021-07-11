@@ -2,7 +2,7 @@ package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.textSize
 

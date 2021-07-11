@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node
 import ktx.scene2d.*
 
-
 /**
  * @param accessibleInputWindow optional [AccessibleInputWindow] to put the text field in. If specified, an adjust focus
  * listener will be added to the text field for you.

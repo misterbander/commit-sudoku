@@ -4,10 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import ktx.actors.centerPosition
 import ktx.actors.onChange
 import ktx.actors.txt
-import ktx.scene2d.actor
-import ktx.scene2d.scene2d
-import ktx.scene2d.table
-import ktx.scene2d.textButton
+import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.util.wrap
 

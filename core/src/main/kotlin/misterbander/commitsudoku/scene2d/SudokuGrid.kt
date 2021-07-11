@@ -13,12 +13,16 @@ import ktx.actors.plusAssign
 import ktx.collections.GdxArray
 import ktx.collections.GdxMap
 import ktx.collections.plusAssign
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.decorations.Decoration
 import misterbander.commitsudoku.modifiers.GridModfier
 import misterbander.commitsudoku.modifiers.GridModifiers
-import misterbander.commitsudoku.scene2d.actions.*
+import misterbander.commitsudoku.scene2d.actions.ActionController
+import misterbander.commitsudoku.scene2d.actions.ModifyCellAction
+import misterbander.commitsudoku.scene2d.actions.ModifyColorAction
+import misterbander.commitsudoku.scene2d.actions.ModifyDigitAction
+import misterbander.commitsudoku.scene2d.actions.ModifyMarkAction
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.cycle
@@ -27,7 +31,6 @@ import java.io.Serializable
 import kotlin.math.floor
 import kotlin.math.min
 import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
-
 
 class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 {

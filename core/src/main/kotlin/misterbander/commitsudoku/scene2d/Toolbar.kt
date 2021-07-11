@@ -11,7 +11,7 @@ import ktx.actors.onChange
 import ktx.actors.onClick
 import ktx.actors.plusAssign
 import ktx.scene2d.*
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.CommitSudokuScreen
 
 class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()

@@ -9,13 +9,12 @@ import ktx.collections.GdxArray
 import ktx.collections.plusAssign
 import ktx.math.minusAssign
 import ktx.math.vec2
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.angle
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.tempVec
 import space.earlygrey.shapedrawer.JoinType
-
 
 class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecoration(grid, startX, startY)
 {

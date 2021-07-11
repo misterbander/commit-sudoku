@@ -2,11 +2,13 @@ package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import ktx.actors.*
-import ktx.scene2d.actor
-import ktx.scene2d.scene2d
-import ktx.scene2d.table
-import ktx.scene2d.textButton
+import ktx.actors.centerPosition
+import ktx.actors.onChange
+import ktx.actors.onKeyDown
+import ktx.actors.onKeyboardFocus
+import ktx.actors.setKeyboardFocus
+import ktx.actors.txt
+import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.scene2d.MBTextField
 import misterbander.gframework.scene2d.UnfocusListener

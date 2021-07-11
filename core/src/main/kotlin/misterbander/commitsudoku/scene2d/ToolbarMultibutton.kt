@@ -6,9 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.actors.onClick
 import ktx.math.vec2
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.CommitSudokuScreen
-
 
 class ToolbarMultibutton(
 	private val screen: CommitSudokuScreen,

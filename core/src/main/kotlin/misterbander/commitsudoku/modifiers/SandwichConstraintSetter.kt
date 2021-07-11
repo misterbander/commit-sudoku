@@ -5,13 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxMap
 import ktx.collections.set
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.cycle
 import java.io.Serializable
-
 
 class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstraint>(grid)
 {

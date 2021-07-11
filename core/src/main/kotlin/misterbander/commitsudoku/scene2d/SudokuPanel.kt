@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Align
 import ktx.actors.onChange
 import ktx.actors.txt
 import ktx.scene2d.*
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper

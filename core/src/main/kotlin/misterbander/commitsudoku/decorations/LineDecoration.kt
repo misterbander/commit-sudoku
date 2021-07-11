@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Intersector
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 import ktx.collections.plusAssign
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.roundedLine

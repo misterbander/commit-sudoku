@@ -1,11 +1,10 @@
 package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.style.get
+import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
-
 
 open class TextDecoration(
 	grid: SudokuGrid,

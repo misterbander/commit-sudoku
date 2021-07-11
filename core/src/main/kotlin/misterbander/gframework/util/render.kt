@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.MathUtils
 import space.earlygrey.shapedrawer.ShapeDrawer
 import kotlin.math.min
 
-
 /**
  * Draws a line with rounded caps.
  * @param x1 the x-component of the first point
