@@ -9,6 +9,8 @@ import misterbander.commitsudoku.decorations.LittleArrowDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDecoration>(grid)
 {
@@ -62,10 +64,7 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDeco
 		grid.decorations -= modification
 	}
 	
-	override fun clear()
-	{
-		arrowMap.forEach { it.fill(null) }
-	}
+	override fun clear() = arrowMap.forEach { it.fill(null) }
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
@@ -82,8 +81,10 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDeco
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		val littleArrowDecorations: GdxSet<LittleArrowDecoration> = GdxSet()
-		arrowMap.forEach {
-			it.forEach { arrow ->
+		for (arrows in arrowMap)
+		{
+			for (arrow in arrows)
+			{
 				if (arrow != null)
 					littleArrowDecorations += arrow
 			}

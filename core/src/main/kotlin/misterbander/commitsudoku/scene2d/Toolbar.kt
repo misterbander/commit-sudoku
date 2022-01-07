@@ -1,9 +1,7 @@
 package misterbander.commitsudoku.scene2d
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
@@ -12,7 +10,26 @@ import ktx.actors.onClick
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.*
+import misterbander.commitsudoku.ADD_ARROW_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_BORDER_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_CAGE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_CIRCLE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_CORNER_TEXT_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_KILLER_CAGE_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_LINE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_LITTLE_ARROW_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_SANDWICH_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_TEXT_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.ADD_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.ANTIKING_BUTTON_STYLE
+import misterbander.commitsudoku.ANTIKNIGHT_BUTTON_STYLE
 import misterbander.commitsudoku.CommitSudokuScreen
+import misterbander.commitsudoku.EMPTY_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.NON_CONSECUTIVE_BUTTON_STYLE
+import misterbander.commitsudoku.SET_GIVENS_BUTTON_STYLE
+import misterbander.commitsudoku.SOFT_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.X_BUTTON_STYLE
+import misterbander.commitsudoku.toolbarBackgroundColor
 
 class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 {
@@ -22,23 +39,23 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	private val constraintsChecker
 		get() = grid.constraintsChecker
 	
-	private val thermoMultibutton = ToolbarMultibutton(screen, game.skin, "addthermobuttonstyle")
+	private val thermoMultibutton = ToolbarMultibutton(screen, ADD_THERMO_BUTTON_STYLE)
 	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
 		game,
 		thermoMultibutton,
-		scene2d.imageButton("addthermobuttonstyle", game.skin),
-		scene2d.imageButton("softthermobuttonstyle", game.skin),
-		scene2d.imageButton("emptythermobuttonstyle", game.skin)
+		scene2d.imageButton(ADD_THERMO_BUTTON_STYLE),
+		scene2d.imageButton(SOFT_THERMO_BUTTON_STYLE),
+		scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE)
 	)
-	private val cageMultibutton = ToolbarMultibutton(screen, game.skin, "addkillercagebuttonstyle")
+	private val cageMultibutton = ToolbarMultibutton(screen, ADD_KILLER_CAGE_BUTTON_STYLE)
 	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
 		game,
 		cageMultibutton,
-		scene2d.imageButton("addkillercagebuttonstyle", game.skin) { onClick { screen.panel.showZero = true } },
-		scene2d.imageButton("addcagedecorationbuttonstyle", game.skin) { onClick { screen.panel.showZero = false } }
+		scene2d.imageButton(ADD_KILLER_CAGE_BUTTON_STYLE) { onClick { screen.panel.showZero = true } },
+		scene2d.imageButton(ADD_CAGE_DECORATION_BUTTON_STYLE) { onClick { screen.panel.showZero = false } }
 	)
 	
-	val xButton = ImageButton(game.skin, "xbuttonstyle").apply {
+	val xButton = scene2d.imageButton(X_BUTTON_STYLE).apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -47,7 +64,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				constraintsChecker -= constraintsChecker.xConstraint
 		}
 	}
-	val antiKingButton = ImageButton(game.skin, "antikingbuttonstyle").apply {
+	val antiKingButton = scene2d.imageButton(ANTIKING_BUTTON_STYLE).apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -56,7 +73,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				constraintsChecker -= constraintsChecker.antiKingStatement
 		}
 	}
-	val antiKnightButton = ImageButton(game.skin, "antiknightbuttonstyle").apply {
+	val antiKnightButton = scene2d.imageButton(ANTIKNIGHT_BUTTON_STYLE).apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -65,7 +82,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				constraintsChecker -= constraintsChecker.antiKnightStatement
 		}
 	}
-	val nonconsecutiveButton = ImageButton(game.skin, "nonconsecutivebuttonstyle").apply {
+	val nonconsecutiveButton = scene2d.imageButton(NON_CONSECUTIVE_BUTTON_STYLE).apply {
 		setProgrammaticChangeEvents(true)
 		onChange {
 			if (isChecked)
@@ -77,8 +94,8 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	
 	init
 	{
-		this += scene2d.buttonGroup(1, 1, game.skin) {
-			imageButton("setgivensbuttonstyle", game.skin) {
+		this += scene2d.buttonGroup(1, 1) {
+			imageButton(SET_GIVENS_BUTTON_STYLE) {
 				isChecked = true
 				onChange { grid.modifier = null }
 			}
@@ -87,28 +104,28 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				onChange { grid.modifier = grid.modifiers.thermoAdder }
 			}
 			row()
-			imageButton("addsandwichbuttonstyle", game.skin) {
+			imageButton(ADD_SANDWICH_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.sandwichConstraintSetter }
 			}
-			imageButton("addtextdecorationbuttonstyle", game.skin) {
+			imageButton(ADD_TEXT_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.textDecorationAdder }
 			}
 			row()
-			imageButton("addcornertextdecorationbuttonstyle", game.skin) {
+			imageButton(ADD_CORNER_TEXT_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.cornerTextDecorationAdder }
 			}
-			imageButton("addcircledecorationbuttonstyle", game.skin) {
+			imageButton(ADD_CIRCLE_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.circleDecorationAdder }
 			}
 			row()
-			imageButton("addlinedecorationbuttonstyle", game.skin) {
+			imageButton(ADD_LINE_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.lineDecorationAdder }
 			}
-			imageButton("addarrowdecorationbuttonstyle", game.skin) {
+			imageButton(ADD_ARROW_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.arrowDecorationAdder }
 			}
 			row()
-			imageButton("addlittlearrowdecorationbuttonstyle", game.skin) {
+			imageButton(ADD_LITTLE_ARROW_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.littleArrowDecorationAdder }
 			}
 			actor(cageMultibutton) {
@@ -116,11 +133,11 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
 			row()
-			imageButton("addborderdecorationbuttonstyle", game.skin) {
+			imageButton(ADD_BORDER_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.borderDecorationSetter }
 			}
 		}
-		this += Image(game.skin["divider"], Scaling.none, Align.center)
+		this += Image(Scene2DSkin.defaultSkin["divider"], Scaling.none, Align.center)
 		this += scene2d.table {
 			actor(xButton)
 			actor(antiKingButton)
@@ -132,9 +149,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
-		game.shapeDrawer.filledRectangle(
-			0F, 0F, width, screen.viewport.worldHeight, game.skin["toolbarbackgroundcolor", Color::class.java]
-		)
+		game.shapeDrawer.filledRectangle(0F, 0F, width, screen.viewport.worldHeight, toolbarBackgroundColor)
 		super.draw(batch, parentAlpha)
 	}
 }

@@ -9,5 +9,5 @@ interface Constraint
 	 */
 	fun check(): Boolean
 	
-	fun drawConstraint(batch: Batch) {}
+	fun drawConstraint(batch: Batch) = Unit
 }

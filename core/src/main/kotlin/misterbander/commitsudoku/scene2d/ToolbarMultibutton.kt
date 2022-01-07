@@ -3,20 +3,19 @@ package misterbander.commitsudoku.scene2d
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.actors.onClick
 import ktx.math.vec2
+import ktx.scene2d.*
 import ktx.style.*
 import misterbander.commitsudoku.CommitSudokuScreen
 
 class ToolbarMultibutton(
 	private val screen: CommitSudokuScreen,
-	skin: Skin,
 	styleName: String,
-) : ImageButton(skin, styleName)
+) : ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
 	private val multibuttonIcon: TextureRegion
-		get() = screen.game.skin[if (screen.game.isDarkMode) "darkmultibuttonicon" else "multibuttonicon"]
+		get() = Scene2DSkin.defaultSkin[if (screen.game.isDarkMode) "darkmultibuttonicon" else "multibuttonicon"]
 	private val posVector = vec2()
 	private var shouldExpand = false
 	var multibuttonMenu: ToolbarMultibuttonMenu? = null

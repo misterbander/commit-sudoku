@@ -2,8 +2,6 @@ package misterbander.commitsudoku
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Net
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL30
 import com.badlogic.gdx.net.ServerSocket
 import com.badlogic.gdx.net.ServerSocketHints
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -14,21 +12,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.GdxRuntimeException
+import com.badlogic.gdx.utils.ScreenUtils
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
-import ktx.collections.plusAssign
+import ktx.collections.*
 import ktx.log.info
 import ktx.scene2d.*
 import ktx.style.*
-import misterbander.commitsudoku.scene2d.CommitSudokuWindow
-import misterbander.commitsudoku.scene2d.ConnectWindow
-import misterbander.commitsudoku.scene2d.MessageDialog
-import misterbander.commitsudoku.scene2d.SingleInputWindow
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.commitsudoku.scene2d.ToolbarMultibuttonMenu
+import misterbander.commitsudoku.scene2d.dialogs.CommitSudokuDialog
+import misterbander.commitsudoku.scene2d.dialogs.ConnectDialog
+import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
+import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
 import misterbander.gframework.GScreen
-import misterbander.gframework.scene2d.MBTextField
+import misterbander.gframework.scene2d.GTextField
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.ObjectInputStream
 import kotlin.concurrent.thread
@@ -37,13 +36,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
-	val textInputWindow = SingleInputWindow(this, isModal = true)
-	val connectWindow = ConnectWindow(this)
+	val textInputDialog = SingleInputDialog(this)
+	val connectDialog = ConnectDialog(this)
 	val messageDialog = MessageDialog(this)
 	
 	val mapper = PersistentStateMapper()
 	
-	lateinit var serverSocket: ServerSocket
+	private lateinit var serverSocket: ServerSocket
 	@Volatile var shouldCloseServer = false
 		set(value)
 		{
@@ -61,10 +60,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 				onTouchDown { panel.grid.unselect() }
 			}
 			
-			override fun hit(x: Float, y: Float, touchable: Boolean): Actor
-			{
-				return this
-			}
+			override fun hit(x: Float, y: Float, touchable: Boolean): Actor = this
 		}
 		uiStage += scene2d.table {
 			setFillParent(true)
@@ -74,15 +70,12 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		uiStage.keyboardFocus = panel.grid
 		uiStage += toolbar.thermoMultibuttonMenu
 		uiStage += toolbar.cageMultibuttonMenu
-		uiStage += textInputWindow
-		uiStage += connectWindow
-		uiStage += messageDialog
 		
 		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
 		
-		keyboardHeightObservers += textInputWindow
-		keyboardHeightObservers += connectWindow
+		keyboardHeightObservers += textInputDialog
+		keyboardHeightObservers += connectDialog
 	}
 	
 	override fun show()
@@ -130,15 +123,15 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			return
 		when (actor)
 		{
-			is Label -> actor.style = game.skin[otherSkin.find(actor.style)]
-			is TextButton -> actor.style = game.skin[otherSkin.find(actor.style)]
-			is ImageButton -> actor.style = game.skin[otherSkin.find(actor.style)]
-			is MBTextField -> actor.style = game.skin[otherSkin.find(actor.style)]
-			is CommitSudokuWindow ->
+			is Label -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
+			is TextButton -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
+			is ImageButton -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
+			is GTextField -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
+			is CommitSudokuDialog ->
 			{
-				actor.style = game.skin[otherSkin.find(actor.style)]
+				actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
 				actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
-				actor.closeButton.style = game.skin[otherSkin.find(actor.closeButton.style)]
+				actor.closeButton.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.closeButton.style)]
 			}
 			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
 			is ToolbarMultibuttonMenu ->
@@ -153,9 +146,10 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	fun updateStyles()
 	{
 		val otherSkin = if (game.isDarkMode) game.lightSkin else game.darkSkin
-		uiStage.actors.forEach {
+		for (actor: Actor in uiStage.actors)
+		{
 			updateActorStyle(
-				it, otherSkin,
+				actor, otherSkin,
 				panel.digitKeypad,
 				panel.cornerMarkKeypad,
 				panel.centerMarkKeypad,
@@ -180,15 +174,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		shouldCloseServer = true // Stop the thread
 	}
 	
-	override fun resume()
-	{
-		runServer()
-	}
+	override fun resume() = runServer()
 	
-	override fun clearScreen()
-	{
-		val backgroundColor: Color = game.skin["backgroundcolor"]
-		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT or GL30.GL_DEPTH_BUFFER_BIT)
-	}
+	override fun clearScreen() = ScreenUtils.clear(backgroundColor, true)
 }

@@ -18,13 +18,11 @@ class ModifyDigitAction(
 		"to" to to
 	)
 	
-	init
+	override fun run()
 	{
-		runnable = Runnable {
-			val from = if (inverse) this.to else this.from
-			val to = if (inverse) this.from else this.to
-			info("ModifyDigitAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) digit from $from to $to" }
-			cell.digit = to
-		}
+		val from = if (inverse) this.to else this.from
+		val to = if (inverse) this.from else this.to
+		info("ModifyDigitAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) digit from $from to $to" }
+		cell.digit = to
 	}
 }

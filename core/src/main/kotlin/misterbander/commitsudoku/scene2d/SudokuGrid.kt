@@ -9,23 +9,26 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils
+import com.badlogic.gdx.utils.IntMap
 import ktx.actors.plusAssign
-import ktx.collections.GdxArray
-import ktx.collections.GdxMap
-import ktx.collections.plusAssign
-import ktx.style.*
+import ktx.collections.*
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.decorations.Decoration
+import misterbander.commitsudoku.highlightColors
+import misterbander.commitsudoku.markColor
 import misterbander.commitsudoku.modifiers.GridModfier
 import misterbander.commitsudoku.modifiers.GridModifiers
+import misterbander.commitsudoku.nonGivenColor
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.actions.ActionController
 import misterbander.commitsudoku.scene2d.actions.ModifyCellAction
 import misterbander.commitsudoku.scene2d.actions.ModifyColorAction
 import misterbander.commitsudoku.scene2d.actions.ModifyDigitAction
 import misterbander.commitsudoku.scene2d.actions.ModifyMarkAction
+import misterbander.commitsudoku.secondaryColor
+import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
-import misterbander.gframework.util.cycle
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 import kotlin.math.floor
@@ -95,35 +98,17 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			completionCharmT = 0F
 	}
 	
-	fun iToX(i: Float): Float
-	{
-		return x + i*cellSize
-	}
+	fun iToX(i: Float): Float = x + i*cellSize
 	
-	fun jToY(j: Float): Float
-	{
-		return y + j*cellSize
-	}
+	fun jToY(j: Float): Float = y + j*cellSize
 	
-	fun xToI(x: Float): Int
-	{
-		return floor((x - this.x)/cellSize).toInt()
-	}
+	fun xToI(x: Float): Int = floor((x - this.x)/cellSize).toInt()
 	
-	fun xToI(x: Float, precision: Float): Float
-	{
-		return floor((x - this.x)/(cellSize*precision))*precision
-	}
+	fun xToI(x: Float, precision: Float): Float = floor((x - this.x)/(cellSize*precision))*precision
 	
-	fun yToJ(y: Float): Int
-	{
-		return floor((y - this.y)/cellSize).toInt()
-	}
+	fun yToJ(y: Float): Int = floor((y - this.y)/cellSize).toInt()
 	
-	fun yToJ(y: Float, precision: Float): Float
-	{
-		return floor((y - this.y)/(cellSize*precision))*precision
-	}
+	fun yToJ(y: Float, precision: Float): Float = floor((y - this.y)/(cellSize*precision))*precision
 	
 	fun select(i: Int, j: Int)
 	{
@@ -137,10 +122,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		cell.isSelected = true
 	}
 	
-	fun unselect()
-	{
-		cells.forEach { it.forEach { cell -> cell.isSelected = false } }
-	}
+	fun unselect() = cells.forEach { it.forEach { cell -> cell.isSelected = false } }
 	
 	fun unselect(i: Int, j: Int)
 	{
@@ -156,8 +138,10 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	
 	fun setGivens(isGiven: Boolean)
 	{
-		cells.forEach {
-			it.forEach { cell ->
+		for (cellRow in cells)
+		{
+			for (cell in cellRow)
+			{
 				if (isGiven)
 				{
 					if (cell.digit != 0)
@@ -172,8 +156,10 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	private fun getSelectedCells(): GdxArray<Cell>
 	{
 		val selectedCells: GdxArray<Cell> = GdxArray()
-		cells.forEach {
-			it.forEach { cell ->
+		for (cellRow in cells)
+		{
+			for (cell in cellRow)
+			{
 				if (cell.isSelected)
 					selectedCells += cell
 			}
@@ -201,7 +187,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			// Clear cell except color
 			digit == 0 && (isKeypad && panel.keypadInputMode != SudokuPanel.InputMode.COLOR || !isKeypad && !UIUtils.alt()) ->
 			{
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (!cell.isGiven)
 					{
 						shouldCheck = true
@@ -221,14 +208,16 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				// Only delete mark if all selected cells have the corner mark
 				var to = false
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (cell.digit == 0 && !cell.cornerMarks[digit - 1])
 					{
 						to = true
-						return@forEach
+						break
 					}
 				}
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (!cell.isGiven)
 						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, digit, to = to)
 				}
@@ -238,14 +227,16 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			{
 				// Only delete mark if all selected cells have the center mark
 				var to = false
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (cell.digit == 0 && !cell.centerMarks[digit - 1])
 					{
 						to = true
-						return@forEach
+						break
 					}
 				}
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (!cell.isGiven)
 						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, digit, to = to)
 				}
@@ -257,7 +248,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			else ->
 			{
 				shouldCheck = true
-				selectedCells.forEach { cell ->
+				for (cell: SudokuGrid.Cell in selectedCells)
+				{
 					if (!cell.isGiven)
 						modifyCellActions += ModifyDigitAction(cell, to = digit)
 				}
@@ -274,8 +266,10 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 	fun clearGrid()
 	{
 		val modifyCellActions: GdxArray<ModifyCellAction> = GdxArray()
-		cells.forEach {
-			it.forEach { cell ->
+		for (cellRow in cells)
+		{
+			for (cell in cellRow)
+			{
 				if (!cell.isGiven)
 				{
 					modifyCellActions.apply {
@@ -385,7 +379,7 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		constraintsChecker.drawAdditionalConstraints(batch)
 		decorations.forEach { it.draw(batch) }
 		
-		val lineColor: Color = game.skin["secondarycolor"]
+		val lineColor: Color = secondaryColor
 		shapeDrawer.rectangle(x, y, gridSize, gridSize, lineColor, 3F)
 		cells.forEach { it.forEach { cell -> cell.draw(batch) } }
 		for (i in 1 until 9)
@@ -426,8 +420,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		
 		fun offset(iOffset: Int, jOffset: Int): Cell
 		{
-			val i2 = i + iOffset cycle 0..8
-			val j2 = j + jOffset cycle 0..8
+			val i2 = (i + iOffset).mod(9)
+			val j2 = (j + jOffset).mod(9)
 			return cells[i2][j2]
 		}
 		
@@ -444,9 +438,9 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		{
 			val shapeDrawer = game.shapeDrawer
 			val segoeui = game.segoeui
-			val segoeui2 = game.segoeui2
+			val segoeui2 = game.segoeuil
 			
-			val highlightColorsMap: GdxMap<Int, Color> = game.skin["highlightcolors"]
+			val highlightColorsMap: IntMap<Color> = highlightColors
 			
 			if (constraintsChecker.xConstraint in constraintsChecker && (i == j || i == 8 - j)) // Color X
 			{
@@ -463,18 +457,18 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 			
 			if (isSelected) // Draw selection
 			{
-				shapeDrawer.setColor(game.skin.getColor("selectedcolor"))
+				shapeDrawer.setColor(selectedColor)
 				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
 			}
 			
 			if (digit != 0) // Draw digits
 			{
-				segoeui2.color = if (isGiven) game.skin["primarycolor"] else if (isCorrect) game.skin["nongivencolor"] else Color.RED
+				segoeui2.color = if (isGiven) primaryColor else if (isCorrect) nonGivenColor else Color.RED
 				segoeui2.drawCenter(batch, digit.toString(), x + cellSize/2, y + cellSize/2)
 			}
 			else // Draw marks
 			{
-				segoeui.color = game.skin["markcolor"]
+				segoeui.color = markColor
 				// Corner marks
 				var markCount = 0
 				if (cornerTextDecorationCount != 0)

@@ -26,16 +26,14 @@ class ModifyMarkAction(
 		"to" to to
 	)
 	
-	init
+	override fun run()
 	{
-		runnable = Runnable {
-			val from = if (inverse) this.to else this.from
-			val to = if (inverse) this.from else this.to
-			info("ModifyMarkAction      | INFO") { "Set cell (${cell.i}, ${cell.j}) ${type.name} mark from $from to $to" }
-			if (type == Type.CORNER)
-				cell.cornerMarks[digit - 1] = to
-			else if (type == Type.CENTER)
-				cell.centerMarks[digit - 1] = to
-		}
+		val from = if (inverse) this.to else this.from
+		val to = if (inverse) this.from else this.to
+		info("ModifyMarkAction      | INFO") { "Set cell (${cell.i}, ${cell.j}) ${type.name} mark from $from to $to" }
+		if (type == Type.CORNER)
+			cell.cornerMarks[digit - 1] = to
+		else if (type == Type.CENTER)
+			cell.centerMarks[digit - 1] = to
 	}
 }

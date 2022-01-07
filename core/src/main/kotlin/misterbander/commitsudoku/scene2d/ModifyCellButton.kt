@@ -1,12 +1,12 @@
 package misterbander.commitsudoku.scene2d
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
 import ktx.actors.onChange
+import ktx.scene2d.*
 
-class ModifyCellButton(grid: SudokuGrid, digit: Int, skin: Skin, styleName: String, alignLabelTopLeft: Boolean = false)
-	: TextButton(digit.toString(), skin, styleName)
+class ModifyCellButton(grid: SudokuGrid, digit: Int, styleName: String, alignLabelTopLeft: Boolean = false)
+	: TextButton(digit.toString(), Scene2DSkin.defaultSkin, styleName)
 {
 	init
 	{

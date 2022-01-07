@@ -1,11 +1,11 @@
 package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.actors.onChange
+import ktx.scene2d.*
 
-class ModifyColorButton(grid: SudokuGrid, digit: Int, skin: Skin, styleName: String)
-	: ImageButton(skin, styleName)
+class ModifyColorButton(grid: SudokuGrid, digit: Int, styleName: String)
+	: ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
 	init
 	{

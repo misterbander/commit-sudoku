@@ -9,6 +9,8 @@ import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecoration>(grid)
 {
@@ -30,7 +32,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 			removeModification(existingCornerTextDecoration)
 		else
 		{
-			grid.panel.screen.textInputWindow.show("Add Corner Text Decoration", "Enter Text:") { result ->
+			grid.panel.screen.textInputDialog.show("Add Corner Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
 					return@show
 				addModification(CornerTextDecoration(grid, selectI, selectJ, result))
@@ -40,9 +42,10 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 	
 	private fun findTextDecoration(i: Int, j: Int): CornerTextDecoration?
 	{
-		cornerTextDecorations.forEach {
-			if (it.i == i && it.j == j)
-				return it
+		for (cornerTextDecoration: CornerTextDecoration in cornerTextDecorations)
+		{
+			if (cornerTextDecoration.i == i && cornerTextDecoration.j == j)
+				return cornerTextDecoration
 		}
 		return null
 	}
@@ -61,10 +64,7 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 		grid.cells[modification.i][modification.j].cornerTextDecorationCount--
 	}
 	
-	override fun clear()
-	{
-		cornerTextDecorations.clear()
-	}
+	override fun clear() = cornerTextDecorations.clear()
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
@@ -82,5 +82,5 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 		mapper["cornerTextDecorations"] = cornerTextDecorations.map { it.dataObject }.toTypedArray()
 	}
 	
-	override fun draw(batch: Batch) {}
+	override fun draw(batch: Batch) = Unit
 }

@@ -1,10 +1,7 @@
 package misterbander.commitsudoku.constraints
 
 import com.fathzer.soft.javaluator.DoubleEvaluator
-import ktx.collections.GdxArray
-import ktx.collections.GdxMap
-import ktx.collections.gdxMapOf
-import ktx.collections.plusAssign
+import ktx.collections.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
@@ -73,7 +70,8 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 		var predicate: (Double, Double) -> Boolean = { _, _ -> true }
 		var operatorCount = 0
 		
-		operatorPredicateMap.keys().forEach { operator ->
+		for (operator: Regex in operatorPredicateMap.keys())
+		{
 			if (operator in statementStr2)
 			{
 				operatorCount++
@@ -161,8 +159,5 @@ class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val stat
 		return builder.toString()
 	}
 	
-	private fun isValidCell(i: Int, j: Int): Boolean
-	{
-		return i in 0..8 && j in 0..8
-	}
+	private fun isValidCell(i: Int, j: Int): Boolean = i in 0..8 && j in 0..8
 }

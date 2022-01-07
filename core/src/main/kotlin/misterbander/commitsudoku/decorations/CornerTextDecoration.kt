@@ -1,8 +1,8 @@
 package misterbander.commitsudoku.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.style.*
+import misterbander.commitsudoku.backgroundColor
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.textSize
 
@@ -18,8 +18,8 @@ class CornerTextDecoration(
 		val x = grid.iToX(i + 0.05F)
 		val y = grid.jToY(j + 0.95F)
 		val textSize = game.segoeui.textSize(text)
-		game.shapeDrawer.filledRectangle(x, y - textSize.y, textSize.x, textSize.y, game.skin["backgroundcolor", Color::class.java])
-		game.segoeui.color = color ?: game.skin["primarycolor"]
+		game.shapeDrawer.filledRectangle(x, y - textSize.y, textSize.x, textSize.y, backgroundColor)
+		game.segoeui.color = color ?: primaryColor
 		game.segoeui.draw(game.batch, text, x, y)
 	}
 }

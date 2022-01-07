@@ -10,6 +10,8 @@ import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 
 class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
@@ -116,10 +118,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 		}
 	}
 	
-	override fun clear()
-	{
-		cageMap.forEach { it.fill(null) }
-	}
+	override fun clear() = cageMap.forEach { it.fill(null) }
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
@@ -161,8 +160,10 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		val cageDecorations: GdxSet<CageDecoration> = GdxSet()
-		cageMap.forEach {
-			it.forEach { cage ->
+		for (cages in cageMap)
+		{
+			for (cage in cages)
+			{
 				if (cage != null)
 					cageDecorations += cage
 			}

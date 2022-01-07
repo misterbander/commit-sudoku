@@ -9,6 +9,8 @@ import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 {
@@ -76,10 +78,11 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 	
 	private fun tryDeleteThermo()
 	{
-		thermoConstraints.forEach {
-			if (it.isOver(selectI, selectJ))
+		for (thermoConstraint: ThermoConstraint in thermoConstraints)
+		{
+			if (thermoConstraint.isOver(selectI, selectJ))
 			{
-				removeModification(it)
+				removeModification(thermoConstraint)
 				return
 			}
 		}
@@ -98,10 +101,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 		grid.constraintsChecker.check()
 	}
 	
-	override fun clear()
-	{
-		thermoConstraints.clear()
-	}
+	override fun clear() = thermoConstraints.clear()
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)

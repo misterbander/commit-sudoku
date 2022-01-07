@@ -5,13 +5,11 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.MathUtils.cosDeg
 import com.badlogic.gdx.math.MathUtils.sinDeg
 import com.badlogic.gdx.math.Vector2
-import ktx.collections.GdxArray
-import ktx.collections.plusAssign
+import ktx.collections.*
 import ktx.math.minusAssign
 import ktx.math.vec2
-import ktx.style.*
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
-import misterbander.gframework.util.cycle
 import misterbander.gframework.util.tempVec
 import space.earlygrey.shapedrawer.JoinType
 import java.io.Serializable
@@ -27,7 +25,7 @@ class LittleArrowDecoration(
 	var pointingDirection = pointingDirection
 		set(value)
 		{
-			field = value cycle 0F..360F
+			field = value.mod(360F)
 		}
 	
 	override val dataObject: HashMap<String, Serializable>
@@ -50,15 +48,15 @@ class LittleArrowDecoration(
 		}
 		
 		// Draw arrow
-		shapeDrawer.setColor(color ?: game.skin["primarycolor"])
-		tempVec.set(16F, 0F).setAngle(pointingDirection)
+		shapeDrawer.setColor(color ?: primaryColor)
+		tempVec.set(16F, 0F).setAngleDeg(pointingDirection)
 		shapeDrawer.line(x, y, x - tempVec.x, y - tempVec.y, 2F)
 		
 		// Draw arrow head
-		tempVec.set(16F, 0F).setAngle(pointingDirection + 45F)
+		tempVec.set(16F, 0F).setAngleDeg(pointingDirection + 45F)
 		arrowHeadVertices[0].set(x, y) -= tempVec
 		arrowHeadVertices[1].set(x, y)
-		tempVec.set(16F, 0F).setAngle(pointingDirection - 45F)
+		tempVec.set(16F, 0F).setAngleDeg(pointingDirection - 45F)
 		arrowHeadVertices[2].set(x, y) -= tempVec
 		shapeDrawer.path(arrowHeadVertices, 2F, JoinType.POINTY, true)
 	}

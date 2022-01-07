@@ -1,13 +1,12 @@
 package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.utils.IntMap
-import com.badlogic.gdx.utils.StringBuilder
-import ktx.collections.GdxArray
-import ktx.collections.plusAssign
+import ktx.collections.*
 import ktx.collections.set
 import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Constraint
 {
@@ -42,13 +41,14 @@ class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Con
 		else
 		{
 			var first = true
-			val statementBuilder = StringBuilder()
-			killerCells.forEach {
+			val statementBuilder = GdxStringBuilder()
+			for (cell: SudokuGrid.Cell in killerCells)
+			{
 				if (first)
 					first = false
 				else
 					statementBuilder.append("+")
-				statementBuilder.append("[r${9 - it.j}c${it.i + 1}]")
+				statementBuilder.append("[r${9 - cell.j}c${cell.i + 1}]")
 			}
 			statementBuilder.append("=$killerSum")
 			killerStatement = SingleStatement(grid.cells, statementBuilder.toString())
@@ -61,17 +61,18 @@ class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Con
 		var correctFlag = true
 		correctFlag = killerStatement?.check() ?: true && correctFlag
 		digitCellMap.clear()
-		killerCells.forEach {
-			if (it.digit == 0)
-				return@forEach
-			if (digitCellMap[it.digit] != null)
+		for (cell: SudokuGrid.Cell in killerCells)
+		{
+			if (cell.digit == 0)
+				break
+			if (digitCellMap[cell.digit] != null)
 			{
-				it.isCorrect = false
-				digitCellMap[it.digit].isCorrect = false
+				cell.isCorrect = false
+				digitCellMap[cell.digit].isCorrect = false
 				correctFlag = false
 			}
 			else
-				digitCellMap[it.digit] = it
+				digitCellMap[cell.digit] = cell
 		}
 		return correctFlag
 	}

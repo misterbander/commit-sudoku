@@ -1,7 +1,7 @@
 package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.style.*
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
@@ -20,7 +20,7 @@ open class TextDecoration(
 	{
 		val x = grid.iToX(i + 0.5F)
 		val y = grid.jToY(j + 0.5F)
-		game.segoeui2.color = color ?: game.skin["primarycolor"]
-		game.segoeui2.drawCenter(batch, text, x, y)
+		game.segoeuil.color = color ?: primaryColor
+		game.segoeuil.drawCenter(batch, text, x, y)
 	}
 }
