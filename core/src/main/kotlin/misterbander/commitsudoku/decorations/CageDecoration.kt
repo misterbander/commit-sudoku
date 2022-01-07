@@ -2,8 +2,9 @@ package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.style.*
+import misterbander.commitsudoku.backgroundColor
 import misterbander.commitsudoku.constraints.KillerConstraint
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.dashedLine
@@ -65,9 +66,9 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 				val topLeftConnected = topConnected && leftConnected && mask[i - 1][j + 1]
 				val topRightConnected = topConnected && rightConnected && mask[i + 1][j + 1]
 				
-				internalColor.set(game.skin["primarycolor", Color::class.java])
+				internalColor.set(primaryColor)
 				if (color != null)
-					internalColor.blend(color!!, game.skin["backgroundcolor"])
+					internalColor.blend(color!!, backgroundColor)
 				
 				if (!bottomConnected)
 					shapeDrawer.dashedLine(

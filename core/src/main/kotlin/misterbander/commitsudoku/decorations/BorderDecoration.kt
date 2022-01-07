@@ -2,6 +2,7 @@ package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import java.io.Serializable
 
@@ -42,7 +43,7 @@ class BorderDecoration(
 		val shapeDrawer = game.shapeDrawer
 		val x = grid.iToX(i)
 		val y = grid.jToY(j)
-		shapeDrawer.setColor(game.skin["primarycolor", Color::class.java])
+		shapeDrawer.setColor(primaryColor)
 		shapeDrawer.circle(x, y, 8F, 2F)
 		shapeDrawer.filledCircle(x, y, 8F, color)
 	}

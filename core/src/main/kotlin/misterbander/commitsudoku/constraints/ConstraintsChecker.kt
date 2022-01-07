@@ -9,6 +9,7 @@ import ktx.log.info
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
+import kotlin.collections.contains
 
 class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 {
@@ -74,10 +75,7 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		check()
 	}
 	
-	operator fun contains(constraint: Constraint): Boolean
-	{
-		return constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
-	}
+	operator fun contains(constraint: Constraint): Boolean = constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
 	
 	fun clear()
 	{
@@ -119,7 +117,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		
 		val globalStatementStrs: GdxArray<Array<String>> = GdxArray()
 		val staticStatementStrs: GdxArray<Array<String>> = GdxArray()
-		globalStatements.forEach { statement ->
+		for (statement: Statement in globalStatements)
+		{
 			when (statement)
 			{
 				antiKingStatement -> mapper["antiKing"] = true
@@ -131,7 +130,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 					globalStatementStrs += statement.statementStrs
 			}
 		}
-		staticStatements.forEach { statement ->
+		for (statement: Statement in staticStatements)
+		{
 			when (statement)
 			{
 				is SingleStatement ->
@@ -144,8 +144,5 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		mapper["staticStatements"] = staticStatementStrs.toArray(Array<String>::class.java)
 	}
 	
-	fun drawAdditionalConstraints(batch: Batch)
-	{
-		additionalConstraints.forEach { it.drawConstraint(batch) }
-	}
+	fun drawAdditionalConstraints(batch: Batch) = additionalConstraints.forEach { it.drawConstraint(batch) }
 }

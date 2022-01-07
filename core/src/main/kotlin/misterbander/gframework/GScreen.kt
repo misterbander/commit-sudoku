@@ -3,150 +3,128 @@ package misterbander.gframework
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.physics.box2d.Contact
-import com.badlogic.gdx.physics.box2d.ContactImpulse
-import com.badlogic.gdx.physics.box2d.ContactListener
-import com.badlogic.gdx.physics.box2d.Manifold
-import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.OrderedSet
+import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.actors.plusAssign
 import ktx.app.KtxScreen
-import ktx.collections.GdxSet
-import ktx.collections.plusAssign
-import misterbander.gframework.scene2d.GContactListener
+import ktx.collections.*
+import misterbander.gframework.layer.GLayer
+import misterbander.gframework.layer.StageLayer
+import misterbander.gframework.layer.TransitionLayer
 import misterbander.gframework.scene2d.GObject
 import misterbander.gframework.scene2d.KeyboardHeightObserver
 
 /**
- * `GScreen`s are extensions of [KtxScreen]s. `GScreen`s have a main camera, a viewport, and a `Scene2D` [Stage] already
- * defined for you. All you need to do is to override the `show()` method and place your initialization code in there.
- * This could include setting up Tiled maps, creating [GObject]s and/or build your UI.
+ * `GScreen`s are extensions of [KtxScreen]s. By default, it consists of three [GLayer]s: one for the main layer, one
+ * for the UI layer, and one for the transition layer. The main [GLayer] and the UI [GLayer] each hold a [Stage] which
+ * can be used for the world and UI.
  *
- * The camera and the viewport can be overridden to use your own camera and/or viewport.
+ * Two cameras and two viewports are also defined, one camera and one viewport each used by the main layer and the UI
+ * layer. The cameras and viewports can be overridden to use your own camera and/or viewport.
  *
- * `GScreen`s provide convenient methods to spawn `GObject`s.
+ * You can also override the layers to reorder or add your own [GLayer]s.
  *
- * `GScreen`s may also optionally include a `Box2D` world.
  * @property game parent GFramework instance
  */
-abstract class GScreen<T : GFramework>(val game: T) : KtxScreen, ContactListener
+abstract class GScreen<T : GFramework>(val game: T) : KtxScreen
 {
-	/** Main camera for this GScreen. Defaults to an `OrthographicCamera`. */
-	open val camera: Camera = OrthographicCamera().apply { setToOrtho(false) }
-	/** Secondary camera for UI on this GScreen. Also defaults to an `OrthographicCamera`. */
-	open val uiCamera = OrthographicCamera().apply { setToOrtho(false) }
-	/** Viewport to project camera contents. Defaults to `ExtendViewport`. */
+	/** Main camera used by [stage] and projected through [viewport] in the main layer. Defaults to an [OrthographicCamera]. */
+	open val camera: Camera = OrthographicCamera()
+	/** Secondary camera used by [uiStage] and projected through [uiViewport] in the UI layer. */
+	open val uiCamera = OrthographicCamera()
+	/** Primary viewport to project [camera] contents in the main layer. Defaults to [ExtendViewport]. */
 	open val viewport: Viewport by lazy { ExtendViewport(1280F, 720F, camera) }
-	/** Viewport to project UI contents. Also defaults to `ExtendViewport`. */
+	/** Secondary viewport to project [uiCamera] contents in the UI layer. Also defaults to [ExtendViewport]. */
 	open val uiViewport by lazy { ExtendViewport(1280F, 720F, uiCamera) }
-	val stage by lazy { Stage(viewport, game.batch) }
-	val uiStage by lazy { Stage(uiViewport, game.batch) }
+	
+	/** All the [GLayer]s in the [GScreen]. Can be overridden to customize the layers. */
+	protected open val layers by lazy { arrayOf(mainLayer, uiLayer, transition) }
+	protected open val mainLayer by lazy { StageLayer(game, camera, viewport, false) }
+	protected open val uiLayer by lazy { StageLayer(game, uiCamera, uiViewport, true) }
+	open val transition by lazy { TransitionLayer(this) }
+	
+	/** Main stage in the main layer for generic purposes. */
+	val stage: Stage
+		get() = mainLayer.stage
+	/** Secondary stage in the UI layer optimized for UI. */
+	val uiStage: Stage
+		get() = uiLayer.stage
+	
+	/**
+	 * Convenient set of [KeyboardHeightObserver]s that you can notify soft-keyboard height changes from mobile
+	 * platforms.
+	 */
 	val keyboardHeightObservers = GdxSet<KeyboardHeightObserver>()
 	
-	open val world: World? = null
-	open val mpp = 0.25F
+	val scheduledAddingGObjects = OrderedMap<GObject<*>, Group>()
+	val scheduledRemovalGObjects = OrderedSet<GObject<*>>()
 	
-	val scheduledAddingGObjects = GdxSet<GObject<T>>()
-	val scheduledRemovalGObjects = GdxSet<GObject<T>>()
+	private var deltaAccumulator = 0F
+	var fixedUpdateCount = 0
+		private set
 	
 	override fun show()
 	{
 		Gdx.input.inputProcessor = InputMultiplexer(uiStage, stage)
-		world?.setContactListener(this)
-	}
-	
-	/**
-	 * Spawns the GObject into the world and adds it to the stage. Calls `GObject::onSpawn()`.
-	 */
-	fun spawnGObject(gObject: GObject<T>)
-	{
-		stage += gObject
-		gObject.onSpawn()
-	}
-	
-	fun scheduleSpawnGObject(gObject: GObject<T>)
-	{
-		scheduledAddingGObjects += gObject
-	}
-	
-	override fun beginContact(contact: Contact)
-	{
-		if (contact.fixtureA.body?.userData is GContactListener)
-			(contact.fixtureA.body.userData as GContactListener).beginContact(contact.fixtureB)
-		if (contact.fixtureB.body?.userData is GContactListener)
-			(contact.fixtureB.body.userData as GContactListener).beginContact(contact.fixtureA)
-	}
-	
-	override fun endContact(contact: Contact)
-	{
-		if (contact.fixtureA.body?.userData is GContactListener)
-			(contact.fixtureA.body.userData as GContactListener).endContact(contact.fixtureB)
-		if (contact.fixtureB.body?.userData is GContactListener)
-			(contact.fixtureB.body.userData as GContactListener).endContact(contact.fixtureA)
-	}
-	
-	override fun preSolve(contact: Contact, oldManifold: Manifold) {}
-	
-	override fun postSolve(contact: Contact, impulse: ContactImpulse) {}
-	
-	override fun resize(width: Int, height: Int)
-	{
-		if (viewport is ExtendViewport)
-		{
-			val extendViewport = viewport as ExtendViewport
-			camera.position.set(extendViewport.minWorldWidth/2, extendViewport.minWorldHeight /2, 0F)
-		}
-		viewport.update(width, height, false)
-		uiViewport.update(width, height, true)
-		Gdx.graphics.requestRendering()
 	}
 	
 	override fun render(delta: Float)
 	{
+		deltaAccumulator += delta
+		fixedUpdateCount = 0
+		while (deltaAccumulator >= 1/60F)
+		{
+			deltaAccumulator -= 1/60F
+			fixedUpdateCount++
+		}
+		
 		clearScreen()
-		renderStage(camera, stage, delta)
-		renderStage(uiCamera, uiStage, delta)
-		updateWorld()
-	}
-	
-	protected fun renderStage(camera: Camera, stage: Stage, delta: Float)
-	{
-		camera.update()
-		game.batch.projectionMatrix = camera.combined
-		game.shapeRenderer.projectionMatrix = camera.combined
-		game.shapeDrawer.update()
-		stage.act(delta)
-		stage.draw()
-	}
-	
-	protected fun updateWorld()
-	{
-		scheduledAddingGObjects.forEach { spawnGObject(it) }
+		layers.forEach { it.update(delta) }
+		layers.forEach { it.render(delta) }
+		layers.forEach { it.postRender(delta) }
+		for ((gObject, group) in scheduledAddingGObjects)
+		{
+			if (group != null)
+				group += gObject
+			else
+				stage += gObject
+		}
 		scheduledAddingGObjects.clear()
-		
-		world?.step(1/60F, 6, 4)
-		
 		scheduledRemovalGObjects.forEach { it.remove() }
 		scheduledRemovalGObjects.clear()
 	}
 	
 	/**
-	 * Clears the screen and paints it black. Gets called every frame.
+	 * Clears the screen and paints it black. Called once every frame.
 	 *
 	 * You can override this to change the background color.
 	 */
-	open fun clearScreen()
+	open fun clearScreen() = ScreenUtils.clear(Color.BLACK, true)
+	
+	override fun resize(width: Int, height: Int)
 	{
-		Gdx.gl.glClearColor(0F, 0F, 0F, 1F)
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+		layers.forEach { it.resize(width, height) }
+		Gdx.graphics.requestRendering()
 	}
 	
-	override fun dispose()
+	/**
+	 * Schedules the [GObject] to be added into the world as a child of a specified [Group]. The [GObject] will be added
+	 * at the end of the next world time step. Useful during collision callbacks where creation and removal of objects
+	 * are prohibited.
+	 * @param gObject the [GObject] to spawn
+	 * @param parent the parent group to add the [GObject], defaults to [stage] root
+	 */
+	fun scheduleSpawnGObject(gObject: GObject<*>, parent: Group = stage.root)
 	{
-		stage.dispose()
+		scheduledAddingGObjects[gObject] = parent
 	}
+	
+	override fun dispose() = layers.forEach { it.dispose() }
 }

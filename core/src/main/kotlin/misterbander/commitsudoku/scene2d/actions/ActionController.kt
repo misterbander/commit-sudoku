@@ -2,8 +2,7 @@ package misterbander.commitsudoku.scene2d.actions
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import ktx.actors.plusAssign
-import ktx.collections.GdxArray
-import ktx.collections.plusAssign
+import ktx.collections.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
@@ -31,7 +30,8 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 			return
 		undidActionCount++
 		val lastAction: GdxArray<ModifyCellAction> = actionHistory[actionHistory.size - undidActionCount]
-		lastAction.forEach { action ->
+		for (action: ModifyCellAction in lastAction)
+		{
 			action.inverse = true
 			action.restart()
 			grid += action
@@ -46,7 +46,8 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 			return
 		val nextAction: GdxArray<ModifyCellAction> = actionHistory[actionHistory.size - undidActionCount]
 		undidActionCount--
-		nextAction.forEach { action ->
+		for (action: ModifyCellAction in nextAction)
+		{
 			action.inverse = false
 			action.restart()
 			grid += action
@@ -73,7 +74,8 @@ class ActionController(private val grid: SudokuGrid): PersistentState
 		val actionHistoryDataObjects: Array<Array<HashMap<String, Serializable>>>? = mapper["actionHistory"]
 		actionHistoryDataObjects?.forEach { dataObjectGroup ->
 			val actionHistoryGroup: GdxArray<ModifyCellAction> = GdxArray()
-			dataObjectGroup.forEach { dataObject ->
+			for (dataObject in dataObjectGroup)
+			{
 				val type = dataObject["type"] as ModifyCellAction.Type
 				val i = dataObject["i"] as Int
 				val j = dataObject["j"] as Int

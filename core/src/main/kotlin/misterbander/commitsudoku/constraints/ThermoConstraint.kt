@@ -2,11 +2,13 @@ package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import ktx.collections.GdxArray
-import ktx.style.*
+import ktx.collections.*
+import misterbander.commitsudoku.backgroundColor
+import misterbander.commitsudoku.decorationColor1
 import misterbander.commitsudoku.decorations.LineDecoration
 import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.blend
 import java.io.Serializable
 
@@ -32,10 +34,7 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 			"operator" to operator
 		)
 	
-	fun addThermoCell(endI: Int, endJ: Int)
-	{
-		thermoLine.addLineCell(endI, endJ)
-	}
+	fun addThermoCell(endI: Int, endJ: Int) = thermoLine.addLineCell(endI, endJ)
 	
 	fun generateThermoStatement()
 	{
@@ -60,15 +59,9 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		grid.constraintsChecker.check()
 	}
 	
-	fun isOver(i: Int, j: Int): Boolean
-	{
-		return thermoLine.isOver(i, j)
-	}
+	fun isOver(i: Int, j: Int): Boolean = thermoLine.isOver(i, j)
 	
-	override fun check(): Boolean
-	{
-		return thermoStatement.check()
-	}
+	override fun check(): Boolean = thermoStatement.check()
 	
 	override fun drawConstraint(batch: Batch)
 	{
@@ -76,8 +69,8 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		val x = grid.iToX(thermoLine.lineCells[0].first + 0.5F)
 		val y = grid.jToY(thermoLine.lineCells[0].second + 0.5F)
 		internalColor.blend(
-			if (isHighlighted) grid.game.skin["selectedcolor"] else grid.game.skin["decorationcolor1"],
-			grid.game.skin["backgroundcolor"]
+			if (isHighlighted) selectedColor else decorationColor1,
+			backgroundColor
 		)
 		shapeDrawer.filledCircle(x, y, grid.cellSize*0.3F, internalColor)
 		thermoLine.color = internalColor

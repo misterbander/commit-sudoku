@@ -18,13 +18,11 @@ class ModifyColorAction(
 		"to" to to
 	)
 	
-	init
+	override fun run()
 	{
-		runnable = Runnable {
-			val from = if (inverse) this.to else this.from
-			val to = if (inverse) this.from else this.to
-			info("ModifyColorAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) color from $from to $to" }
-			cell.colorCode = to
-		}
+		val from = if (inverse) this.to else this.from
+		val to = if (inverse) this.from else this.to
+		info("ModifyColorAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) color from $from to $to" }
+		cell.colorCode = to
 	}
 }

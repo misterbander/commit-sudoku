@@ -3,11 +3,11 @@ package misterbander.commitsudoku.decorations
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Intersector
-import ktx.collections.GdxArray
-import ktx.collections.gdxArrayOf
-import ktx.collections.plusAssign
-import ktx.style.*
+import ktx.collections.*
+import misterbander.commitsudoku.backgroundColor
+import misterbander.commitsudoku.decorationColor1
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.roundedLine
 import java.io.Serializable
@@ -83,7 +83,7 @@ open class LineDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decorati
 			
 			shapeDrawer.roundedLine(
 				x1, y1, x2, y2,
-				internalColor.blend(src = if (isHighlighted) game.skin["selectedcolor"] else color ?: game.skin["decorationcolor1"], dest = game.skin["backgroundcolor"]),
+				internalColor.blend(src = if (isHighlighted) selectedColor else color ?: decorationColor1, dest = backgroundColor),
 				16F
 			)
 		}

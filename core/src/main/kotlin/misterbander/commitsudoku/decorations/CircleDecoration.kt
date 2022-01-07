@@ -5,10 +5,9 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils.cosDeg
 import com.badlogic.gdx.math.MathUtils.sinDeg
 import com.badlogic.gdx.math.Vector2
-import ktx.collections.GdxArray
-import ktx.collections.plusAssign
+import ktx.collections.*
 import ktx.math.vec2
-import ktx.style.*
+import misterbander.commitsudoku.decorationColor2
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.angle
 import java.io.Serializable
@@ -29,10 +28,8 @@ class CircleDecoration(
 		repeat(122) { this += vec2() }
 	}
 	
-	fun isOver(i: Int, j: Int): Boolean
-	{
-		return Intersector.distanceSegmentPoint(i1.toFloat(), j1.toFloat(), i2.toFloat(), j2.toFloat(), i.toFloat(), j.toFloat()) < radius/grid.cellSize
-	}
+	fun isOver(i: Int, j: Int): Boolean =
+		Intersector.distanceSegmentPoint(i1.toFloat(), j1.toFloat(), i2.toFloat(), j2.toFloat(), i.toFloat(), j.toFloat()) < radius/grid.cellSize
 	
 	override fun draw(batch: Batch)
 	{
@@ -55,7 +52,7 @@ class CircleDecoration(
 				vertices[i].set(x2 + radius*cosDeg(theta), y2 + radius*sinDeg(theta))
 			}
 		}
-		shapeDrawer.setColor(color ?: game.skin["decorationcolor2"])
+		shapeDrawer.setColor(color ?: decorationColor2)
 		shapeDrawer.path(vertices, 2F, false)
 	}
 }

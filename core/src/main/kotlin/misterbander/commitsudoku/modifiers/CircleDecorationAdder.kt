@@ -10,6 +10,8 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.angle
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -114,9 +116,10 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 	
 	private fun findCircleDecoration(): CircleDecoration?
 	{
-		circleDecorations.forEach {
-			if (it.isOver(selectI, selectJ))
-				return it
+		for (circleDecoration: CircleDecoration in circleDecorations)
+		{
+			if (circleDecoration.isOver(selectI, selectJ))
+				return circleDecoration
 		}
 		return null
 	}
@@ -133,10 +136,7 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 		grid.decorations -= modification
 	}
 	
-	override fun clear()
-	{
-		circleDecorations.clear()
-	}
+	override fun clear() = circleDecorations.clear()
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{

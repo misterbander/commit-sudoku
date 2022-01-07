@@ -10,6 +10,8 @@ import misterbander.commitsudoku.decorations.LineDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 
 abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid) : GridModfier<T>(grid)
@@ -78,10 +80,11 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 	
 	private fun tryDelete()
 	{
-		lineDecorations.forEach {
-			if (it.isOver(selectI, selectJ))
+		for (lineDecoration: T in lineDecorations)
+		{
+			if (lineDecoration.isOver(selectI, selectJ))
 			{
-				removeModification(it)
+				removeModification(lineDecoration)
 				return
 			}
 		}
@@ -99,10 +102,7 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 		grid.decorations -= modification
 	}
 	
-	override fun clear()
-	{
-		lineDecorations.clear()
-	}
+	override fun clear() = lineDecorations.clear()
 	
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)

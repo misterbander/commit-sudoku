@@ -9,6 +9,8 @@ import misterbander.commitsudoku.decorations.BorderDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(grid)
 {
@@ -45,9 +47,10 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 	
 	private fun findBorderDecoration(): BorderDecoration?
 	{
-		borderDecorations.forEach {
-			if (MathUtils.isEqual(it.i, selectIF) && MathUtils.isEqual(it.j, selectJF))
-				return it
+		for (borderDecoration: BorderDecoration in borderDecorations)
+		{
+			if (MathUtils.isEqual(borderDecoration.i, selectIF) && MathUtils.isEqual(borderDecoration.j, selectJF))
+				return borderDecoration
 		}
 		return null
 	}
@@ -64,10 +67,7 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 		grid.foreDecorations -= modification
 	}
 	
-	override fun clear()
-	{
-		borderDecorations.clear()
-	}
+	override fun clear() = borderDecorations.clear()
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{

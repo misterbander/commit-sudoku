@@ -3,13 +3,12 @@ package misterbander.commitsudoku.modifiers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import ktx.collections.GdxMap
+import ktx.collections.*
 import ktx.collections.set
-import ktx.style.*
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.PersistentStateMapper
-import misterbander.gframework.util.cycle
 import java.io.Serializable
 
 class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstraint>(grid)
@@ -23,10 +22,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 	
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 	
-	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
-	{
-		updateSelect(x, y)
-	}
+	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) = updateSelect(x, y)
 	
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
@@ -41,18 +37,18 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 		if (di != 0)
 		{
 			selectI += di
-			selectI = selectI cycle -1..8
+			selectI = (selectI + 1).mod(10) - 1
 			selectJ = if (selectI == -1) 8 else 9
 		}
 		else if (dj != 0)
 		{
 			selectJ += dj
-			selectJ = selectJ cycle 0..9
+			selectJ = (selectJ + 1).mod(10) - 1
 			selectI = if (selectJ == 9) 0 else -1
 		}
 	}
 	
-	override fun enter() {}
+	override fun enter() = Unit
 	
 	override fun typedDigit(digit: Int)
 	{
@@ -97,10 +93,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 		grid.constraintsChecker -= modification
 	}
 	
-	override fun clear()
-	{
-		sandwichConstraints.clear()
-	}
+	override fun clear() = sandwichConstraints.clear()
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
@@ -134,6 +127,6 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 		val x = grid.iToX(i.toFloat())
 		val y = grid.jToY(j.toFloat())
 		val isSelected = i == selectI && j == selectJ
-		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) game.skin["selectedcolor"] else gray)
+		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
 	}
 }

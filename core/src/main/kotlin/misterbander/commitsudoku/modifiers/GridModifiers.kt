@@ -30,18 +30,9 @@ class GridModifiers(grid: SudokuGrid) : PersistentState
 		borderDecorationSetter
 	)
 	
-	fun clear()
-	{
-		modifiers.forEach { it.clear() }
-	}
+	fun clear() = modifiers.forEach { it.clear() }
 	
-	override fun readState(mapper: PersistentStateMapper)
-	{
-		modifiers.forEach { it.readState(mapper) }
-	}
+	override fun readState(mapper: PersistentStateMapper) = modifiers.forEach { it.readState(mapper) }
 	
-	override fun writeState(mapper: PersistentStateMapper)
-	{
-		modifiers.forEach { it.writeState(mapper) }
-	}
+	override fun writeState(mapper: PersistentStateMapper) = modifiers.forEach { it.writeState(mapper) }
 }

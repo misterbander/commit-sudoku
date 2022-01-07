@@ -12,24 +12,13 @@ object Lwjgl3Launcher
 	@JvmStatic
 	fun main(args: Array<String>)
 	{
-		createApplication()
+		val configuration = Lwjgl3ApplicationConfiguration()
+		configuration.setTitle("Commit Sudoku")
+		configuration.setWindowedMode(1280, 720)
+		configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
+		configuration.setBackBufferConfig(8, 8, 8,8, 16, 0, 4)
+		Lwjgl3Application(CommitSudoku(args, DesktopDarkModeSettingsProvider()), configuration)
 	}
-	
-	private fun createApplication(): Lwjgl3Application
-	{
-		return Lwjgl3Application(CommitSudoku(DesktopDarkModeSettingsProvider()), defaultConfiguration)
-	}
-	
-	private val defaultConfiguration: Lwjgl3ApplicationConfiguration
-		get()
-		{
-			val configuration = Lwjgl3ApplicationConfiguration()
-			configuration.setTitle("Commit Sudoku")
-			configuration.setWindowedMode(1280, 720)
-			configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
-			configuration.setBackBufferConfig(8, 8, 8,8, 16, 0, 4)
-			return configuration
-		}
 	
 	private class DesktopDarkModeSettingsProvider : DarkModeSettingsProvider
 	{

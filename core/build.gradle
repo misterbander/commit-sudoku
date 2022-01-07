@@ -1,25 +1,30 @@
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
 
+sourceSets {
+	main.java.srcDirs = ['src/main/java', 'src/main/kotlin']
+	main.kotlin.srcDirs = ['src/main/kotlin']
+}
+
 dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-	api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-	api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
 	api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion"
-	api "io.github.libktx:ktx-actors:$ktxActorsVersion"
-	api "io.github.libktx:ktx-app:$ktxAppVersion"
-	api "io.github.libktx:ktx-assets:$ktxAssetsVersion"
-	api "io.github.libktx:ktx-async:$ktxAsyncVersion"
-	api "io.github.libktx:ktx-box2d:$ktxBox2dVersion"
-	api "io.github.libktx:ktx-collections:$ktxCollectionsVersion"
-	api "io.github.libktx:ktx-freetype:$ktxFreetypeVersion"
-	api "io.github.libktx:ktx-graphics:$ktxGraphicsVersion"
-	api "io.github.libktx:ktx-log:$ktxLogVersion"
-	api "io.github.libktx:ktx-math:$ktxMathVersion"
-	api "io.github.libktx:ktx-scene2d:$ktxScene2DVersion"
-	api "io.github.libktx:ktx-style:$ktxStyleVersion"
-	implementation "space.earlygrey:shapedrawer:$shapeDrawerVersion"
-	implementation files("D:\\user\\Desktop\\Java_Stuff\\Libraries\\javaluator-3.0.1.jar")
+	api "io.github.libktx:ktx-actors:$ktxVersion"
+	api "io.github.libktx:ktx-app:$ktxVersion"
+	api "io.github.libktx:ktx-assets:$ktxVersion"
+	api "io.github.libktx:ktx-assets-async:$ktxVersion"
+	api "io.github.libktx:ktx-async:$ktxVersion"
+	api "io.github.libktx:ktx-collections:$ktxVersion"
+	api "io.github.libktx:ktx-freetype:$ktxVersion"
+	api "io.github.libktx:ktx-freetype-async:$ktxVersion"
+	api "io.github.libktx:ktx-graphics:$ktxVersion"
+	api "io.github.libktx:ktx-log:$ktxVersion"
+	api "io.github.libktx:ktx-math:$ktxVersion"
+	api "io.github.libktx:ktx-preferences:$ktxVersion"
+	api "io.github.libktx:ktx-scene2d:$ktxVersion"
+	api "io.github.libktx:ktx-style:$ktxVersion"
+	api "space.earlygrey:shapedrawer:$shapeDrawerVersion"
+	implementation files("libs/javaluator-3.0.1.jar")
 }

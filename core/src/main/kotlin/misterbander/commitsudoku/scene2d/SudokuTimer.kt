@@ -2,7 +2,10 @@ package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.utils.Timer
 import ktx.actors.txt
+import ktx.scene2d.*
 import ktx.style.*
+import misterbander.commitsudoku.PAUSE_BUTTON_STYLE
+import misterbander.commitsudoku.PLAY_BUTTON_STYLE
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.formatDuration
@@ -29,7 +32,7 @@ class SudokuTimer(private val panel: SudokuPanel) : PersistentState
 	var isRunning = false
 		set(value)
 		{
-			panel.playButton.style = panel.screen.game.skin[if (value) "pausebuttonstyle" else "playbuttonstyle"]
+			panel.playButton.style = Scene2DSkin.defaultSkin[if (value) PAUSE_BUTTON_STYLE else PLAY_BUTTON_STYLE]
 			if (value && !field)
 				Timer.schedule(incrementSeconds, 1 - (stopTimerMillis - lastSecondMillis)/1000F, 1F)
 			else

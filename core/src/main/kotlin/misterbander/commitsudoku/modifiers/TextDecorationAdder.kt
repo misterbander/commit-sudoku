@@ -6,12 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
-import ktx.style.*
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.PersistentStateMapper
-import misterbander.gframework.util.cycle
 import java.io.Serializable
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 {
@@ -44,7 +45,7 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 				selectI = if (selectI == 9) -1 else 9
 			else
 				selectI += di
-			selectI = selectI cycle -1..9
+			selectI = (selectI + 1).mod(11) - 1
 		}
 		else if (dj != 0)
 		{
@@ -52,7 +53,7 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 				selectJ = if (selectJ == 9) -1 else 9
 			else
 				selectJ += dj
-			selectJ = selectJ cycle -1..9
+			selectJ = (selectJ + 1).mod(11) - 1
 		}
 	}
 	
@@ -65,7 +66,7 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 			removeModification(existingTextDecoration)
 		else
 		{
-			grid.panel.screen.textInputWindow.show("Add Text Decoration", "Enter Text:") { result ->
+			grid.panel.screen.textInputDialog.show("Add Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
 					return@show
 				addModification(TextDecoration(grid, selectI, selectJ, result))
@@ -75,9 +76,10 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 	
 	private fun findTextDecoration(): TextDecoration?
 	{
-		textDecorations.forEach {
-			if (it.i == selectI && it.j == selectJ)
-				return it
+		for (textDecoration: TextDecoration in textDecorations)
+		{
+			if (textDecoration.i == selectI && textDecoration.j == selectJ)
+				return textDecoration
 		}
 		return null
 	}
@@ -94,10 +96,7 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 		grid.decorations -= modification
 	}
 	
-	override fun clear()
-	{
-		textDecorations.clear()
-	}
+	override fun clear() = textDecorations.clear()
 	
 	override fun readState(mapper: PersistentStateMapper)
 	{
@@ -134,6 +133,6 @@ class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
 		val x = grid.iToX(i.toFloat())
 		val y = grid.jToY(j.toFloat())
 		val isSelected = i == selectI && j == selectJ
-		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) game.skin["selectedcolor"] else gray)
+		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
 	}
 }

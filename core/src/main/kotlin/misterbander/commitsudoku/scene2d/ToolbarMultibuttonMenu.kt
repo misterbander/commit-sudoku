@@ -30,10 +30,11 @@ class ToolbarMultibuttonMenu(
 		updateStyle()
 		this += background
 		val horizontalGroup = HorizontalGroup()
-		buttons.forEach {
-			buttonGroup.add(it)
-			horizontalGroup += it
-			it.onClick {
+		for (button in buttons)
+		{
+			buttonGroup.add(button)
+			horizontalGroup += button
+			button.onClick {
 				this@ToolbarMultibuttonMenu.isVisible = false
 				parentMultibutton.style = style
 			}
@@ -53,7 +54,7 @@ class ToolbarMultibuttonMenu(
 	
 	fun updateStyle()
 	{
-		background.drawable = game.skin["${if (game.isDarkMode) "dark" else ""}toolbarmultibuttonmenubackground"]
+		background.drawable = Scene2DSkin.defaultSkin["${if (game.isDarkMode) "dark" else ""}toolbarmultibuttonmenubackground"]
 	}
 	
 	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?

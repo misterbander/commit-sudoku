@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils.cosDeg
 import com.badlogic.gdx.math.MathUtils.sinDeg
 import com.badlogic.gdx.math.Vector2
-import ktx.collections.GdxArray
-import ktx.collections.plusAssign
+import ktx.collections.*
 import ktx.math.minusAssign
 import ktx.math.vec2
-import ktx.style.*
+import misterbander.commitsudoku.backgroundColor
+import misterbander.commitsudoku.decorationColor2
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.angle
 import misterbander.gframework.util.blend
@@ -48,14 +48,14 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecorati
 				grid.jToY(arrowJoint.second + 0.5F) + if (index == 0) offsetY else 0F
 			)
 		}
-		shapeDrawer.setColor(if (isHighlighted) Color.ORANGE else internalColor.blend(src = color ?: game.skin["decorationcolor2"], dest = game.skin["backgroundcolor"]))
+		shapeDrawer.setColor(if (isHighlighted) Color.ORANGE else internalColor.blend(src = color ?: decorationColor2, dest = backgroundColor))
 		shapeDrawer.path(arrowVertices, 2F, JoinType.SMOOTH, true)
 		
 		// Draw arrow head
-		tempVec.set(16F, 0F).setAngle(endDirection + 45F)
+		tempVec.set(16F, 0F).setAngleDeg(endDirection + 45F)
 		arrowHeadVertices[0].set(arrowVertices.peek()) -= tempVec
 		arrowHeadVertices[1].set(arrowVertices.peek())
-		tempVec.set(16F, 0F).setAngle(endDirection - 45F)
+		tempVec.set(16F, 0F).setAngleDeg(endDirection - 45F)
 		arrowHeadVertices[2].set(arrowVertices.peek()) -= tempVec
 		shapeDrawer.path(arrowHeadVertices, 2F, JoinType.POINTY, true)
 	}
