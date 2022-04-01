@@ -35,7 +35,6 @@ class BorderDecoration(
 	init
 	{
 		this.type = type
-		color = Color.BLACK
 	}
 	
 	override fun draw(batch: Batch)
