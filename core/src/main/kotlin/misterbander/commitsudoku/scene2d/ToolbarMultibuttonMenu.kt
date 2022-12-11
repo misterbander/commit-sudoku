@@ -54,7 +54,8 @@ class ToolbarMultibuttonMenu(
 	
 	fun updateStyle()
 	{
-		background.drawable = Scene2DSkin.defaultSkin["${if (game.isDarkMode) "dark" else ""}toolbarmultibuttonmenubackground"]
+		background.drawable =
+			Scene2DSkin.defaultSkin["${if (game.isDarkMode) "dark" else ""}toolbarmultibuttonmenubackground"]
 	}
 	
 	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?

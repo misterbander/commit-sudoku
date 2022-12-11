@@ -14,7 +14,7 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class TextDecorationAdder(grid: SudokuGrid): GridModfier<TextDecoration>(grid)
+class TextDecorationAdder(grid: SudokuGrid) : GridModfier<TextDecoration>(grid)
 {
 	private val textDecorations: GdxSet<TextDecoration> = GdxSet()
 	

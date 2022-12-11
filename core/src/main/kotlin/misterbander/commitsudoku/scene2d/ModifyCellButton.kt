@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.Align
 import ktx.actors.onChange
 import ktx.scene2d.*
 
-class ModifyCellButton(grid: SudokuGrid, digit: Int, styleName: String, alignLabelTopLeft: Boolean = false)
-	: TextButton(digit.toString(), Scene2DSkin.defaultSkin, styleName)
+class ModifyCellButton(grid: SudokuGrid, digit: Int, styleName: String, alignLabelTopLeft: Boolean = false) :
+	TextButton(digit.toString(), Scene2DSkin.defaultSkin, styleName)
 {
 	init
 	{

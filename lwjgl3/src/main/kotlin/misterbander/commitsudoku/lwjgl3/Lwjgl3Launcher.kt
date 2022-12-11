@@ -4,29 +4,24 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import misterbander.commitsudoku.CommitSudoku
 import misterbander.commitsudoku.DarkModeSettingsProvider
+import misterbander.gframework.GFrameworkDelegator
 import java.time.LocalTime
 
-/** Launches the desktop (LWJGL3) application.  */
-object Lwjgl3Launcher
+/** Launches the desktop (LWJGL3) application. */
+fun main(args: Array<String>)
 {
-	@JvmStatic
-	fun main(args: Array<String>)
-	{
-		val configuration = Lwjgl3ApplicationConfiguration()
-		configuration.setTitle("Commit Sudoku")
-		configuration.setWindowedMode(1280, 720)
-		configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
-		configuration.setBackBufferConfig(8, 8, 8,8, 16, 0, 4)
-		Lwjgl3Application(CommitSudoku(args, DesktopDarkModeSettingsProvider()), configuration)
-	}
-	
-	private class DesktopDarkModeSettingsProvider : DarkModeSettingsProvider
-	{
-		override val defaultDarkModeEnabled: Boolean
-			get()
+	Lwjgl3Application(
+		GFrameworkDelegator {
+			CommitSudoku(args, object : DarkModeSettingsProvider
 			{
-				val now: LocalTime = LocalTime.now()
-				return now.hour >= 22 || now.hour < 8
-			}
-	}
+				override val defaultDarkModeEnabled = LocalTime.now().let { it.hour >= 22 || it.hour < 8 }
+			})
+		},
+		Lwjgl3ApplicationConfiguration().apply {
+			setTitle("Commit Sudoku")
+			setWindowedMode(1280, 720)
+			setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
+			setBackBufferConfig(8, 8, 8, 8, 16, 0, 4)
+		}
+	)
 }

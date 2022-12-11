@@ -33,11 +33,13 @@ useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
 inputFiles=[{path:gui.png,type:Ignore},{path:.,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
+keepInputFileExtensions=false
 
 
 -PROJ-
 
-version=4.9.0
+version=4.10.2
 fileTypeType=png
 fileTypeData={encoding:RGBA8888}
 previewBackgroundColor=ffffffff
+projectSettings={inputFiles:{}}

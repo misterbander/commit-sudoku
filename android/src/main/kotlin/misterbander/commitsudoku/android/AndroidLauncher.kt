@@ -6,9 +6,9 @@ import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import misterbander.commitsudoku.CommitSudoku
 import misterbander.commitsudoku.DarkModeSettingsProvider
+import misterbander.gframework.GFrameworkDelegator
 import misterbander.gframework.GScreen
 import misterbander.gframework.scene2d.KeyboardHeightObserver
-
 
 /** Launches the Android application.  */
 class AndroidLauncher : AndroidApplication(), KeyboardHeightObserver
@@ -20,13 +20,14 @@ class AndroidLauncher : AndroidApplication(), KeyboardHeightObserver
 	{
 		super.onCreate(savedInstanceState)
 		val args = intent.extras?.getString("args")
-		val darkModeSettingsProvider = object : DarkModeSettingsProvider
-		{
-			override val defaultDarkModeEnabled
-				get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-		}
-		commitSudoku = CommitSudoku(args?.let { arrayOf(it) } ?: emptyArray(), darkModeSettingsProvider)
-		initialize(commitSudoku, AndroidApplicationConfiguration())
+		initialize(GFrameworkDelegator {
+			commitSudoku = CommitSudoku(args?.let { arrayOf(it) } ?: emptyArray(), object : DarkModeSettingsProvider
+			{
+				override val defaultDarkModeEnabled
+					get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+			})
+			commitSudoku
+		}, AndroidApplicationConfiguration())
 		
 		keyboardHeightProvider = KeyboardHeightProvider(this)
 		

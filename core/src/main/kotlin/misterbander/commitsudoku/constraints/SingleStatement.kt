@@ -3,7 +3,7 @@ package misterbander.commitsudoku.constraints
 import com.fathzer.soft.javaluator.DoubleEvaluator
 import ktx.collections.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
-import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
+import misterbander.gframework.util.GdxStringBuilder
 
 class SingleStatement(private val cells: Array<Array<SudokuGrid.Cell>>, val statementStr: String) : Statement
 {

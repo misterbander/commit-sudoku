@@ -27,13 +27,13 @@ import misterbander.commitsudoku.scene2d.actions.ModifyDigitAction
 import misterbander.commitsudoku.scene2d.actions.ModifyMarkAction
 import misterbander.commitsudoku.secondaryColor
 import misterbander.commitsudoku.selectedColor
+import misterbander.gframework.util.GdxStringBuilder
 import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.drawCenter
 import java.io.Serializable
 import kotlin.math.floor
 import kotlin.math.min
-import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
 
 class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 {

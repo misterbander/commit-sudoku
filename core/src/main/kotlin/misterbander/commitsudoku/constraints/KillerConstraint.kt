@@ -6,7 +6,7 @@ import ktx.collections.set
 import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
-import com.badlogic.gdx.utils.StringBuilder as GdxStringBuilder
+import misterbander.gframework.util.GdxStringBuilder
 
 class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Constraint
 {

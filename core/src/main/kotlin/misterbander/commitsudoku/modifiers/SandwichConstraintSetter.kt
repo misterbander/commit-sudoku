@@ -63,7 +63,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 				if (sandwichConstraint.sandwichValue < 10)
 					removeModification(sandwichConstraint)
 				else
-					sandwichConstraint.sandwichValue/=10
+					sandwichConstraint.sandwichValue /= 10
 			}
 			else
 				sandwichConstraint.sandwichValue = sandwichConstraint.sandwichValue*10 + digit

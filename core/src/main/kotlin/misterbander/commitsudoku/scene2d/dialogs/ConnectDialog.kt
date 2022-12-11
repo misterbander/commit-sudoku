@@ -8,7 +8,7 @@ import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.INFO_LABEL_STYLE
 import misterbander.commitsudoku.TEXT_BUTTON_STYLE
 import misterbander.commitsudoku.TEXT_FIELD_STYLE
-import misterbander.gframework.scene2d.GTextField
+import misterbander.gframework.scene2d.GTextWidget
 import misterbander.gframework.scene2d.UnfocusListener
 import misterbander.gframework.scene2d.gTextField
 import java.io.ObjectOutputStream
@@ -22,12 +22,13 @@ class ConnectDialog(screen: CommitSudokuScreen) : CommitSudokuDialog(screen, "Sy
 			defaults().left().space(16F)
 			label("Host Address:", INFO_LABEL_STYLE)
 			row()
-			val hostAddressTextField = gTextField(this@ConnectDialog, "192.168.", TEXT_FIELD_STYLE).cell(colspan = 2, fillX = true)
+			val hostAddressTextField =
+				gTextField(this@ConnectDialog, "192.168.", TEXT_FIELD_STYLE).cell(colspan = 2, fillX = true)
 			row()
 			label("Port", INFO_LABEL_STYLE)
 			row()
 			val portTextField = gTextField(this@ConnectDialog, "11530", TEXT_FIELD_STYLE) {
-				textFieldFilter = GTextField.GTextFieldFilter.DigitsOnlyFilter()
+				filter = GTextWidget.GTextWidgetFilter.DigitsOnlyFilter()
 			}.cell(colspan = 2, fillX = true)
 			row()
 			textButton("OK", TEXT_BUTTON_STYLE) {
@@ -38,7 +39,7 @@ class ConnectDialog(screen: CommitSudokuScreen) : CommitSudokuDialog(screen, "Sy
 						val socket = Gdx.net.newClientSocket(
 							Net.Protocol.TCP,
 							hostAddressTextField.text,
-							portTextField.text.toString().toInt(),
+							portTextField.text.toInt(),
 							null
 						)
 						val outputStream = ObjectOutputStream(socket.outputStream)

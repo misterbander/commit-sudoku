@@ -29,7 +29,14 @@ class CircleDecoration(
 	}
 	
 	fun isOver(i: Int, j: Int): Boolean =
-		Intersector.distanceSegmentPoint(i1.toFloat(), j1.toFloat(), i2.toFloat(), j2.toFloat(), i.toFloat(), j.toFloat()) < radius/grid.cellSize
+		Intersector.distanceSegmentPoint(
+			i1.toFloat(),
+			j1.toFloat(),
+			i2.toFloat(),
+			j2.toFloat(),
+			i.toFloat(),
+			j.toFloat()
+		) < radius/grid.cellSize
 	
 	override fun draw(batch: Batch)
 	{

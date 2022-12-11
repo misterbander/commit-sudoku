@@ -13,7 +13,6 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-
 class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 {
 	private val cageMap: Array<Array<CageDecoration?>> = Array(9) { arrayOfNulls(9) }
@@ -88,7 +87,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 		{
 			val killerConstraint = currentCage!!.killerConstraint!!
 			if (digit == -1) // Backspace
-				killerConstraint.killerSum/=10
+				killerConstraint.killerSum /= 10
 			else
 				killerConstraint.killerSum = killerConstraint.killerSum*10 + digit
 		}

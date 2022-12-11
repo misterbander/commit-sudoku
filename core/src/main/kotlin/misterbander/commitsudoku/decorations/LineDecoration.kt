@@ -83,7 +83,10 @@ open class LineDecoration(grid: SudokuGrid, startX: Int, startY: Int) : Decorati
 			
 			shapeDrawer.roundedLine(
 				x1, y1, x2, y2,
-				internalColor.blend(src = if (isHighlighted) selectedColor else color ?: decorationColor1, dest = backgroundColor),
+				internalColor.blend(
+					src = if (isHighlighted) selectedColor else color ?: decorationColor1,
+					dest = backgroundColor
+				),
 				16F
 			)
 		}

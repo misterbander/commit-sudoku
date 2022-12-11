@@ -75,7 +75,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 		check()
 	}
 	
-	operator fun contains(constraint: Constraint): Boolean = constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
+	operator fun contains(constraint: Constraint): Boolean =
+		constraint in globalStatements || constraint in staticStatements || constraint in additionalConstraints
 	
 	fun clear()
 	{
@@ -124,10 +125,8 @@ class ConstraintsChecker(private val grid: SudokuGrid) : PersistentState
 				antiKingStatement -> mapper["antiKing"] = true
 				antiKnightStatement -> mapper["antiKnight"] = true
 				nonconsecutiveStatement -> mapper["nonconsecutive"] = true
-				is SingleStatement ->
-					globalStatementStrs += arrayOf(statement.statementStr)
-				is CompoundStatement ->
-					globalStatementStrs += statement.statementStrs
+				is SingleStatement -> globalStatementStrs += arrayOf(statement.statementStr)
+				is CompoundStatement -> globalStatementStrs += statement.statementStrs
 			}
 		}
 		for (statement: Statement in staticStatements)

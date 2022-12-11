@@ -98,9 +98,9 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 		actor(ModifyCellButton(grid, 5, TEXT_BUTTON_STYLE, true))
 		actor(ModifyCellButton(grid, 6, TEXT_BUTTON_STYLE, true))
 		row()
-		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_STYLE,true))
-		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_STYLE,true))
-		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_STYLE,true))
+		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_STYLE, true))
+		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_STYLE, true))
+		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_STYLE, true))
 		row()
 	}
 	val centerMarkKeypad = scene2d.table {
@@ -173,7 +173,8 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 			field = value
 			modeLabel.txt = if (value) "Edit Mode" else "Playing"
 			timerLabel.isVisible = !value
-			editButton.style = if (value) Scene2DSkin.defaultSkin[NEW_BUTTON_STYLE] else Scene2DSkin.defaultSkin[EDIT_BUTTON_STYLE]
+			editButton.style =
+				if (value) Scene2DSkin.defaultSkin[NEW_BUTTON_STYLE] else Scene2DSkin.defaultSkin[EDIT_BUTTON_STYLE]
 			grid.setGivens(!value)
 			timer.isRunning = !value
 			grid.actionController.clearHistory()

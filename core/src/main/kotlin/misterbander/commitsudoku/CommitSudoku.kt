@@ -160,13 +160,13 @@ class CommitSudoku(
 			}
 			gTextField(TEXT_FIELD_STYLE) {
 				background = this@skin["textfield"]
-				background.leftWidth = 16F
-				background.rightWidth = 16F
+				background!!.leftWidth = 16F
+				background!!.rightWidth = 16F
 				font = segoeui
 				fontColor = this@skin["primarycolor"]
 				selectionFontColor = Color.WHITE
 				cursor = this@skin["textcursor"]
-				cursor.leftWidth = 32F
+				cursor!!.leftWidth = 32F
 				selection = this@skin["textselection"]
 			}
 		}
@@ -270,13 +270,13 @@ class CommitSudoku(
 			}
 			gTextField(TEXT_FIELD_STYLE) {
 				background = this@skin["darktextfield"]
-				background.leftWidth = 16F
-				background.rightWidth = 16F
+				background!!.leftWidth = 16F
+				background!!.rightWidth = 16F
 				font = segoeui
 				fontColor = this@skin["primarycolor"]
 				selectionFontColor = Color.WHITE
 				cursor = this@skin["darktextcursor"]
-				cursor.leftWidth = 32F
+				cursor!!.leftWidth = 32F
 				selection = this@skin["textselection"]
 			}
 		}
@@ -296,11 +296,14 @@ class CommitSudoku(
 		KtxAsync.initiate()
 		
 		KtxAsync.launch {
-			val assets= listOf(
+			val assets = listOf(
 				assetStorage.loadAsync(TextureAtlases.gui),
 				assetStorage.loadAsync(Fonts.segoeui)
 			)
 			assets.joinAll()
+			
+			shapeDrawer.setTextureRegion(guiAtlas.findRegion("pixel"))
+			
 			Scene2DSkin.defaultSkin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 			info("CommitSudoku          | INFO") { "Finished loading assets!" }
 			info("CommitSudoku          | INFO") { "Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}" }

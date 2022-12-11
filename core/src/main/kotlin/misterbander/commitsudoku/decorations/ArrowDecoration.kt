@@ -48,7 +48,14 @@ class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecorati
 				grid.jToY(arrowJoint.second + 0.5F) + if (index == 0) offsetY else 0F
 			)
 		}
-		shapeDrawer.setColor(if (isHighlighted) Color.ORANGE else internalColor.blend(src = color ?: decorationColor2, dest = backgroundColor))
+		shapeDrawer.setColor(
+			if (isHighlighted)
+				Color.ORANGE
+			else internalColor.blend(
+				src = color ?: decorationColor2,
+				dest = backgroundColor
+			)
+		)
 		shapeDrawer.path(arrowVertices, 2F, JoinType.SMOOTH, true)
 		
 		// Draw arrow head

@@ -13,7 +13,6 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-
 abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid) : GridModfier<T>(grid)
 {
 	private val lineDecorations: GdxArray<T> = GdxArray()
@@ -38,7 +37,7 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 		addModification(currentLine!!)
 	}
 	
-	abstract fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int) : T
+	abstract fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int): T
 	
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{

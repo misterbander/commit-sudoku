@@ -11,7 +11,7 @@ import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.INFO_LABEL_STYLE
 import misterbander.commitsudoku.TEXT_BUTTON_STYLE
 import misterbander.commitsudoku.TEXT_FIELD_STYLE
-import misterbander.gframework.scene2d.GTextField
+import misterbander.gframework.scene2d.GTextWidget
 import misterbander.gframework.scene2d.UnfocusListener
 import misterbander.gframework.scene2d.gTextField
 
@@ -34,9 +34,9 @@ class SingleInputDialog(
 			row()
 			actor(textField) {
 				if (digitsOnly)
-					textFieldFilter = GTextField.GTextFieldFilter.DigitsOnlyFilter()
+					filter = GTextWidget.GTextWidgetFilter.DigitsOnlyFilter()
 				this.maxLength = maxLength
-				onKeyboardFocus { focused -> textField.onscreenKeyboard.show(focused) }
+				onKeyboardFocus { focused -> textField.keyboard.show(focused) }
 			}.cell(colspan = 2, fillX = true)
 			row()
 			textButton("OK", TEXT_BUTTON_STYLE) {
@@ -66,7 +66,7 @@ class SingleInputDialog(
 	{
 		titleLabel.txt = title
 		messageLabel.txt = message
-		textField.text = null
+		textField.text = ""
 		this.onSuccess = onSuccess
 		show()
 		textField.setKeyboardFocus(true)

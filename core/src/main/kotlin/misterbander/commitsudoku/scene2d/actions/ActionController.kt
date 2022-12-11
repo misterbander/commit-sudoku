@@ -8,7 +8,7 @@ import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
-class ActionController(private val grid: SudokuGrid): PersistentState
+class ActionController(private val grid: SudokuGrid) : PersistentState
 {
 	private val actionHistory: GdxArray<GdxArray<ModifyCellAction>> = GdxArray()
 	private var undidActionCount: Int = 0
