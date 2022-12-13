@@ -6,33 +6,30 @@ import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.gframework.util.wrap
 
-class MessageDialog(screen: CommitSudokuScreen) : CommitSudokuDialog(screen, "")
+class MessageDialog(screen: CommitSudokuScreen) : RebuildableDialog(screen, "")
 {
-	private val messageLabel = scene2d.label("")
-	private var fallbackWindow: CommitSudokuDialog? = null
+	private var message = ""
+	private var hideAction: () -> Unit = {}
 	
-	init
+	override fun build()
 	{
-		contentTable.add(scene2d.table {
-			pad(24F)
-			defaults().left().space(16F)
-			actor(messageLabel)
-			row()
-			textButton("OK") { onChange { hide() } }.cell(width = 96F).inCell.center()
-		})
+		contentTable.add(scene2d.label(game.segoeUi.wrap(message, 720)))
+		buttonTable.add(scene2d.textButton("OK") {
+			onChange { hide() }
+		}).prefWidth(96F)
 	}
 	
-	fun show(title: String, message: String, fallbackWindow: CommitSudokuDialog? = null)
+	fun show(title: String, message: String, hideAction: () -> Unit = {})
 	{
-		this.fallbackWindow = fallbackWindow
 		titleLabel.txt = title
-		messageLabel.txt = game.segoeUi.wrap(message, 720)
+		this.message = message
+		this.hideAction = hideAction
 		show()
 	}
 	
 	override fun hide()
 	{
 		super.hide()
-		fallbackWindow?.show()
+		hideAction()
 	}
 }

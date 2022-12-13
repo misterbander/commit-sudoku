@@ -17,15 +17,17 @@ abstract class CommitSudokuDialog(
 ) : AccessibleInputDialog(title, Scene2DSkin.defaultSkin, defaultStyle)
 {
 	protected val game = screen.game
-	val closeButton = scene2d.button(CLOSE_BUTTON_STYLE) { onChange { hide() } }
+	private val closeButton = scene2d.button(CLOSE_BUTTON_STYLE) { onChange { hide() } }
 	
 	init
 	{
 		titleTable.add(closeButton).right()
 		titleTable.pad(2F, 16F, 0F, 2F)
+		contentTable.pad(24F)
+		buttonTable.pad(0F, 24F, 24F, 24F)
 	}
 	
-	fun show()
+	open fun show()
 	{
 		show(screen.uiStage, null)
 		centerPosition()

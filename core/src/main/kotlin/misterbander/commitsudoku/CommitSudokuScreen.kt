@@ -16,7 +16,6 @@ import ktx.scene2d.*
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
-import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
 import misterbander.commitsudoku.scene2d.dialogs.SyncDialog
 import misterbander.commitsudoku.scene2d.updateStyle
 import misterbander.gframework.GScreen
@@ -28,7 +27,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 {
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
-	val textInputDialog = SingleInputDialog(this)
 	val syncDialog = SyncDialog(this)
 	val messageDialog = MessageDialog(this)
 	
@@ -66,7 +64,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		if (mapper.read("commit_sudoku_state"))
 			panel.readState(mapper)
 		
-		keyboardHeightObservers += textInputDialog
 		keyboardHeightObservers += syncDialog
 		
 		Scene2DSkin.addListener { updateStyles(it) }
@@ -115,7 +112,6 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	{
 		val oldSkin = if (skin == game.lightSkin) game.darkSkin else game.lightSkin
 		uiStage.root.updateStyle(skin, oldSkin)
-		textInputDialog.updateStyle(skin, oldSkin)
 		syncDialog.updateStyle(skin, oldSkin)
 		messageDialog.updateStyle(skin, oldSkin)
 	}

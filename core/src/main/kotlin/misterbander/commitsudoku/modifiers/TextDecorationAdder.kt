@@ -8,6 +8,7 @@ import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
 import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
@@ -66,11 +67,11 @@ class TextDecorationAdder(grid: SudokuGrid) : GridModfier<TextDecoration>(grid)
 			removeModification(existingTextDecoration)
 		else
 		{
-			grid.panel.screen.textInputDialog.show("Add Text Decoration", "Enter Text:") { result ->
+			SingleInputDialog(grid.panel.screen, "Add Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
-					return@show
+					return@SingleInputDialog
 				addModification(TextDecoration(grid, selectI, selectJ, result))
-			}
+			}.show()
 		}
 	}
 	

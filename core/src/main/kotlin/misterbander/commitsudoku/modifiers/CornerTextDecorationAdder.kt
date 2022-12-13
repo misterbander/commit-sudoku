@@ -7,6 +7,7 @@ import ktx.collections.minusAssign
 import ktx.collections.plusAssign
 import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 import kotlin.collections.map
@@ -32,11 +33,11 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 			removeModification(existingCornerTextDecoration)
 		else
 		{
-			grid.panel.screen.textInputDialog.show("Add Corner Text Decoration", "Enter Text:") { result ->
+			SingleInputDialog(grid.panel.screen, "Add Corner Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
-					return@show
+					return@SingleInputDialog
 				addModification(CornerTextDecoration(grid, selectI, selectJ, result))
-			}
+			}.show()
 		}
 	}
 	
