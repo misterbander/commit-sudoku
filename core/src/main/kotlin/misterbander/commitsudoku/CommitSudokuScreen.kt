@@ -5,12 +5,7 @@ import com.badlogic.gdx.Net
 import com.badlogic.gdx.net.ServerSocket
 import com.badlogic.gdx.net.ServerSocketHints
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.badlogic.gdx.utils.ScreenUtils
 import ktx.actors.onTouchDown
@@ -18,16 +13,13 @@ import ktx.actors.plusAssign
 import ktx.collections.*
 import ktx.log.info
 import ktx.scene2d.*
-import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
-import misterbander.commitsudoku.scene2d.ToolbarMultibuttonMenu
-import misterbander.commitsudoku.scene2d.dialogs.CommitSudokuDialog
-import misterbander.commitsudoku.scene2d.dialogs.ConnectDialog
 import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
 import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
+import misterbander.commitsudoku.scene2d.dialogs.SyncDialog
+import misterbander.commitsudoku.scene2d.updateStyle
 import misterbander.gframework.GScreen
-import misterbander.gframework.scene2d.GTextField
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.ObjectInputStream
 import kotlin.concurrent.thread
@@ -37,7 +29,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
 	val textInputDialog = SingleInputDialog(this)
-	val connectDialog = ConnectDialog(this)
+	val syncDialog = SyncDialog(this)
 	val messageDialog = MessageDialog(this)
 	
 	val mapper = PersistentStateMapper()
@@ -75,7 +67,9 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			panel.readState(mapper)
 		
 		keyboardHeightObservers += textInputDialog
-		keyboardHeightObservers += connectDialog
+		keyboardHeightObservers += syncDialog
+		
+		Scene2DSkin.addListener { updateStyles(it) }
 	}
 	
 	override fun show()
@@ -117,53 +111,13 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 		}
 	}
 	
-	private fun updateActorStyle(actor: Actor, otherSkin: Skin, vararg exclude: Actor)
+	private fun updateStyles(skin: Skin)
 	{
-		if (exclude.any { actor == it })
-			return
-		when (actor)
-		{
-			is Label -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
-			is TextButton -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
-			is ImageButton -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
-			is GTextField -> actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
-			is CommitSudokuDialog ->
-			{
-				actor.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.style)]
-				actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
-				actor.closeButton.style = Scene2DSkin.defaultSkin[otherSkin.find(actor.closeButton.style)]
-			}
-			is Table -> actor.cells.forEach { updateActorStyle(it.actor, otherSkin, *exclude) }
-			is ToolbarMultibuttonMenu ->
-			{
-				actor.updateStyle()
-				actor.children.forEach { updateActorStyle(it, otherSkin, *exclude) }
-			}
-			is Group -> actor.children.forEach { updateActorStyle(it, otherSkin, *exclude) }
-		}
-	}
-	
-	fun updateStyles()
-	{
-		val otherSkin = if (game.isDarkMode) game.lightSkin else game.darkSkin
-		for (actor: Actor in uiStage.actors)
-		{
-			updateActorStyle(
-				actor, otherSkin,
-				panel.digitKeypad,
-				panel.cornerMarkKeypad,
-				panel.centerMarkKeypad,
-				panel.colorKeypad,
-				panel.undoRedoTray,
-				panel.zeroButton
-			)
-		}
-		updateActorStyle(panel.digitKeypad, otherSkin)
-		updateActorStyle(panel.cornerMarkKeypad, otherSkin)
-		updateActorStyle(panel.centerMarkKeypad, otherSkin)
-		updateActorStyle(panel.colorKeypad, otherSkin)
-		updateActorStyle(panel.undoRedoTray, otherSkin)
-		updateActorStyle(panel.zeroButton, otherSkin)
+		val oldSkin = if (skin == game.lightSkin) game.darkSkin else game.lightSkin
+		uiStage.root.updateStyle(skin, oldSkin)
+		textInputDialog.updateStyle(skin, oldSkin)
+		syncDialog.updateStyle(skin, oldSkin)
+		messageDialog.updateStyle(skin, oldSkin)
 	}
 	
 	override fun pause()

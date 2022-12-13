@@ -11,5 +11,5 @@ object TextureAtlases
 
 object Fonts
 {
-	val segoeui = assetDescriptor<FreeTypeFontGenerator>("fonts/segoeui.ttf")
+	val segoeUi = assetDescriptor<FreeTypeFontGenerator>("fonts/segoe_ui.ttf")
 }

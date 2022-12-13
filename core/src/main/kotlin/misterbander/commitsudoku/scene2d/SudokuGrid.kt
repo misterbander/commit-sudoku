@@ -437,8 +437,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		fun draw(batch: Batch)
 		{
 			val shapeDrawer = game.shapeDrawer
-			val segoeui = game.segoeui
-			val segoeui2 = game.segoeuil
+			val segoeui = game.segoeUi
+			val segoeui2 = game.segoeUiLarge
 			
 			val highlightColorsMap: IntMap<Color> = highlightColors
 			

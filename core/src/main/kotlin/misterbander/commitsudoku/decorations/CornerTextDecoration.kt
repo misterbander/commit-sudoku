@@ -17,9 +17,9 @@ class CornerTextDecoration(
 	{
 		val x = grid.iToX(i + 0.05F)
 		val y = grid.jToY(j + 0.95F)
-		val textSize = game.segoeui.textSize(text)
+		val textSize = game.segoeUi.textSize(text)
 		game.shapeDrawer.filledRectangle(x, y - textSize.y, textSize.x, textSize.y, backgroundColor)
-		game.segoeui.color = color ?: primaryColor
-		game.segoeui.draw(game.batch, text, x, y)
+		game.segoeUi.color = color ?: primaryColor
+		game.segoeUi.draw(game.batch, text, x, y)
 	}
 }

@@ -8,9 +8,6 @@ import ktx.actors.setKeyboardFocus
 import ktx.actors.txt
 import ktx.scene2d.*
 import misterbander.commitsudoku.CommitSudokuScreen
-import misterbander.commitsudoku.INFO_LABEL_STYLE
-import misterbander.commitsudoku.TEXT_BUTTON_STYLE
-import misterbander.commitsudoku.TEXT_FIELD_STYLE
 import misterbander.gframework.scene2d.GTextWidget
 import misterbander.gframework.scene2d.UnfocusListener
 import misterbander.gframework.scene2d.gTextField
@@ -21,8 +18,8 @@ class SingleInputDialog(
 	maxLength: Int = 0
 ) : CommitSudokuDialog(screen, "")
 {
-	private val messageLabel = scene2d.label("", INFO_LABEL_STYLE)
-	private val textField = scene2d.gTextField(this, "", TEXT_FIELD_STYLE)
+	private val messageLabel = scene2d.label("")
+	private val textField = scene2d.gTextField(this, "")
 	var onSuccess: (String) -> Unit = {}
 	
 	init
@@ -39,13 +36,13 @@ class SingleInputDialog(
 				onKeyboardFocus { focused -> textField.keyboard.show(focused) }
 			}.cell(colspan = 2, fillX = true)
 			row()
-			textButton("OK", TEXT_BUTTON_STYLE) {
+			textButton("OK") {
 				onChange {
 					onSuccess(textField.text)
 					hide()
 				}
 			}.cell(width = 96F)
-			textButton("Cancel", TEXT_BUTTON_STYLE) { onChange { hide() } }.cell(width = 96F)
+			textButton("Cancel") { onChange { hide() } }.cell(width = 96F)
 		})
 		left()
 		pack()

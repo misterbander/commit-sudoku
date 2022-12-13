@@ -10,24 +10,24 @@ import ktx.actors.onClick
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.*
-import misterbander.commitsudoku.ADD_ARROW_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_BORDER_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_CAGE_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_CIRCLE_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_CORNER_TEXT_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_KILLER_CAGE_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_LINE_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_LITTLE_ARROW_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_SANDWICH_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_TEXT_DECORATION_BUTTON_STYLE
-import misterbander.commitsudoku.ADD_THERMO_BUTTON_STYLE
 import misterbander.commitsudoku.ANTIKING_BUTTON_STYLE
 import misterbander.commitsudoku.ANTIKNIGHT_BUTTON_STYLE
+import misterbander.commitsudoku.ARROW_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.BORDER_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.CAGE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.CIRCLE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.CORNER_TEXT_DECORATION_BUTTON_STYLE
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.EMPTY_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.KILLER_CAGE_BUTTON_STYLE
+import misterbander.commitsudoku.LINE_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.LITTLE_ARROW_DECORATION_BUTTON_STYLE
 import misterbander.commitsudoku.NON_CONSECUTIVE_BUTTON_STYLE
+import misterbander.commitsudoku.SANDWICH_BUTTON_STYLE
 import misterbander.commitsudoku.SET_GIVENS_BUTTON_STYLE
 import misterbander.commitsudoku.SOFT_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.TEXT_DECORATION_BUTTON_STYLE
+import misterbander.commitsudoku.THERMO_BUTTON_STYLE
 import misterbander.commitsudoku.X_BUTTON_STYLE
 import misterbander.commitsudoku.toolbarBackgroundColor
 
@@ -39,20 +39,20 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	private val constraintsChecker
 		get() = grid.constraintsChecker
 	
-	private val thermoMultibutton = ToolbarMultibutton(screen, ADD_THERMO_BUTTON_STYLE)
+	private val thermoMultibutton = ToolbarMultibutton(screen, THERMO_BUTTON_STYLE)
 	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
 		game,
 		thermoMultibutton,
-		scene2d.imageButton(ADD_THERMO_BUTTON_STYLE),
+		scene2d.imageButton(THERMO_BUTTON_STYLE),
 		scene2d.imageButton(SOFT_THERMO_BUTTON_STYLE),
 		scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE)
 	)
-	private val cageMultibutton = ToolbarMultibutton(screen, ADD_KILLER_CAGE_BUTTON_STYLE)
+	private val cageMultibutton = ToolbarMultibutton(screen, KILLER_CAGE_BUTTON_STYLE)
 	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
 		game,
 		cageMultibutton,
-		scene2d.imageButton(ADD_KILLER_CAGE_BUTTON_STYLE) { onClick { screen.panel.showZero = true } },
-		scene2d.imageButton(ADD_CAGE_DECORATION_BUTTON_STYLE) { onClick { screen.panel.showZero = false } }
+		scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) { onClick { screen.panel.showZero = true } },
+		scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) { onClick { screen.panel.showZero = false } }
 	)
 	
 	val xButton = scene2d.imageButton(X_BUTTON_STYLE).apply {
@@ -104,28 +104,28 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				onChange { grid.modifier = grid.modifiers.thermoAdder }
 			}
 			row()
-			imageButton(ADD_SANDWICH_BUTTON_STYLE) {
+			imageButton(SANDWICH_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.sandwichConstraintSetter }
 			}
-			imageButton(ADD_TEXT_DECORATION_BUTTON_STYLE) {
+			imageButton(TEXT_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.textDecorationAdder }
 			}
 			row()
-			imageButton(ADD_CORNER_TEXT_DECORATION_BUTTON_STYLE) {
+			imageButton(CORNER_TEXT_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.cornerTextDecorationAdder }
 			}
-			imageButton(ADD_CIRCLE_DECORATION_BUTTON_STYLE) {
+			imageButton(CIRCLE_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.circleDecorationAdder }
 			}
 			row()
-			imageButton(ADD_LINE_DECORATION_BUTTON_STYLE) {
+			imageButton(LINE_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.lineDecorationAdder }
 			}
-			imageButton(ADD_ARROW_DECORATION_BUTTON_STYLE) {
+			imageButton(ARROW_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.arrowDecorationAdder }
 			}
 			row()
-			imageButton(ADD_LITTLE_ARROW_DECORATION_BUTTON_STYLE) {
+			imageButton(LITTLE_ARROW_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.littleArrowDecorationAdder }
 			}
 			actor(cageMultibutton) {
@@ -133,7 +133,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
 			row()
-			imageButton(ADD_BORDER_DECORATION_BUTTON_STYLE) {
+			imageButton(BORDER_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.borderDecorationSetter }
 			}
 		}

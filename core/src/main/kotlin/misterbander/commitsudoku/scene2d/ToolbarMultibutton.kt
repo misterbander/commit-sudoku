@@ -1,8 +1,8 @@
 package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import ktx.actors.onClick
 import ktx.math.vec2
 import ktx.scene2d.*
@@ -14,8 +14,8 @@ class ToolbarMultibutton(
 	styleName: String,
 ) : ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
-	private val multibuttonIcon: TextureRegion
-		get() = Scene2DSkin.defaultSkin[if (screen.game.isDarkMode) "darkmultibuttonicon" else "multibuttonicon"]
+	private val multibuttonIcon: Drawable
+		get() = Scene2DSkin.defaultSkin[if (screen.game.isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
 	private val posVector = vec2()
 	private var shouldExpand = false
 	var multibuttonMenu: ToolbarMultibuttonMenu? = null
@@ -49,6 +49,6 @@ class ToolbarMultibutton(
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
 		super.draw(batch, parentAlpha)
-		batch.draw(multibuttonIcon, x + width - multibuttonIcon.regionWidth - 4, y + 4)
+		multibuttonIcon.draw(batch, x + width - multibuttonIcon.minWidth - 4, y + 4, multibuttonIcon.minWidth, multibuttonIcon.minHeight)
 	}
 }

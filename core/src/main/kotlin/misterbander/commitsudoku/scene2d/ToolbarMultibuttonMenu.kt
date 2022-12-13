@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Stack
 import ktx.actors.onClick
 import ktx.actors.onTouchEvent
@@ -27,7 +28,8 @@ class ToolbarMultibuttonMenu(
 	
 	init
 	{
-		updateStyle()
+		background.drawable =
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (game.isDarkMode) "_dark" else ""}"]
 		this += background
 		val horizontalGroup = HorizontalGroup()
 		for (button in buttons)
@@ -52,10 +54,11 @@ class ToolbarMultibuttonMenu(
 		}
 	}
 	
-	fun updateStyle()
+	fun updateStyle(skin: Skin, oldSkin: Skin)
 	{
 		background.drawable =
-			Scene2DSkin.defaultSkin["${if (game.isDarkMode) "dark" else ""}toolbarmultibuttonmenubackground"]
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (game.isDarkMode) "_dark" else ""}"]
+		children.forEach { it.updateStyle(skin, oldSkin) }
 	}
 	
 	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?

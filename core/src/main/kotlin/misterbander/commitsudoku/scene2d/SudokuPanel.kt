@@ -10,11 +10,10 @@ import ktx.actors.txt
 import ktx.scene2d.*
 import ktx.style.*
 import misterbander.commitsudoku.BLUE_BUTTON_STYLE
+import misterbander.commitsudoku.CHECKABLE_TEXT_BUTTON_LARGE_STYLE
 import misterbander.commitsudoku.CHECKABLE_TEXT_BUTTON_STYLE
-import misterbander.commitsudoku.CHECKABLE_TEXT_BUTTON_STYLE_L
 import misterbander.commitsudoku.CLEAR_BUTTON_STYLE
 import misterbander.commitsudoku.COLOR_BUTTON_STYLE
-import misterbander.commitsudoku.CONNECT_BUTTON_STYLE
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.DARK_BLUE_BUTTON_STYLE
 import misterbander.commitsudoku.DARK_MODE_BUTTON_STYLE
@@ -22,7 +21,6 @@ import misterbander.commitsudoku.DELETE_BUTTON_STYLE
 import misterbander.commitsudoku.EDIT_BUTTON_STYLE
 import misterbander.commitsudoku.GRAY_BUTTON_STYLE
 import misterbander.commitsudoku.GREEN_BUTTON_STYLE
-import misterbander.commitsudoku.INFO_LABEL_STYLE
 import misterbander.commitsudoku.NEW_BUTTON_STYLE
 import misterbander.commitsudoku.ORANGE_BUTTON_STYLE
 import misterbander.commitsudoku.PINK_BUTTON_STYLE
@@ -30,8 +28,8 @@ import misterbander.commitsudoku.PLAY_BUTTON_STYLE
 import misterbander.commitsudoku.PURPLE_BUTTON_STYLE
 import misterbander.commitsudoku.REDO_BUTTON_STYLE
 import misterbander.commitsudoku.RED_BUTTON_STYLE
-import misterbander.commitsudoku.TEXT_BUTTON_STYLE
-import misterbander.commitsudoku.TEXT_BUTTON_STYLE_L
+import misterbander.commitsudoku.SYNC_BUTTON_STYLE
+import misterbander.commitsudoku.TEXT_BUTTON_LARGE_STYLE
 import misterbander.commitsudoku.UNDO_BUTTON_STYLE
 import misterbander.commitsudoku.YELLOW_BUTTON_STYLE
 import misterbander.gframework.util.PersistentState
@@ -44,8 +42,8 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 	val grid = SudokuGrid(this)
 	
 	private val buttonSize = 80F
-	private val modeLabel = scene2d.label("Edit Mode", INFO_LABEL_STYLE)
-	val timerLabel = scene2d.label("0 : 00", INFO_LABEL_STYLE).apply { isVisible = false }
+	private val modeLabel = scene2d.label("Edit Mode")
+	val timerLabel = scene2d.label("0 : 00").apply { isVisible = false }
 	private val editButton = scene2d.imageButton(NEW_BUTTON_STYLE).apply {
 		onChange {
 			if (!isEditing)
@@ -76,46 +74,46 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 	}
 	val digitKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
-		actor(ModifyCellButton(grid, 7, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 8, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 9, TEXT_BUTTON_STYLE_L))
+		actor(ModifyCellButton(grid, 7, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 8, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 9, TEXT_BUTTON_LARGE_STYLE))
 		row()
-		actor(ModifyCellButton(grid, 4, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 5, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 6, TEXT_BUTTON_STYLE_L))
+		actor(ModifyCellButton(grid, 4, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 5, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 6, TEXT_BUTTON_LARGE_STYLE))
 		row()
-		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_STYLE_L))
-		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_STYLE_L))
+		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_LARGE_STYLE))
+		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_LARGE_STYLE))
 	}
 	val cornerMarkKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
-		actor(ModifyCellButton(grid, 7, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 8, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 9, TEXT_BUTTON_STYLE, true))
+		actor(ModifyCellButton(grid, 7, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 8, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 9, alignLabelTopLeft = true))
 		row()
-		actor(ModifyCellButton(grid, 4, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 5, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 6, TEXT_BUTTON_STYLE, true))
+		actor(ModifyCellButton(grid, 4, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 5, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 6, alignLabelTopLeft = true))
 		row()
-		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_STYLE, true))
-		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_STYLE, true))
+		actor(ModifyCellButton(grid, 1, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 2, alignLabelTopLeft = true))
+		actor(ModifyCellButton(grid, 3, alignLabelTopLeft = true))
 		row()
 	}
 	val centerMarkKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
-		actor(ModifyCellButton(grid, 7, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 8, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 9, TEXT_BUTTON_STYLE))
+		actor(ModifyCellButton(grid, 7))
+		actor(ModifyCellButton(grid, 8))
+		actor(ModifyCellButton(grid, 9))
 		row()
-		actor(ModifyCellButton(grid, 4, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 5, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 6, TEXT_BUTTON_STYLE))
+		actor(ModifyCellButton(grid, 4))
+		actor(ModifyCellButton(grid, 5))
+		actor(ModifyCellButton(grid, 6))
 		row()
-		actor(ModifyCellButton(grid, 1, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 2, TEXT_BUTTON_STYLE))
-		actor(ModifyCellButton(grid, 3, TEXT_BUTTON_STYLE))
+		actor(ModifyCellButton(grid, 1))
+		actor(ModifyCellButton(grid, 2))
+		actor(ModifyCellButton(grid, 3))
 	}
 	val colorKeypad = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
@@ -131,7 +129,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 		actor(ModifyColorButton(grid, 8, PINK_BUTTON_STYLE))
 		actor(ModifyColorButton(grid, 9, GRAY_BUTTON_STYLE))
 	}
-	val zeroButton = ModifyCellButton(grid, 0, TEXT_BUTTON_STYLE_L)
+	val zeroButton = ModifyCellButton(grid, 0, TEXT_BUTTON_LARGE_STYLE)
 	val undoRedoTray = scene2d.table {
 		defaults().size(buttonSize, buttonSize).pad(3F)
 		actor(undoButton)
@@ -149,7 +147,7 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 	}
 	private val keypadButtonGroup = scene2d.buttonGroup(1, 1) {
 		defaults().size(buttonSize, buttonSize).pad(4F)
-		textButton("#", CHECKABLE_TEXT_BUTTON_STYLE_L) {
+		textButton("#", CHECKABLE_TEXT_BUTTON_LARGE_STYLE) {
 			isChecked = true
 			onChange { keypadInputMode = InputMode.DIGIT }
 		}
@@ -240,12 +238,11 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 					isChecked = game.isDarkMode
 					onChange {
 						Scene2DSkin.defaultSkin = if (isChecked) game.darkSkin else game.lightSkin
-						screen.updateStyles()
 					}
 				}
-				imageButton(CONNECT_BUTTON_STYLE) {
+				imageButton(SYNC_BUTTON_STYLE) {
 					onChange {
-						screen.connectDialog.show()
+						screen.syncDialog.show()
 					}
 				}
 			}.inCell.left()

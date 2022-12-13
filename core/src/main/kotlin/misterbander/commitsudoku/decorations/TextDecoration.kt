@@ -20,7 +20,7 @@ open class TextDecoration(
 	{
 		val x = grid.iToX(i + 0.5F)
 		val y = grid.jToY(j + 0.5F)
-		game.segoeuil.color = color ?: primaryColor
-		game.segoeuil.drawCenter(batch, text, x, y)
+		game.segoeUiLarge.color = color ?: primaryColor
+		game.segoeUiLarge.drawCenter(batch, text, x, y)
 	}
 }

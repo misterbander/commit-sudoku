@@ -4,129 +4,42 @@ size: 2048, 128
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
-addarrowdecorationicon
+antiking_icon
   rotate: false
-  xy: 182, 22
+  xy: 1764, 90
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-addborderdecorationicon
-  rotate: false
-  xy: 74, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addcagedecorationicon
-  rotate: false
-  xy: 326, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addcircledecorationicon
-  rotate: false
-  xy: 218, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addcornertextdecorationicon
-  rotate: false
-  xy: 1090, 38
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addkillercageicon
+antiknight_icon
   rotate: false
   xy: 1270, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-addlinedecorationicon
+arrow_decoration_icon
   rotate: false
-  xy: 1800, 90
+  xy: 1126, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-addlittlearrowdecorationicon
+blue_icon
   rotate: false
-  xy: 1980, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addsandwichicon
-  rotate: false
-  xy: 254, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addtextdecorationicon
-  rotate: false
-  xy: 794, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-addthermoicon
-  rotate: false
-  xy: 1836, 54
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-antikingicon
-  rotate: false
-  xy: 398, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-antiknighticon
-  rotate: false
-  xy: 686, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-blueicon
-  rotate: false
-  xy: 1534, 80
+  xy: 1350, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
+border_decoration_icon
+  rotate: false
+  xy: 470, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 button
-  rotate: false
-  xy: 614, 58
-  size: 64, 64
-  split: 2, 2, 2, 2
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-buttondisabled
-  rotate: false
-  xy: 138, 58
-  size: 64, 64
-  split: 2, 2, 2, 2
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-buttondown
-  rotate: false
-  xy: 954, 58
-  size: 64, 64
-  split: 2, 2, 2, 2
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-buttonover
   rotate: false
   xy: 410, 58
   size: 64, 64
@@ -134,147 +47,7 @@ buttonover
   orig: 64, 64
   offset: 0, 0
   index: -1
-clearicon
-  rotate: false
-  xy: 1872, 54
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-closebutton
-  rotate: false
-  xy: 1298, 74
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-closebuttondown
-  rotate: false
-  xy: 1194, 74
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-closebuttonover
-  rotate: false
-  xy: 1246, 74
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-coloricon
-  rotate: false
-  xy: 1142, 74
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-connecticon
-  rotate: false
-  xy: 1872, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddarrowdecorationicon
-  rotate: false
-  xy: 650, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddborderdecorationicon
-  rotate: false
-  xy: 2, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddcagedecorationicon
-  rotate: false
-  xy: 830, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddcircledecorationicon
-  rotate: false
-  xy: 1154, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddcornertextdecorationicon
-  rotate: false
-  xy: 1226, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddkillercageicon
-  rotate: false
-  xy: 1306, 38
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddlinedecorationicon
-  rotate: false
-  xy: 1082, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddlittlearrowdecorationicon
-  rotate: false
-  xy: 722, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddsandwichicon
-  rotate: false
-  xy: 1262, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddtextdecorationicon
-  rotate: false
-  xy: 506, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkaddthermoicon
-  rotate: false
-  xy: 1764, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkantikingicon
-  rotate: false
-  xy: 1944, 54
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkantiknighticon
-  rotate: false
-  xy: 146, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkblueicon
-  rotate: false
-  xy: 1672, 80
-  size: 42, 42
-  orig: 42, 42
-  offset: 0, 0
-  index: -1
-darkbutton
+button_dark
   rotate: false
   xy: 818, 58
   size: 64, 64
@@ -282,143 +55,23 @@ darkbutton
   orig: 64, 64
   offset: 0, 0
   index: -1
-darkbuttondisabled
+button_disabled
   rotate: false
-  xy: 750, 58
+  xy: 614, 58
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
-darkbuttondown
+button_disabled_dark
   rotate: false
-  xy: 546, 58
+  xy: 138, 58
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
-darkbuttonover
-  rotate: false
-  xy: 70, 58
-  size: 64, 64
-  split: 2, 2, 2, 2
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-darkclearicon
-  rotate: false
-  xy: 1234, 38
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkclosebutton
-  rotate: false
-  xy: 1090, 74
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-darkconnecticon
-  rotate: false
-  xy: 1800, 54
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkdeleteicon
-  rotate: false
-  xy: 1944, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkediticon
-  rotate: false
-  xy: 758, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkemptythermoicon
-  rotate: false
-  xy: 1298, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkmoonicon
-  rotate: false
-  xy: 1342, 38
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkmultibuttonicon
-  rotate: false
-  xy: 110, 2
-  size: 8, 16
-  orig: 8, 16
-  offset: 0, 0
-  index: -1
-darknewicon
-  rotate: false
-  xy: 1010, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darknonconsecutiveicon
-  rotate: false
-  xy: 938, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkpauseicon
-  rotate: false
-  xy: 434, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkplayicon
-  rotate: false
-  xy: 1378, 44
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkredoicon
-  rotate: false
-  xy: 1908, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darksetgivensicon
-  rotate: false
-  xy: 1118, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darksoftthermoicon
-  rotate: false
-  xy: 614, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darktextcursor
-  rotate: false
-  xy: 2016, 92
-  size: 2, 30
-  orig: 2, 30
-  offset: 0, 0
-  index: -1
-darktextfield
+button_down
   rotate: false
   xy: 206, 58
   size: 64, 64
@@ -426,40 +79,103 @@ darktextfield
   orig: 64, 64
   offset: 0, 0
   index: -1
-darktoolbarmultibuttonmenubackground
+button_down_dark
   rotate: false
-  xy: 1022, 58
+  xy: 478, 58
   size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
-darkundoicon
+button_over
   rotate: false
-  xy: 470, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-darkwindow
-  rotate: false
-  xy: 274, 58
+  xy: 2, 58
   size: 64, 64
-  split: 2, 2, 50, 2
-  pad: 0, 0, 50, 0
+  split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
-darkxicon
+button_over_dark
   rotate: false
-  xy: 1190, 2
+  xy: 682, 58
+  size: 64, 64
+  split: 2, 2, 2, 2
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+cage_decoration_icon
+  rotate: false
+  xy: 1090, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-deleteicon
+circle_decoration_icon
   rotate: false
-  xy: 1162, 38
+  xy: 1198, 38
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+clear_icon
+  rotate: false
+  xy: 254, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+close_button
+  rotate: false
+  xy: 1090, 74
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+close_button_dark
+  rotate: false
+  xy: 1194, 74
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+close_button_down
+  rotate: false
+  xy: 1142, 74
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+close_button_over
+  rotate: false
+  xy: 1298, 74
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+color_icon
+  rotate: false
+  xy: 1246, 74
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+corner_text_decoration_icon
+  rotate: false
+  xy: 398, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dark_blue_icon
+  rotate: false
+  xy: 1488, 80
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+delete_icon
+  rotate: false
+  xy: 110, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -471,93 +187,100 @@ divider
   orig: 90, 16
   offset: 0, 0
   index: -1
-editdisabledicon
+edit_icon
   rotate: false
-  xy: 1908, 54
+  xy: 74, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-editicon
+empty_thermo_icon
   rotate: false
-  xy: 1980, 54
+  xy: 434, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-emptythermoicon
+gray_icon
   rotate: false
-  xy: 362, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-grayicon
-  rotate: false
-  xy: 1488, 80
+  xy: 1718, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
-greenicon
-  rotate: false
-  xy: 1626, 80
-  size: 42, 42
-  orig: 42, 42
-  offset: 0, 0
-  index: -1
-moonicon
-  rotate: false
-  xy: 1764, 54
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-multibuttonicon
-  rotate: false
-  xy: 96, 38
-  size: 8, 16
-  orig: 8, 16
-  offset: 0, 0
-  index: -1
-newicon
-  rotate: false
-  xy: 290, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-nonconsecutiveicon
-  rotate: false
-  xy: 974, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-orangeicon
+green_icon
   rotate: false
   xy: 1442, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
-pausedisabledicon
+killer_cage_icon
   rotate: false
-  xy: 866, 22
+  xy: 1836, 90
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pauseicon
+line_decoration_icon
   rotate: false
-  xy: 578, 22
+  xy: 182, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pinkicon
+little_arrow_decoration_icon
   rotate: false
-  xy: 1396, 80
+  xy: 1162, 38
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+moon_icon
+  rotate: false
+  xy: 218, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+multibutton_icon
+  rotate: false
+  xy: 96, 38
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+new_icon
+  rotate: false
+  xy: 1944, 90
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+non_consecutive_icon
+  rotate: false
+  xy: 1872, 90
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+orange_icon
+  rotate: false
+  xy: 1626, 80
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+pause_icon
+  rotate: false
+  xy: 146, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+pink_icon
+  rotate: false
+  xy: 1672, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
@@ -569,114 +292,155 @@ pixel
   orig: 2, 2
   offset: 0, 0
   index: -1
-playicon
+play_icon
   rotate: false
-  xy: 110, 22
+  xy: 326, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-purpleicon
+purple_icon
+  rotate: false
+  xy: 1534, 80
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+red_icon
   rotate: false
   xy: 1580, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
-redicon
+redo_icon
   rotate: false
-  xy: 1718, 80
-  size: 42, 42
-  orig: 42, 42
+  xy: 1306, 38
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
-redodisabledicon
+sandwich_icon
+  rotate: false
+  xy: 362, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+set_givens_icon
+  rotate: false
+  xy: 1980, 90
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+soft_thermo_icon
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sync_icon
+  rotate: false
+  xy: 1908, 90
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+text_cursor
+  rotate: false
+  xy: 2016, 92
+  size: 2, 30
+  orig: 2, 30
+  offset: 0, 0
+  index: -1
+text_decoration_icon
+  rotate: false
+  xy: 1234, 38
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+text_field
+  rotate: false
+  xy: 546, 58
+  size: 64, 64
+  split: 2, 2, 2, 2
+  pad: 18, 18, 2, 2
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+text_field_dark
+  rotate: false
+  xy: 750, 58
+  size: 64, 64
+  split: 2, 2, 2, 2
+  pad: 16, 18, 2, 2
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+text_selection
+  rotate: false
+  xy: 290, 22
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+thermo_icon
   rotate: false
   xy: 38, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-redoicon
+toolbar_button_down
   rotate: false
-  xy: 1046, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-setgivensicon
-  rotate: false
-  xy: 1836, 90
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-softthermoicon
-  rotate: false
-  xy: 902, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-textcursor
-  rotate: false
-  xy: 1370, 4
-  size: 2, 30
-  orig: 2, 30
-  offset: 0, 0
-  index: -1
-textfield
-  rotate: false
-  xy: 682, 58
-  size: 64, 64
-  split: 2, 2, 2, 2
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-textselection
-  rotate: false
-  xy: 542, 22
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-toolbarbuttondown
-  rotate: false
-  xy: 2, 58
+  xy: 70, 58
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-toolbarbuttonover
-  rotate: false
-  xy: 478, 58
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-toolbarmultibuttonmenubackground
+toolbar_button_over
   rotate: false
   xy: 342, 58
   size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+toolbar_multibutton_menu_background
+  rotate: false
+  xy: 1022, 58
+  size: 64, 64
   split: 2, 2, 2, 2
   orig: 64, 64
   offset: 0, 0
   index: -1
-undodisabledicon
+toolbar_multibutton_menu_background_dark
   rotate: false
-  xy: 1334, 2
-  size: 32, 32
-  orig: 32, 32
+  xy: 274, 58
+  size: 64, 64
+  split: 2, 2, 2, 2
+  orig: 64, 64
   offset: 0, 0
   index: -1
-undoicon
+undo_icon
   rotate: false
-  xy: 1126, 38
+  xy: 1800, 90
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 window
+  rotate: false
+  xy: 954, 58
+  size: 64, 64
+  split: 2, 2, 50, 2
+  pad: 0, 0, 50, 0
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+window_dark
   rotate: false
   xy: 886, 58
   size: 64, 64
@@ -685,16 +449,16 @@ window
   orig: 64, 64
   offset: 0, 0
   index: -1
-xicon
+x_icon
   rotate: false
-  xy: 1198, 38
+  xy: 506, 22
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-yellowicon
+yellow_icon
   rotate: false
-  xy: 1350, 80
+  xy: 1396, 80
   size: 42, 42
   orig: 42, 42
   offset: 0, 0

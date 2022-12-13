@@ -1,0 +1,387 @@
+{
+  "Color": {
+    "black": {
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 1
+    },
+    "disabled_gray": {
+      "r": 0.5254902,
+      "g": 0.5254902,
+      "b": 0.5254902,
+      "a": 1
+    },
+    "tint": {
+      "r": 0.77254903,
+      "g": 0.77254903,
+      "b": 0.77254903,
+      "a": 1
+    },
+    "white": {
+      "r": 1,
+      "g": 1,
+      "b": 1,
+      "a": 1
+    }
+  },
+  "TintedDrawable": {
+    "antiking_icon_dark": {
+      "name": "antiking_icon",
+      "color": "tint"
+    },
+    "antiknight_icon_dark": {
+      "name": "antiknight_icon",
+      "color": "tint"
+    },
+    "arrow_decoration_icon_dark": {
+      "name": "arrow_decoration_icon",
+      "color": "tint"
+    },
+    "border_decoration_icon_dark": {
+      "name": "border_decoration_icon",
+      "color": "tint"
+    },
+    "cage_decoration_icon_dark": {
+      "name": "cage_decoration_icon",
+      "color": "tint"
+    },
+    "circle_decoration_icon_dark": {
+      "name": "circle_decoration_icon",
+      "color": "tint"
+    },
+    "clear_icon_dark": {
+      "name": "clear_icon",
+      "color": "tint"
+    },
+    "corner_text_decoration_icon_dark": {
+      "name": "corner_text_decoration_icon",
+      "color": "tint"
+    },
+    "delete_icon_dark": {
+      "name": "delete_icon",
+      "color": "tint"
+    },
+    "edit_icon_dark": {
+      "name": "edit_icon",
+      "color": "tint"
+    },
+    "empty_thermo_icon_dark": {
+      "name": "empty_thermo_icon",
+      "color": "tint"
+    },
+    "killer_cage_icon_dark": {
+      "name": "killer_cage_icon",
+      "color": "tint"
+    },
+    "line_decoration_icon_dark": {
+      "name": "line_decoration_icon",
+      "color": "tint"
+    },
+    "little_arrow_decoration_icon_dark": {
+      "name": "little_arrow_decoration_icon",
+      "color": "tint"
+    },
+    "moon_icon_dark": {
+      "name": "moon_icon",
+      "color": "tint"
+    },
+    "multibutton_icon_dark": {
+      "name": "multibutton_icon",
+      "color": "tint"
+    },
+    "new_icon_dark": {
+      "name": "new_icon",
+      "color": "tint"
+    },
+    "non_consecutive_icon_dark": {
+      "name": "non_consecutive_icon",
+      "color": "tint"
+    },
+    "pause_icon_dark": {
+      "name": "pause_icon",
+      "color": "tint"
+    },
+    "play_icon_dark": {
+      "name": "play_icon",
+      "color": "tint"
+    },
+    "redo_icon_dark": {
+      "name": "redo_icon",
+      "color": "tint"
+    },
+    "sandwich_icon_dark": {
+      "name": "sandwich_icon",
+      "color": "tint"
+    },
+    "set_givens_icon_dark": {
+      "name": "set_givens_icon",
+      "color": "tint"
+    },
+    "soft_thermo_icon_dark": {
+      "name": "soft_thermo_icon",
+      "color": "tint"
+    },
+    "sync_icon_dark": {
+      "name": "sync_icon",
+      "color": "tint"
+    },
+    "text_cursor_dark": {
+      "name": "text_cursor",
+      "color": "tint"
+    },
+    "text_decoration_icon_dark": {
+      "name": "text_decoration_icon",
+      "color": "tint"
+    },
+    "thermo_icon_dark": {
+      "name": "thermo_icon",
+      "color": "tint"
+    },
+    "undo_icon_dark": {
+      "name": "undo_icon",
+      "color": "tint"
+    },
+    "x_icon_dark": {
+      "name": "x_icon",
+      "color": "tint"
+    },
+    "undo_icon_disabled": {
+      "name": "undo_icon",
+      "color": "disabled_gray"
+    },
+    "redo_icon_disabled": {
+      "name": "redo_icon",
+      "color": "disabled_gray"
+    }
+  },
+  "misterbander.gframework.scene2d.GTextField$GTextFieldStyle": {
+    "default": {
+      "background": "text_field_dark",
+      "font": "segoe_ui",
+      "fontColor": "white",
+      "selectionFontColor": "white",
+      "cursor": "text_cursor_dark",
+      "selection": "text_selection"
+    }
+  },
+  "ButtonStyle": {
+    "close_button": {
+      "up": "close_button_dark",
+      "down": "close_button_down",
+      "over": "close_button_over"
+    }
+  },
+  "ImageButtonStyle": {
+    "default": {
+      "up": "button_dark",
+      "down": "button_down_dark",
+      "over": "button_over_dark",
+      "disabled": "button_disabled_dark"
+    },
+    "checkable_image_button": {
+      "parent": "default",
+      "checked": "button_down_dark"
+    },
+    "toolbar_button": {
+      "down": "toolbar_button_down",
+      "over": "toolbar_button_over",
+      "checked": "toolbar_button_down"
+    },
+    "new_button": {
+      "parent": "default",
+      "imageUp": "new_icon_dark"
+    },
+    "edit_button": {
+      "parent": "default",
+      "imageUp": "edit_icon_dark"
+    },
+    "play_button": {
+      "parent": "default",
+      "imageUp": "play_icon_dark"
+    },
+    "pause_button": {
+      "parent": "default",
+      "imageUp": "pause_icon_dark"
+    },
+    "clear_button": {
+      "parent": "default",
+      "imageUp": "clear_icon_dark"
+    },
+    "dark_mode_button": {
+      "parent": "checkable_image_button",
+      "imageUp": "moon_icon_dark"
+    },
+    "sync_button": {
+      "parent": "default",
+      "imageUp": "sync_icon_dark"
+    },
+    "delete_button": {
+      "parent": "default",
+      "imageUp": "delete_icon_dark"
+    },
+    "undo_button": {
+      "parent": "default",
+      "imageUp": "undo_icon_dark",
+      "imageDisabled": "undo_icon_disabled"
+    },
+    "redo_button": {
+      "parent": "default",
+      "imageUp": "redo_icon_dark",
+      "imageDisabled": "redo_icon_disabled"
+    },
+    "color_button": {
+      "parent": "checkable_image_button",
+      "imageUp": "color_icon"
+    },
+    "red_button": {
+      "parent": "default",
+      "imageUp": "red_icon"
+    },
+    "orange_button": {
+      "parent": "default",
+      "imageUp": "orange_icon"
+    },
+    "yellow_button": {
+      "parent": "default",
+      "imageUp": "yellow_icon"
+    },
+    "green_button": {
+      "parent": "default",
+      "imageUp": "green_icon"
+    },
+    "blue_button": {
+      "parent": "default",
+      "imageUp": "blue_icon"
+    },
+    "dark_blue_button": {
+      "parent": "default",
+      "imageUp": "dark_blue_icon"
+    },
+    "purple_button": {
+      "parent": "default",
+      "imageUp": "purple_icon"
+    },
+    "pink_button": {
+      "parent": "default",
+      "imageUp": "pink_icon"
+    },
+    "gray_button": {
+      "parent": "default",
+      "imageUp": "gray_icon"
+    },
+    "set_givens_button": {
+      "parent": "toolbar_button",
+      "imageUp": "set_givens_icon_dark"
+    },
+    "thermo_button": {
+      "parent": "toolbar_button",
+      "imageUp": "thermo_icon_dark"
+    },
+    "soft_thermo_button": {
+      "parent": "toolbar_button",
+      "imageUp": "soft_thermo_icon_dark"
+    },
+    "empty_thermo_button": {
+      "parent": "toolbar_button",
+      "imageUp": "empty_thermo_icon_dark"
+    },
+    "sandwich_button": {
+      "parent": "toolbar_button",
+      "imageUp": "sandwich_icon_dark"
+    },
+    "text_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "text_decoration_icon_dark"
+    },
+    "corner_text_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "corner_text_decoration_icon_dark"
+    },
+    "circle_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "circle_decoration_icon_dark"
+    },
+    "line_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "line_decoration_icon_dark"
+    },
+    "arrow_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "arrow_decoration_icon_dark"
+    },
+    "little_arrow_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "little_arrow_decoration_icon_dark"
+    },
+    "killer_cage_button": {
+      "parent": "toolbar_button",
+      "imageUp": "killer_cage_icon_dark"
+    },
+    "cage_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "cage_decoration_icon_dark"
+    },
+    "border_decoration_button": {
+      "parent": "toolbar_button",
+      "imageUp": "border_decoration_icon_dark"
+    },
+    "x_button": {
+      "parent": "toolbar_button",
+      "imageUp": "x_icon_dark"
+    },
+    "antiking_button": {
+      "parent": "toolbar_button",
+      "imageUp": "antiking_icon_dark"
+    },
+    "antiknight_button": {
+      "parent": "toolbar_button",
+      "imageUp": "antiknight_icon_dark"
+    },
+    "non_consecutive_button": {
+      "parent": "toolbar_button",
+      "imageUp": "non_consecutive_icon_dark"
+    }
+  },
+  "LabelStyle": {
+    "default": {
+      "font": "segoe_ui",
+      "fontColor": "white"
+    }
+  },
+  "TextButtonStyle": {
+    "default": {
+      "font": "segoe_ui",
+      "fontColor": "white",
+      "disabledFontColor": "disabled_gray",
+      "up": "button_dark",
+      "down": "button_down_dark",
+      "over": "button_over_dark",
+      "disabled": "button_disabled_dark"
+    },
+    "checkable_text_button": {
+      "parent": "default",
+      "checked": "button_down_dark"
+    },
+    "text_button_large": {
+      "parent": "default",
+      "font": "segoe_ui_large"
+    },
+    "checkable_text_button_large": {
+      "parent": "checkable_text_button",
+      "font": "segoe_ui_large"
+    }
+  },
+  "TextTooltipStyle": {
+    "default": {
+      "label": "default"
+    }
+  },
+  "WindowStyle": {
+    "default": {
+      "background": "window_dark",
+      "titleFont": "segoe_ui",
+      "titleFontColor": "white"
+    }
+  }
+}
