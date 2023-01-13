@@ -16,7 +16,6 @@ abstract class CommitSudokuDialog(
 	title: String
 ) : AccessibleInputDialog(title, Scene2DSkin.defaultSkin, defaultStyle)
 {
-	protected val game = screen.game
 	private val closeButton = scene2d.button(CLOSE_BUTTON_STYLE) { onChange { hide() } }
 	
 	init

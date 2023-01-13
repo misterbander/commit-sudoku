@@ -13,10 +13,10 @@ import ktx.actors.onTouchEvent
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.*
-import misterbander.commitsudoku.CommitSudoku
+import misterbander.commitsudoku.CommitSudokuScreen
 
 class ToolbarMultibuttonMenu(
-	private val game: CommitSudoku,
+	private val screen: CommitSudokuScreen,
 	private val parentMultibutton: ToolbarMultibutton,
 	vararg buttons: ImageButton
 ) : Stack()
@@ -29,7 +29,7 @@ class ToolbarMultibuttonMenu(
 	init
 	{
 		background.drawable =
-			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (game.isDarkMode) "_dark" else ""}"]
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (screen.isDarkMode) "_dark" else ""}"]
 		this += background
 		val horizontalGroup = HorizontalGroup()
 		for (button in buttons)
@@ -57,7 +57,7 @@ class ToolbarMultibuttonMenu(
 	fun updateStyle(skin: Skin, oldSkin: Skin)
 	{
 		background.drawable =
-			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (game.isDarkMode) "_dark" else ""}"]
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (screen.isDarkMode) "_dark" else ""}"]
 		children.forEach { it.updateStyle(skin, oldSkin) }
 	}
 	

@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils
 import com.badlogic.gdx.utils.IntMap
 import ktx.actors.plusAssign
 import ktx.collections.*
+import misterbander.commitsudoku.CommitSudoku
+import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.decorations.Decoration
 import misterbander.commitsudoku.highlightColors
@@ -37,7 +39,10 @@ import kotlin.math.min
 
 class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 {
-	val game = panel.screen.game
+	val game: CommitSudoku
+		get() = panel.game
+	val screen: CommitSudokuScreen
+		get() = panel.screen
 	
 	val cells = Array(9) { i -> Array(9) { j -> Cell(i, j) } }
 	val cellSize = 64F
@@ -437,8 +442,8 @@ class SudokuGrid(val panel: SudokuPanel) : Actor(), PersistentState
 		fun draw(batch: Batch)
 		{
 			val shapeDrawer = game.shapeDrawer
-			val segoeui = game.segoeUi
-			val segoeui2 = game.segoeUiLarge
+			val segoeui = screen.segoeUi
+			val segoeui2 = screen.segoeUiLarge
 			
 			val highlightColorsMap: IntMap<Color> = highlightColors
 			

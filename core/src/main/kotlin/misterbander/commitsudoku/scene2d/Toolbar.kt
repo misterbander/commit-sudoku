@@ -41,7 +41,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	
 	private val thermoMultibutton = ToolbarMultibutton(screen, THERMO_BUTTON_STYLE)
 	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
-		game,
+		screen,
 		thermoMultibutton,
 		scene2d.imageButton(THERMO_BUTTON_STYLE),
 		scene2d.imageButton(SOFT_THERMO_BUTTON_STYLE),
@@ -49,7 +49,7 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 	)
 	private val cageMultibutton = ToolbarMultibutton(screen, KILLER_CAGE_BUTTON_STYLE)
 	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
-		game,
+		screen,
 		cageMultibutton,
 		scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) { onClick { screen.panel.showZero = true } },
 		scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) { onClick { screen.panel.showZero = false } }

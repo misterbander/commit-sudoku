@@ -14,6 +14,7 @@ import misterbander.commitsudoku.CHECKABLE_TEXT_BUTTON_LARGE_STYLE
 import misterbander.commitsudoku.CHECKABLE_TEXT_BUTTON_STYLE
 import misterbander.commitsudoku.CLEAR_BUTTON_STYLE
 import misterbander.commitsudoku.COLOR_BUTTON_STYLE
+import misterbander.commitsudoku.CommitSudoku
 import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.DARK_BLUE_BUTTON_STYLE
 import misterbander.commitsudoku.DARK_MODE_BUTTON_STYLE
@@ -37,7 +38,8 @@ import misterbander.gframework.util.PersistentStateMapper
 
 class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSkin), PersistentState
 {
-	private val game = screen.game
+	val game: CommitSudoku
+		get() = screen.game
 	
 	val grid = SudokuGrid(this)
 	
@@ -235,9 +237,9 @@ class SudokuPanel(val screen: CommitSudokuScreen) : Table(Scene2DSkin.defaultSki
 				actor(playButton)
 				imageButton(CLEAR_BUTTON_STYLE) { onChange { grid.clearGrid() } }
 				imageButton(DARK_MODE_BUTTON_STYLE) {
-					isChecked = game.isDarkMode
+					isChecked = screen.isDarkMode
 					onChange {
-						Scene2DSkin.defaultSkin = if (isChecked) game.darkSkin else game.lightSkin
+						Scene2DSkin.defaultSkin = if (isChecked) screen.darkSkin else screen.lightSkin
 					}
 				}
 				imageButton(SYNC_BUTTON_STYLE) {

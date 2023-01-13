@@ -2,6 +2,7 @@ package misterbander.commitsudoku
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Net
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.net.ServerSocket
 import com.badlogic.gdx.net.ServerSocketHints
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -13,6 +14,7 @@ import ktx.actors.plusAssign
 import ktx.collections.*
 import ktx.log.info
 import ktx.scene2d.*
+import ktx.style.*
 import misterbander.commitsudoku.scene2d.SudokuPanel
 import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
@@ -23,8 +25,11 @@ import misterbander.gframework.util.PersistentStateMapper
 import java.io.ObjectInputStream
 import kotlin.concurrent.thread
 
-class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
+class CommitSudokuScreen(game: CommitSudoku, val lightSkin: Skin, val darkSkin: Skin) : GScreen<CommitSudoku>(game)
 {
+	val segoeUi: BitmapFont = Scene2DSkin.defaultSkin["segoe_ui"]
+	val segoeUiLarge: BitmapFont = Scene2DSkin.defaultSkin["segoe_ui_large"]
+	
 	val panel = SudokuPanel(this)
 	val toolbar = Toolbar(this)
 	val syncDialog = SyncDialog(this)
@@ -40,6 +45,9 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 			if (value)
 				serverSocket.dispose()
 		}
+	
+	val isDarkMode: Boolean
+		get() = Scene2DSkin.defaultSkin == darkSkin
 	
 	init
 	{
@@ -110,7 +118,7 @@ class CommitSudokuScreen(game: CommitSudoku) : GScreen<CommitSudoku>(game)
 	
 	private fun updateStyles(skin: Skin)
 	{
-		val oldSkin = if (skin == game.lightSkin) game.darkSkin else game.lightSkin
+		val oldSkin = if (skin == lightSkin) darkSkin else lightSkin
 		uiStage.root.updateStyle(skin, oldSkin)
 		syncDialog.updateStyle(skin, oldSkin)
 		messageDialog.updateStyle(skin, oldSkin)

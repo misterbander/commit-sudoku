@@ -4,9 +4,6 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 import ktx.freetype.generateFont
@@ -21,89 +18,6 @@ class CommitSudoku(
 	private val darkModeSettingsProvider: DarkModeSettingsProvider
 ) : GFramework()
 {
-	// Assets
-	private val guiAtlas: TextureAtlas
-		get() = assetStorage[TextureAtlases.gui]
-	
-	// Fonts
-	private val generator: FreeTypeFontGenerator
-		get() = assetStorage[Fonts.segoeUi]
-	val segoeUi by lazy {
-		generator.generateFont {
-			size = 18
-			padLeft = 1 // Padding to ensure font doesn't get clipped
-			padRight = 1
-			padBottom = 4
-			minFilter = Texture.TextureFilter.Linear
-			magFilter = Texture.TextureFilter.Linear
-		}
-	}
-	
-	val segoeUiLarge by lazy {
-		generator.generateFont {
-			size = 32
-			padLeft = 1 // Padding to ensure font doesn't get clipped
-			padRight = 1
-			padBottom = 4
-			minFilter = Texture.TextureFilter.Linear
-			magFilter = Texture.TextureFilter.Linear
-		}
-	}
-	
-	// Skins
-	private val highlightColors = gdxIntMapOf(
-		0 to Color.CLEAR,
-		1 to Color(0xFF000050.toInt()), // Red
-		2 to Color(0xFF911450.toInt()), // Orange
-		3 to Color(0xFFFF1450.toInt()), // Yellow
-		4 to Color(0x81FF1450.toInt()), // Green
-		5 to Color(0x14F7FF50), // Blue
-		6 to Color(0x1481FF50), // Dark blue
-		7 to Color(0x9114FF50.toInt()), // Purple
-		8 to Color(0xFF00BB50.toInt()), // Pink
-		9 to Color(0xB4B4B450.toInt()) // Gray
-	)
-	private val markColor = Color(0x7F92FFFF)
-	private val decorationColor1 = Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F)
-	val lightSkin by lazy {
-		skin {
-			addRegions(guiAtlas)
-			add(PRIMARY_COLOR, Color.BLACK)
-			add(SECONDARY_COLOR, Color.GRAY)
-			add(BACKGROUND_COLOR, Color.WHITE)
-			add(TOOLBAR_BACKGROUND_COLOR, Color(0xF0F0F0FF.toInt()))
-			add(NON_GIVEN_COLOR, Color(0x00DB15FF))
-			add(MARK_COLOR, markColor)
-			add(SELECTED_COLOR, Color(0xFFF27F78.toInt()))
-			add(HIGHLIGHT_COLORS, highlightColors)
-			add(DECORATION_COLOR_1, decorationColor1)
-			add(DECORATION_COLOR_2, Color(0.39875F, 0.39875F, 0.39875F, 0.417431F))
-			add("segoe_ui", segoeUi)
-			add("segoe_ui_large", segoeUiLarge)
-			load(Gdx.files.internal("textures/light_skin.json"))
-		}
-	}
-	val darkSkin by lazy {
-		skin {
-			addRegions(guiAtlas)
-			add(PRIMARY_COLOR, Color.WHITE)
-			add(SECONDARY_COLOR, Color.GRAY)
-			add(BACKGROUND_COLOR, Color(0x252525FF))
-			add(TOOLBAR_BACKGROUND_COLOR, Color(0x0F0F0FFF))
-			add(NON_GIVEN_COLOR, Color(0x00DB15FF))
-			add(MARK_COLOR, markColor)
-			add(SELECTED_COLOR, Color(0xFFF27F60.toInt()))
-			add(HIGHLIGHT_COLORS, highlightColors)
-			add(DECORATION_COLOR_1, decorationColor1)
-			add(DECORATION_COLOR_2, Color(0.6F, 0.6F, 0.6F, 0.5F))
-			add("segoe_ui", segoeUi)
-			add("segoe_ui_large", segoeUiLarge)
-			load(Gdx.files.internal("textures/dark_skin.json"))
-		}
-	}
-	val isDarkMode
-		get() = Scene2DSkin.defaultSkin == darkSkin
-	
 	override fun create()
 	{
 		Gdx.app.logLevel = when (args.firstOrNull())
@@ -116,18 +30,79 @@ class CommitSudoku(
 		KtxAsync.initiate()
 		
 		KtxAsync.launch {
-			val assets = listOf(
-				assetStorage.loadAsync(TextureAtlases.gui),
-				assetStorage.loadAsync(Fonts.segoeUi)
+			val guiAtlasDeferred = assetStorage.loadAsync(TextureAtlases.gui)
+			val generatorDeferred = assetStorage.loadAsync(Fonts.segoeUi)
+			val guiAtlas = guiAtlasDeferred.await()
+			val segoeUiGenerator = generatorDeferred.await()
+			val highlightColors = gdxIntMapOf(
+				0 to Color.CLEAR,
+				1 to Color(0xFF000050.toInt()), // Red
+				2 to Color(0xFF911450.toInt()), // Orange
+				3 to Color(0xFFFF1450.toInt()), // Yellow
+				4 to Color(0x81FF1450.toInt()), // Green
+				5 to Color(0x14F7FF50), // Blue
+				6 to Color(0x1481FF50), // Dark blue
+				7 to Color(0x9114FF50.toInt()), // Purple
+				8 to Color(0xFF00BB50.toInt()), // Pink
+				9 to Color(0xB4B4B450.toInt()) // Gray
 			)
-			assets.joinAll()
+			val segoeUi = segoeUiGenerator.generateFont {
+				size = 18
+				padLeft = 1 // Padding to ensure font doesn't get clipped
+				padRight = 1
+				padBottom = 4
+				minFilter = Texture.TextureFilter.Linear
+				magFilter = Texture.TextureFilter.Linear
+			}.alsoRegister()
+			val segoeUiLarge = segoeUiGenerator.generateFont {
+				size = 32
+				padLeft = 1 // Padding to ensure font doesn't get clipped
+				padRight = 1
+				padBottom = 4
+				minFilter = Texture.TextureFilter.Linear
+				magFilter = Texture.TextureFilter.Linear
+			}.alsoRegister()
+			
+			val lightSkin = skin {
+				addRegions(guiAtlas)
+				add(PRIMARY_COLOR, Color.BLACK)
+				add(SECONDARY_COLOR, Color.GRAY)
+				add(BACKGROUND_COLOR, Color.WHITE)
+				add(TOOLBAR_BACKGROUND_COLOR, Color(0xF0F0F0FF.toInt()))
+				add(NON_GIVEN_COLOR, Color(0x00DB15FF))
+				add(MARK_COLOR, Color(0x7F92FFFF))
+				add(SELECTED_COLOR, Color(0xFFF27F78.toInt()))
+				add(HIGHLIGHT_COLORS, highlightColors)
+				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
+				add(DECORATION_COLOR_2, Color(0.39875F, 0.39875F, 0.39875F, 0.417431F))
+				add("segoe_ui", segoeUi)
+				add("segoe_ui_large", segoeUiLarge)
+				load(Gdx.files.internal("textures/light_skin.json"))
+			}
+			val darkSkin = skin {
+				addRegions(guiAtlas)
+				add(PRIMARY_COLOR, Color.WHITE)
+				add(SECONDARY_COLOR, Color.GRAY)
+				add(BACKGROUND_COLOR, Color(0x252525FF))
+				add(TOOLBAR_BACKGROUND_COLOR, Color(0x0F0F0FFF))
+				add(NON_GIVEN_COLOR, Color(0x00DB15FF))
+				add(MARK_COLOR, Color(0x7F92FFFF))
+				add(SELECTED_COLOR, Color(0xFFF27F60.toInt()))
+				add(HIGHLIGHT_COLORS, highlightColors)
+				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
+				add(DECORATION_COLOR_2, Color(0.6F, 0.6F, 0.6F, 0.5F))
+				add("segoe_ui", segoeUi)
+				add("segoe_ui_large", segoeUiLarge)
+				load(Gdx.files.internal("textures/dark_skin.json"))
+			}
+			Scene2DSkin.defaultSkin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 			
 			shapeDrawer.setTextureRegion(guiAtlas.findRegion("pixel"))
 			
-			Scene2DSkin.defaultSkin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 			info("CommitSudoku          | INFO") { "Finished loading assets!" }
 			info("CommitSudoku          | INFO") { "Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}" }
-			addScreen(CommitSudokuScreen(this@CommitSudoku))
+			
+			addScreen(CommitSudokuScreen(this@CommitSudoku, lightSkin, darkSkin))
 			setScreen<CommitSudokuScreen>()
 		}
 	}
@@ -136,12 +111,5 @@ class CommitSudoku(
 	{
 		super.resize(width, height)
 		info("CommitSudoku          | INFO") { "Resizing to = ${width}x${height}" }
-	}
-	
-	override fun dispose()
-	{
-		super.dispose()
-		segoeUi.dispose()
-		segoeUiLarge.dispose()
 	}
 }

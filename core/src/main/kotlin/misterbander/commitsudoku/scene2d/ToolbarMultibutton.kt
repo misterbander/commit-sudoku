@@ -15,7 +15,7 @@ class ToolbarMultibutton(
 ) : ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
 	private val multibuttonIcon: Drawable
-		get() = Scene2DSkin.defaultSkin[if (screen.game.isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
+		get() = Scene2DSkin.defaultSkin[if (screen.isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
 	private val posVector = vec2()
 	private var shouldExpand = false
 	var multibuttonMenu: ToolbarMultibuttonMenu? = null

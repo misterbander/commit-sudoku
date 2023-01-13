@@ -13,7 +13,7 @@ class MessageDialog(screen: CommitSudokuScreen) : RebuildableDialog(screen, "")
 	
 	override fun build()
 	{
-		contentTable.add(scene2d.label(game.segoeUi.wrap(message, 720)))
+		contentTable.add(scene2d.label(screen.segoeUi.wrap(message, 720)))
 		buttonTable.add(scene2d.textButton("OK") {
 			onChange { hide() }
 		}).prefWidth(96F)
