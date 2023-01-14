@@ -20,12 +20,16 @@ import misterbander.commitsudoku.scene2d.Toolbar
 import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
 import misterbander.commitsudoku.scene2d.dialogs.SyncDialog
 import misterbander.commitsudoku.scene2d.updateStyle
-import misterbander.gframework.GScreen
+import misterbander.gframework.DefaultGScreen
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.ObjectInputStream
 import kotlin.concurrent.thread
 
-class CommitSudokuScreen(game: CommitSudoku, val lightSkin: Skin, val darkSkin: Skin) : GScreen<CommitSudoku>(game)
+class CommitSudokuScreen(
+	game: CommitSudoku,
+	val lightSkin: Skin,
+	val darkSkin: Skin
+) : DefaultGScreen<CommitSudoku>(game)
 {
 	val segoeUi: BitmapFont = Scene2DSkin.defaultSkin["segoe_ui"]
 	val segoeUiLarge: BitmapFont = Scene2DSkin.defaultSkin["segoe_ui_large"]
