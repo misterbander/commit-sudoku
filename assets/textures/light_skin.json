@@ -158,7 +158,7 @@
   "misterbander.gframework.scene2d.GTextField$GTextFieldStyle": {
     "default": {
       "background": "text_field",
-      "font": "segoe_ui",
+      "font": "noto_sans",
       "fontColor": "black",
       "selectionFontColor": "white",
       "cursor": "text_cursor_light",
@@ -345,13 +345,13 @@
   },
   "LabelStyle": {
     "default": {
-      "font": "segoe_ui",
+      "font": "noto_sans",
       "fontColor": "black"
     }
   },
   "TextButtonStyle": {
     "default": {
-      "font": "segoe_ui",
+      "font": "noto_sans",
       "fontColor": "black",
       "disabledFontColor": "disabled_gray",
       "up": "button",
@@ -365,11 +365,11 @@
     },
     "text_button_large": {
       "parent": "default",
-      "font": "segoe_ui_large"
+      "font": "noto_sans_large"
     },
     "checkable_text_button_large": {
       "parent": "checkable_text_button",
-      "font": "segoe_ui_large"
+      "font": "noto_sans_large"
     }
   },
   "TextTooltipStyle": {
@@ -380,7 +380,7 @@
   "WindowStyle": {
     "default": {
       "background": "window",
-      "titleFont": "segoe_ui",
+      "titleFont": "noto_sans",
       "titleFontColor": "black"
     }
   }

@@ -20,7 +20,7 @@ open class TextDecoration(
 	{
 		val x = grid.iToX(i + 0.5F)
 		val y = grid.jToY(j + 0.5F)
-		screen.segoeUiLarge.color = color ?: primaryColor
-		screen.segoeUiLarge.drawCenter(batch, text, x, y)
+		screen.notoSansLarge.color = color ?: primaryColor
+		screen.notoSansLarge.drawCenter(batch, text, x, y)
 	}
 }

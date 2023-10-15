@@ -31,9 +31,9 @@ class CommitSudoku(
 		
 		KtxAsync.launch {
 			val guiAtlasDeferred = assetStorage.loadAsync(TextureAtlases.gui)
-			val generatorDeferred = assetStorage.loadAsync(Fonts.segoeUi)
+			val generatorDeferred = assetStorage.loadAsync(Fonts.notoSans)
 			val guiAtlas = guiAtlasDeferred.await()
-			val segoeUiGenerator = generatorDeferred.await()
+			val notoSansGenerator = generatorDeferred.await()
 			val highlightColors = gdxIntMapOf(
 				0 to Color.CLEAR,
 				1 to Color(0xFF000050.toInt()), // Red
@@ -46,19 +46,13 @@ class CommitSudoku(
 				8 to Color(0xFF00BB50.toInt()), // Pink
 				9 to Color(0xB4B4B450.toInt()) // Gray
 			)
-			val segoeUi = segoeUiGenerator.generateFont {
+			val notoSans = notoSansGenerator.generateFont {
 				size = 18
-				padLeft = 1 // Padding to ensure font doesn't get clipped
-				padRight = 1
-				padBottom = 4
 				minFilter = Texture.TextureFilter.Linear
 				magFilter = Texture.TextureFilter.Linear
 			}.alsoRegister()
-			val segoeUiLarge = segoeUiGenerator.generateFont {
+			val notoSansLarge = notoSansGenerator.generateFont {
 				size = 32
-				padLeft = 1 // Padding to ensure font doesn't get clipped
-				padRight = 1
-				padBottom = 4
 				minFilter = Texture.TextureFilter.Linear
 				magFilter = Texture.TextureFilter.Linear
 			}.alsoRegister()
@@ -68,15 +62,15 @@ class CommitSudoku(
 				add(PRIMARY_COLOR, Color.BLACK)
 				add(SECONDARY_COLOR, Color.GRAY)
 				add(BACKGROUND_COLOR, Color.WHITE)
-				add(TOOLBAR_BACKGROUND_COLOR, Color(0xF0F0F0FF.toInt()))
+				add(TOOLBAR_BACKGROUND_COLOR, Color(0xEDEDEDFF.toInt()))
 				add(NON_GIVEN_COLOR, Color(0x00DB15FF))
 				add(MARK_COLOR, Color(0x7F92FFFF))
 				add(SELECTED_COLOR, Color(0xFFF27F78.toInt()))
 				add(HIGHLIGHT_COLORS, highlightColors)
 				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
 				add(DECORATION_COLOR_2, Color(0.39875F, 0.39875F, 0.39875F, 0.417431F))
-				add("segoe_ui", segoeUi)
-				add("segoe_ui_large", segoeUiLarge)
+				add("noto_sans", notoSans)
+				add("noto_sans_large", notoSansLarge)
 				load(Gdx.files.internal("textures/light_skin.json"))
 			}
 			val darkSkin = skin {
@@ -91,8 +85,8 @@ class CommitSudoku(
 				add(HIGHLIGHT_COLORS, highlightColors)
 				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
 				add(DECORATION_COLOR_2, Color(0.6F, 0.6F, 0.6F, 0.5F))
-				add("segoe_ui", segoeUi)
-				add("segoe_ui_large", segoeUiLarge)
+				add("noto_sans", notoSans)
+				add("noto_sans_large", notoSansLarge)
 				load(Gdx.files.internal("textures/dark_skin.json"))
 			}
 			Scene2DSkin.defaultSkin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
