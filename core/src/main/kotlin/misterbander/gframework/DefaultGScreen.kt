@@ -23,15 +23,15 @@ import misterbander.gframework.scene2d.KeyboardHeightObserver
 open class DefaultGScreen<T : GFramework>(
 	final override val game: T,
 	final override val viewport: Viewport = ExtendViewport(1280F, 720F),
-	final override val uiViewport: ExtendViewport = ExtendViewport(1280F, 720F)
+	final override val uiViewport: Viewport = ExtendViewport(1280F, 720F)
 ) : GScreen<T>
 {
 	override val mainLayer = StageLayer(game, viewport, false)
 	override val uiLayer = StageLayer(game, uiViewport, true)
 	override val layers: Array<GLayer> by lazy { arrayOf(mainLayer, uiLayer) }
-	
+
 	final override val keyboardHeightObservers = GdxSet<KeyboardHeightObserver>()
-	
+
 	final override val scheduledAddingGObjects = OrderedMap<GObject<*>, Group>()
 	final override val scheduledRemovalGObjects = OrderedSet<GObject<*>>()
 }

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.badlogic.gdx.utils.ScreenUtils
-import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.actors.plusAssign
 import ktx.app.KtxScreen
@@ -39,15 +38,15 @@ interface GScreen<T : GFramework> : KtxScreen
 	/** Primary viewport to project stage contents in [mainLayer]. */
 	val viewport: Viewport
 	/** Secondary viewport to project stage contents in [uiLayer]. */
-	val uiViewport: ExtendViewport
-	
+	val uiViewport: Viewport
+
 	/** Main camera used by [viewport] to project contents of [stage] in [mainLayer]. */
 	val camera: Camera
 		get() = viewport.camera
 	/** Secondary camera used by [uiViewport] to project contents of [uiStage] in [uiLayer]. */
 	val uiCamera: OrthographicCamera
 		get() = uiViewport.camera as OrthographicCamera
-	
+
 	val mainLayer: StageLayer
 	val uiLayer: StageLayer
 	/**
@@ -57,28 +56,28 @@ interface GScreen<T : GFramework> : KtxScreen
 	 * before it.
 	 */
 	val layers: Array<GLayer>
-	
+
 	/** Main stage in [mainLayer]. */
 	val stage: Stage
 		get() = mainLayer.stage
 	/** Secondary stage in [uiLayer] meant for UI. */
 	val uiStage: Stage
 		get() = uiLayer.stage
-	
+
 	/**
 	 * Convenient set of [KeyboardHeightObserver]s that you can notify soft-keyboard height changes in mobile
 	 * platforms.
 	 */
 	val keyboardHeightObservers: GdxSet<KeyboardHeightObserver>
-	
+
 	val scheduledAddingGObjects: OrderedMap<GObject<*>, Group>
 	val scheduledRemovalGObjects: OrderedSet<GObject<*>>
-	
+
 	override fun show()
 	{
 		Gdx.input.inputProcessor = InputMultiplexer(uiStage, stage)
 	}
-	
+
 	override fun render(delta: Float)
 	{
 		clearScreen()
@@ -96,20 +95,20 @@ interface GScreen<T : GFramework> : KtxScreen
 		scheduledRemovalGObjects.forEach { it.remove() }
 		scheduledRemovalGObjects.clear()
 	}
-	
+
 	/**
 	 * Clears the screen and paints it black. Called once every frame.
 	 *
 	 * You can override this to change the background color.
 	 */
 	fun clearScreen() = ScreenUtils.clear(Color.BLACK, true)
-	
+
 	override fun resize(width: Int, height: Int)
 	{
 		layers.forEach { it.resize(width, height) }
 		Gdx.graphics.requestRendering()
 	}
-	
+
 	/**
 	 * Schedules [gObject] to be added into the world as a child of [parent].
 	 *
@@ -120,6 +119,6 @@ interface GScreen<T : GFramework> : KtxScreen
 	{
 		scheduledAddingGObjects[gObject] = parent
 	}
-	
+
 	override fun dispose() = layers.forEach { it.dispose() }
 }
