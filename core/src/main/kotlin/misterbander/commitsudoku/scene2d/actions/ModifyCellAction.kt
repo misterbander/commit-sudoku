@@ -1,13 +1,13 @@
 package misterbander.commitsudoku.scene2d.actions
 
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
 import java.io.Serializable
 
-abstract class ModifyCellAction : RunnableAction()
+abstract class ModifyCellAction
 {
-	var inverse: Boolean = false
 	abstract val dataObject: HashMap<String, Serializable>
-	
+
+	abstract fun run(inverse: Boolean = false)
+
 	enum class Type
 	{
 		DIGIT, CORNER, CENTER, COLOR

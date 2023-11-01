@@ -4,15 +4,16 @@ import com.badlogic.gdx.utils.IntIntMap
 import ktx.collections.set
 import misterbander.commitsudoku.scene2d.SudokuGrid
 
-class SudokuConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Constraint
+class SudokuConstraint : Constraint
 {
-	private val digitIndexMap: IntIntMap = IntIntMap()
-	
-	override fun check(): Boolean
+	private val digitIndexMap = IntIntMap()
+
+	override fun check(grid: SudokuGrid): Boolean
 	{
+		val cells = grid.cells
 		var allFilled = true
 		var correctFlag = true
-		
+
 		// Check row for duplicates
 		for (j in 0..8)
 		{
@@ -36,7 +37,7 @@ class SudokuConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Const
 					digitIndexMap[cell.digit] = i
 			}
 		}
-		
+
 		// Check column for duplicates
 		for (i in 0..8)
 		{
@@ -60,7 +61,7 @@ class SudokuConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Const
 					digitIndexMap[cell.digit] = j
 			}
 		}
-		
+
 		// Check boxes for duplicates
 		for (i1 in 0 until 9 step 3)
 		{
@@ -89,7 +90,7 @@ class SudokuConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Const
 				}
 			}
 		}
-		
+
 		return correctFlag && allFilled
 	}
 }

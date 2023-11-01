@@ -15,17 +15,17 @@ import kotlin.collections.toTypedArray
 import kotlin.math.abs
 import kotlin.math.max
 
-class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(grid)
+class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(grid)
 {
-	private val circleDecorations: GdxArray<CircleDecoration> = GdxArray()
+	private val circleDecorations = GdxArray<CircleDecoration>()
 	private var currentCircleDecoration: CircleDecoration? = null
 	private var justRemovedCircle = false
-	
+
 	private var startI = -1
 	private var startJ = -1
-	override val isValidIndex
+	private val isValidIndex
 		get() = selectI in -1..9 && selectJ in -1..9
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x, y)
@@ -47,7 +47,7 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 			startJ = selectJ
 		}
 	}
-	
+
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		currentCircleDecoration?.color = null
@@ -55,17 +55,17 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 		startI = -1
 		startJ = -1
 	}
-	
+
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
 		if (!isValidIndex || currentCircleDecoration == null)
 			return
-		val d: Int = max(abs(selectI - startI), abs(selectJ - startJ))
-		val angleFromStart: Float = angle(startI, startJ, selectI, selectJ)
+		val d = max(abs(selectI - startI), abs(selectJ - startJ))
+		val angleFromStart = angle(startI, startJ, selectI, selectJ)
 		val snappedI: Int
 		val snappedJ: Int
-		
+
 		if (angleFromStart < 22.5F || angleFromStart >= 337.5F)
 		{
 			snappedI = startI + d
@@ -106,14 +106,14 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 			snappedI = startI + d
 			snappedJ = startJ - d
 		}
-		
+
 		if (snappedI in -1..9 && snappedJ in -1..9)
 		{
 			currentCircleDecoration!!.i2 = snappedI
 			currentCircleDecoration!!.j2 = snappedJ
 		}
 	}
-	
+
 	private fun findCircleDecoration(): CircleDecoration?
 	{
 		for (circleDecoration: CircleDecoration in circleDecorations)
@@ -123,21 +123,21 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 		}
 		return null
 	}
-	
+
 	override fun addModification(modification: CircleDecoration)
 	{
 		circleDecorations.insert(0, modification)
 		grid.decorations += modification
 	}
-	
+
 	override fun removeModification(modification: CircleDecoration)
 	{
 		circleDecorations -= modification
 		grid.decorations -= modification
 	}
-	
+
 	override fun clear() = circleDecorations.clear()
-	
+
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val circleDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["circleDecorations"]
@@ -153,7 +153,7 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModfier<CircleDecoration>(gr
 			grid.decorations += circleDecoration
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper["circleDecorations"] = circleDecorations.map { it.dataObject }.toTypedArray()

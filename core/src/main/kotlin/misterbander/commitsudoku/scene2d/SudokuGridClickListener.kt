@@ -10,7 +10,7 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 	private var selectI = -1
 	private var selectJ = -1
 	private var isUnselecting = false
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
 	{
 		super.touchDown(event, x, y, pointer, button)
@@ -22,7 +22,8 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 		val modifier = grid.modifier
 		if (modifier == null)
 		{
-			isUnselecting = selectI in 0..8 && selectJ in 0..8 && UIUtils.ctrl() && grid.cells[selectI][selectJ].isSelected
+			isUnselecting =
+				selectI in 0..8 && selectJ in 0..8 && UIUtils.ctrl() && grid.cells[selectI][selectJ].isSelected
 			if (isUnselecting)
 				grid.unselect(selectI, selectJ)
 			else
@@ -32,13 +33,13 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 			modifier.touchDown(event, x, y, pointer, button)
 		return true
 	}
-	
+
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		super.touchUp(event, x, y, pointer, button)
 		grid.modifier?.touchUp(event, x, y, pointer, button)
 	}
-	
+
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		super.touchDragged(event, x, y, pointer)
@@ -47,7 +48,7 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 			grid.modifier!!.touchDragged(event, x, y, pointer)
 			return
 		}
-		
+
 		val i = grid.xToI(x)
 		val j = grid.yToJ(y)
 		if (i == selectI && j == selectJ)

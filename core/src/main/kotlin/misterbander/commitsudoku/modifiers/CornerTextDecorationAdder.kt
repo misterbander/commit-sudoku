@@ -1,46 +1,50 @@
 package misterbander.commitsudoku.modifiers
 
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
+import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.commitsudoku.scene2d.dialogs.SingleInputDialog
 import misterbander.gframework.util.PersistentStateMapper
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecoration>(grid)
+class CornerTextDecorationAdder(
+	private val screen: CommitSudokuScreen,
+	grid: SudokuGrid
+) : GridModifier<CornerTextDecoration>(grid)
 {
-	private val cornerTextDecorations: GdxSet<CornerTextDecoration> = GdxSet()
-	
-	override val isValidIndex
+	private val cornerTextDecorations = GdxSet<CornerTextDecoration>()
+
+	private val isValidIndex
 		get() = selectI in 0..8 && selectJ in 0..8
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		grid.unselect()
 		updateSelect(x, y)
 		if (!isValidIndex)
 			return
-		
+
 		grid.select(selectI, selectJ)
 		val existingCornerTextDecoration = findTextDecoration(selectI, selectJ)
 		if (existingCornerTextDecoration != null)
 			removeModification(existingCornerTextDecoration)
 		else
 		{
-			SingleInputDialog(grid.panel.screen, "Add Corner Text Decoration", "Enter Text:") { result ->
+			SingleInputDialog(screen, "Add Corner Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
 					return@SingleInputDialog
 				addModification(CornerTextDecoration(grid, selectI, selectJ, result))
-			}.show()
+			}.show(screen.uiStage)
 		}
 	}
-	
+
 	private fun findTextDecoration(i: Int, j: Int): CornerTextDecoration?
 	{
 		for (cornerTextDecoration: CornerTextDecoration in cornerTextDecorations)
@@ -50,23 +54,23 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 		}
 		return null
 	}
-	
+
 	override fun addModification(modification: CornerTextDecoration)
 	{
 		cornerTextDecorations += modification
 		grid.decorations += modification
 		grid.cells[modification.i][modification.j].cornerTextDecorationCount++
 	}
-	
+
 	override fun removeModification(modification: CornerTextDecoration)
 	{
 		cornerTextDecorations -= modification
 		grid.decorations -= modification
 		grid.cells[modification.i][modification.j].cornerTextDecorationCount--
 	}
-	
+
 	override fun clear() = cornerTextDecorations.clear()
-	
+
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val cornerTextDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["cornerTextDecorations"]
@@ -77,11 +81,11 @@ class CornerTextDecorationAdder(grid: SudokuGrid) : GridModfier<CornerTextDecora
 			addModification(CornerTextDecoration(grid, i, j, text))
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper["cornerTextDecorations"] = cornerTextDecorations.map { it.dataObject }.toTypedArray()
 	}
-	
-	override fun draw(batch: Batch) = Unit
+
+	override fun draw(shapeDrawer: ShapeDrawer) = Unit
 }

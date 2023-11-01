@@ -7,6 +7,6 @@ class ArrowDecorationAdder(grid: SudokuGrid) : AbstractLineDecorationAdder<Arrow
 {
 	override fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int): ArrowDecoration =
 		ArrowDecoration(grid, selectI, selectJ)
-	
+
 	override fun dataObjectKey(): String = "arrowDecorations"
 }

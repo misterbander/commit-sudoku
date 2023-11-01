@@ -23,7 +23,7 @@ class AndroidLauncher : AndroidApplication(), KeyboardHeightObserver
 		initialize(GFrameworkDelegator {
 			commitSudoku = CommitSudoku(args?.let { arrayOf(it) } ?: emptyArray(), object : DarkModeSettingsProvider
 			{
-				override val defaultDarkModeEnabled
+				override val defaultDarkModeEnabled: Boolean
 					get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 			})
 			commitSudoku

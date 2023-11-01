@@ -7,15 +7,14 @@ import ktx.actors.onClick
 import ktx.math.vec2
 import ktx.scene2d.*
 import ktx.style.*
-import misterbander.commitsudoku.CommitSudokuScreen
 
 class ToolbarMultibutton(
-	private val screen: CommitSudokuScreen,
 	styleName: String,
+	private val isDarkMode: Boolean
 ) : ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
 	private val multibuttonIcon: Drawable
-		get() = Scene2DSkin.defaultSkin[if (screen.isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
+		get() = Scene2DSkin.defaultSkin[if (isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
 	private val posVector = vec2()
 	private var shouldExpand = false
 	var multibuttonMenu: ToolbarMultibuttonMenu? = null
@@ -24,7 +23,7 @@ class ToolbarMultibutton(
 			field = value
 			value?.isVisible = false
 		}
-	
+
 	init
 	{
 		onClick {
@@ -38,17 +37,23 @@ class ToolbarMultibutton(
 				shouldExpand = true
 		}
 	}
-	
+
 	override fun act(delta: Float)
 	{
 		super.act(delta)
 		if (!isChecked && shouldExpand)
 			shouldExpand = false
 	}
-	
+
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
 		super.draw(batch, parentAlpha)
-		multibuttonIcon.draw(batch, x + width - multibuttonIcon.minWidth - 4, y + 4, multibuttonIcon.minWidth, multibuttonIcon.minHeight)
+		multibuttonIcon.draw(
+			batch,
+			x + width - multibuttonIcon.minWidth - 4,
+			y + 4,
+			multibuttonIcon.minWidth,
+			multibuttonIcon.minHeight
+		)
 	}
 }

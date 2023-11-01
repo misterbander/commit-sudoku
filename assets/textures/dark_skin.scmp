@@ -743,7 +743,7 @@ atlasData: {
 			hidden: false
 		}
 		{
-			file: "/home/misterbander/Desktop/Java_Stuff/libGDX/Commit Sudoku/assets/textures/ui/soft_thermo_icon.png"
+			file: "/home/misterbander/Desktop/Java_Stuff/libGDX/Commit Sudoku/assets/textures/ui/slow_thermo_icon.png"
 			bgColor: {
 				r: 1
 				g: 1
@@ -752,7 +752,7 @@ atlasData: {
 			}
 			tint: null
 			tintName: null
-			name: soft_thermo_icon
+			name: slow_thermo_icon
 			tiled: false
 			minWidth: -1
 			minHeight: -1
@@ -1383,7 +1383,7 @@ atlasData: {
 			hidden: false
 		}
 		{
-			file: "/home/misterbander/Desktop/Java_Stuff/libGDX/Commit Sudoku/assets/textures/ui/soft_thermo_icon.png"
+			file: "/home/misterbander/Desktop/Java_Stuff/libGDX/Commit Sudoku/assets/textures/ui/slow_thermo_icon.png"
 			bgColor: {
 				r: 1
 				g: 1
@@ -1392,7 +1392,7 @@ atlasData: {
 			}
 			tint: null
 			tintName: tint
-			name: soft_thermo_icon_dark
+			name: slow_thermo_icon_dark
 			tiled: false
 			minWidth: -1
 			minHeight: -1
@@ -5803,14 +5803,14 @@ jsonData: {
 			}
 			{
 				class: com.ray3k.skincomposer.data.StyleData
-				name: soft_thermo_button
+				name: slow_thermo_button
 				clazz: com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 				properties: {
 					imageUp: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: imageUp
 						optional: true
-						value: soft_thermo_icon_dark
+						value: slow_thermo_icon_dark
 					}
 					imageDown: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable

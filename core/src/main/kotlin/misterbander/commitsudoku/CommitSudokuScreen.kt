@@ -1,125 +1,94 @@
 package misterbander.commitsudoku
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Net
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.net.ServerSocket
-import com.badlogic.gdx.net.ServerSocketHints
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.utils.GdxRuntimeException
+import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.ScreenUtils
 import ktx.actors.onTouchDown
 import ktx.actors.plusAssign
 import ktx.collections.*
 import ktx.log.info
 import ktx.scene2d.*
-import ktx.style.*
-import misterbander.commitsudoku.scene2d.SudokuPanel
+import misterbander.commitsudoku.constraints.ConstraintsChecker
+import misterbander.commitsudoku.scene2d.SidePanel
+import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.commitsudoku.scene2d.Toolbar
+import misterbander.commitsudoku.scene2d.actions.ActionController
 import misterbander.commitsudoku.scene2d.dialogs.MessageDialog
 import misterbander.commitsudoku.scene2d.dialogs.SyncDialog
 import misterbander.commitsudoku.scene2d.updateStyle
 import misterbander.gframework.DefaultGScreen
+import misterbander.gframework.util.Observable
+import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
-import java.io.ObjectInputStream
-import kotlin.concurrent.thread
+import kotlin.math.min
 
 class CommitSudokuScreen(
 	game: CommitSudoku,
 	val lightSkin: Skin,
 	val darkSkin: Skin
-) : DefaultGScreen<CommitSudoku>(game)
+) : DefaultGScreen<CommitSudoku>(game), PersistentState
 {
-	val notoSans: BitmapFont = Scene2DSkin.defaultSkin["noto_sans"]
-	val notoSansLarge: BitmapFont = Scene2DSkin.defaultSkin["noto_sans_large"]
-	
-	val panel = SudokuPanel(this)
-	val toolbar = Toolbar(this)
-	val syncDialog = SyncDialog(this)
-	val messageDialog = MessageDialog(this)
-	
-	val mapper = PersistentStateMapper()
-	
-	private lateinit var serverSocket: ServerSocket
-	@Volatile var shouldCloseServer = false
-		set(value)
-		{
-			field = value
-			if (value)
-				serverSocket.dispose()
-		}
-	
-	val isDarkMode: Boolean
+	private val constraintsChecker = ConstraintsChecker()
+	private val actionController = ActionController()
+	private val mapper = PersistentStateMapper()
+
+	private val isDarkMode: Boolean
 		get() = Scene2DSkin.defaultSkin == darkSkin
-	
+	val isFinishedObservable = Observable(false)
+	var isFinished by isFinishedObservable
+
+	// UI
+	private val toolbar = Toolbar(this, constraintsChecker, isDarkMode)
+	val grid = SudokuGrid(this, constraintsChecker, actionController)
+	val panel = SidePanel(this, actionController, isDarkMode)
+	val messageDialog = MessageDialog()
+	val syncDialog = SyncDialog(this, mapper)
+
+	private val server = CommitSudokuServer(this)
+
 	init
 	{
 		uiStage += object : Actor() // Fallback actor
 		{
 			init
 			{
-				onTouchDown { panel.grid.unselect() }
+				onTouchDown { grid.unselect() }
 			}
-			
+
 			override fun hit(x: Float, y: Float, touchable: Boolean): Actor = this
 		}
 		uiStage += scene2d.table {
 			setFillParent(true)
-			actor(toolbar).cell(expandY = true).inCell.top()
-			actor(panel).cell(expand = true)
+			actor(toolbar).cell(growY = true).inCell.top()
+			container(grid) {
+				size(object : Value()
+				{
+					override fun get(context: Actor?): Float = min(width, height)
+				})
+			}.cell(grow = true, pad = 64F)
+			actor(panel).cell(padBottom = 64F).inCell.bottom()
 		}
-		uiStage.keyboardFocus = panel.grid
+		uiStage.keyboardFocus = grid
 		uiStage += toolbar.thermoMultibuttonMenu
 		uiStage += toolbar.cageMultibuttonMenu
-		
+
 		if (mapper.read("commit_sudoku_state"))
-			panel.readState(mapper)
-		
+			readState(mapper)
+
 		keyboardHeightObservers += syncDialog
-		
+
 		Scene2DSkin.addListener { updateStyles(it) }
 	}
-	
+
 	override fun show()
 	{
 		super.show()
 		info("CommitSudokuScreen    | INFO") { "Show CommitSudokuScreen" }
-		runServer()
+		server.start(mapper)
 	}
-	
-	private fun runServer()
-	{
-		shouldCloseServer = false
-		thread(isDaemon = true) {
-			val hints = ServerSocketHints()
-			hints.acceptTimeout = 0
-			serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 11530, hints)
-			info("CommitSudokuScreen    | INFO") { "Running server..." }
-			while (true)
-			{
-				try
-				{
-					val socket = serverSocket.accept(null)
-					info("CommitSudokuScreen    | INFO") { "Accepting connection from ${socket.remoteAddress}" }
-					val objectInputStream = ObjectInputStream(socket.inputStream)
-					mapper.read(objectInputStream)
-					objectInputStream.close()
-					socket.dispose()
-					panel.grid.reset()
-					panel.readState(mapper)
-				}
-				catch (e: GdxRuntimeException)
-				{
-					if (shouldCloseServer)
-						break
-					else
-						e.printStackTrace()
-				}
-			}
-		}
-	}
-	
+
 	private fun updateStyles(skin: Skin)
 	{
 		val oldSkin = if (skin == lightSkin) darkSkin else lightSkin
@@ -127,16 +96,42 @@ class CommitSudokuScreen(
 		syncDialog.updateStyle(skin, oldSkin)
 		messageDialog.updateStyle(skin, oldSkin)
 	}
-	
+
 	override fun pause()
 	{
 		info("CommitSudokuScreen    | INFO") { "Pause! Saving game state..." }
-		panel.writeState(mapper)
+		writeState(mapper)
 		mapper.write("commit_sudoku_state")
-		shouldCloseServer = true // Stop the thread
+		server.stop()
 	}
-	
-	override fun resume() = runServer()
-	
+
+	override fun resume() = server.start(mapper)
+
 	override fun clearScreen() = ScreenUtils.clear(backgroundColor, true)
+
+	fun reset()
+	{
+		grid.reset()
+		panel.resetTimer()
+		actionController.clearHistory()
+		constraintsChecker.clear()
+	}
+
+	override fun readState(mapper: PersistentStateMapper)
+	{
+		grid.readState(mapper)
+		panel.readState(mapper)
+		actionController.readState(grid, mapper)
+		constraintsChecker.readState(mapper)
+		constraintsChecker.check(grid)
+		Gdx.graphics.requestRendering()
+	}
+
+	override fun writeState(mapper: PersistentStateMapper)
+	{
+		grid.writeState(mapper)
+		panel.writeState(mapper)
+		actionController.writeState(mapper)
+		constraintsChecker.writeState(mapper)
+	}
 }

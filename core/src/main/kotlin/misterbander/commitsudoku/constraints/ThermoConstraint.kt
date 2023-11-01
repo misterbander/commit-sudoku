@@ -1,7 +1,6 @@
 package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
 import ktx.collections.*
 import misterbander.commitsudoku.backgroundColor
 import misterbander.commitsudoku.decorationColor1
@@ -10,37 +9,43 @@ import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.blend
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
-class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : Constraint, GridModification
+class ThermoConstraint(
+	private val grid: SudokuGrid,
+	bulbI: Int,
+	bulbJ: Int,
+	private val type: Type
+) : Constraint, GridModification
 {
-	private var thermoStatement: CompoundStatement = CompoundStatement(grid.cells)
-	var operator = when (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex)
-	{
-		0 -> "<"
-		1 -> "<="
-		else -> ""
-	}
+	private var thermoStatement = CompoundStatement()
 	private val thermoLine = LineDecoration(grid, bulbI, bulbJ)
-	val length
+	val length: Int
 		get() = thermoLine.length
-	
+
 	private val internalColor = Color()
 	private var isHighlighted = true
-	
+
 	val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf(
 			"cells" to thermoLine.lineCells.toArray(Pair::class.java),
-			"operator" to operator
+			"type" to type.toString()
 		)
-	
+
 	fun addThermoCell(endI: Int, endJ: Int) = thermoLine.addLineCell(endI, endJ)
-	
+
 	fun generateThermoStatement()
 	{
-		if (operator != "")
+		val operator = when (type)
 		{
-			val statementStrs: GdxArray<String> = GdxArray()
+			Type.NORMAL -> "<"
+			Type.SLOW -> "<="
+			else -> null
+		}
+		if (operator != null)
+		{
+			val statementStrs = GdxArray<String>()
 			for (k in 0 until thermoLine.lineCells.size)
 			{
 				for (l in 0 until k)
@@ -53,19 +58,17 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 					statementStrs.add(statement)
 				}
 			}
-			thermoStatement = CompoundStatement(grid.cells, *statementStrs.toArray(String::class.java))
+			thermoStatement = CompoundStatement(*statementStrs.toArray(String::class.java))
 		}
 		isHighlighted = false
-		grid.constraintsChecker.check()
 	}
-	
+
 	fun isOver(i: Int, j: Int): Boolean = thermoLine.isOver(i, j)
-	
-	override fun check(): Boolean = thermoStatement.check()
-	
-	override fun drawConstraint(batch: Batch)
+
+	override fun check(grid: SudokuGrid): Boolean = thermoStatement.check(grid)
+
+	override fun drawConstraint(shapeDrawer: ShapeDrawer)
 	{
-		val shapeDrawer = grid.game.shapeDrawer
 		val x = grid.iToX(thermoLine.lineCells[0].first + 0.5F)
 		val y = grid.jToY(thermoLine.lineCells[0].second + 0.5F)
 		internalColor.blend(
@@ -74,6 +77,11 @@ class ThermoConstraint(private val grid: SudokuGrid, bulbI: Int, bulbJ: Int) : C
 		)
 		shapeDrawer.filledCircle(x, y, grid.cellSize*0.3F, internalColor)
 		thermoLine.color = internalColor
-		thermoLine.draw(batch)
+		thermoLine.draw(shapeDrawer)
+	}
+
+	enum class Type
+	{
+		NORMAL, SLOW, DECORATION
 	}
 }

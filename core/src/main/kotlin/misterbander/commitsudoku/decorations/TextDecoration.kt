@@ -1,9 +1,10 @@
 package misterbander.commitsudoku.decorations
 
-import com.badlogic.gdx.graphics.g2d.Batch
+import misterbander.commitsudoku.notoSansLarge
 import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.drawCenter
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
 open class TextDecoration(
@@ -15,12 +16,12 @@ open class TextDecoration(
 {
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("i" to i, "j" to j, "text" to text)
-	
-	override fun draw(batch: Batch)
+
+	override fun draw(shapeDrawer: ShapeDrawer)
 	{
 		val x = grid.iToX(i + 0.5F)
 		val y = grid.jToY(j + 0.5F)
-		screen.notoSansLarge.color = color ?: primaryColor
-		screen.notoSansLarge.drawCenter(batch, text, x, y)
+		notoSansLarge.color = color ?: primaryColor
+		notoSansLarge.drawCenter(shapeDrawer.batch, text, x, y)
 	}
 }

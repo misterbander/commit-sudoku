@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2.dst2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxArray
 import ktx.collections.minusAssign
+import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentStateMapper
@@ -12,17 +13,21 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
+class ThermoAdder(
+	grid: SudokuGrid,
+	private val constraintsChecker: ConstraintsChecker
+) : GridModifier<ThermoConstraint>(grid)
 {
-	private val thermoConstraints: GdxArray<ThermoConstraint> = GdxArray()
+	var type = ThermoConstraint.Type.NORMAL
+	private val thermoConstraints = GdxArray<ThermoConstraint>()
 	private var currentThermoConstraint: ThermoConstraint? = null
-	
-	override val isValidIndex
-		get() = if (grid.panel.screen.toolbar.thermoMultibuttonMenu.checkedIndex == 2)
+
+	private val isValidIndex
+		get() = if (type == ThermoConstraint.Type.DECORATION)
 			selectI in -1..9 && selectJ in -1..9
 		else
 			selectI in 0..8 && selectJ in 0..8
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x, y)
@@ -33,17 +38,20 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 			tryDeleteThermo()
 			return
 		}
-		
-		currentThermoConstraint = ThermoConstraint(grid, selectI, selectJ)
+
+		currentThermoConstraint = ThermoConstraint(grid, selectI, selectJ, type)
 		addModification(currentThermoConstraint!!)
 	}
-	
+
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		if (currentThermoConstraint != null)
 		{
 			if (currentThermoConstraint!!.length >= 2)
+			{
 				currentThermoConstraint!!.generateThermoStatement()
+				constraintsChecker.check(grid)
+			}
 			else
 			{
 				removeModification(currentThermoConstraint!!)
@@ -52,7 +60,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 		}
 		currentThermoConstraint = null
 	}
-	
+
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
@@ -62,11 +70,11 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
 		if (dst2(x, y, cellCenterX, cellCenterY) > grid.cellSize*grid.cellSize*0.16F)
 			return
-		
+
 		if (currentThermoConstraint != null)
 			currentThermoConstraint!!.addThermoCell(selectI, selectJ)
 	}
-	
+
 	override fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int)
 	{
 		if (count > 1)
@@ -75,7 +83,7 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 			tryDeleteThermo()
 		}
 	}
-	
+
 	private fun tryDeleteThermo()
 	{
 		for (thermoConstraint: ThermoConstraint in thermoConstraints)
@@ -87,40 +95,42 @@ class ThermoAdder(grid: SudokuGrid) : GridModfier<ThermoConstraint>(grid)
 			}
 		}
 	}
-	
+
 	override fun addModification(modification: ThermoConstraint)
 	{
 		thermoConstraints.insert(0, modification)
-		grid.constraintsChecker += modification
+
+		constraintsChecker += modification
 	}
-	
+
 	override fun removeModification(modification: ThermoConstraint)
 	{
 		thermoConstraints -= modification
-		grid.constraintsChecker -= modification
-		grid.constraintsChecker.check()
+		constraintsChecker -= modification
+		constraintsChecker.check(grid)
 	}
-	
+
 	override fun clear() = thermoConstraints.clear()
-	
+
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val thermometers: Array<HashMap<String, Serializable>>? = mapper["thermoConstraints"]
 		thermometers?.forEach {
 			val thermoCells = it["cells"] as Array<Pair<Int, Int>>
-			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second)
+			val modeStr = it["type"] as String
+			val type = ThermoConstraint.Type.valueOf(modeStr)
+			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second, type)
 			thermoCells.forEachIndexed { index, pair ->
 				if (index == 0)
 					return@forEachIndexed
 				thermoConstraint.addThermoCell(pair.first, pair.second)
 			}
-			thermoConstraint.operator = it["operator"] as String
 			thermoConstraint.generateThermoStatement()
 			addModification(thermoConstraint)
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper["thermoConstraints"] = thermoConstraints.map { it.dataObject }.toTypedArray()

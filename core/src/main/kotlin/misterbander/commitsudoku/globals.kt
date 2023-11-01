@@ -1,6 +1,7 @@
 package misterbander.commitsudoku
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.utils.IntMap
 import ktx.scene2d.*
 import ktx.style.*
@@ -15,6 +16,8 @@ const val SELECTED_COLOR = "selected_color"
 const val HIGHLIGHT_COLORS = "highlight_colors"
 const val DECORATION_COLOR_1 = "decoration_color_1"
 const val DECORATION_COLOR_2 = "decoration_color_2"
+const val NOTO_SANS = "noto_sans"
+const val NOTO_SANS_LARGE = "noto_sans_large"
 const val TEXT_BUTTON_LARGE_STYLE = "text_button_large"
 const val CHECKABLE_TEXT_BUTTON_STYLE = "checkable_text_button"
 const val CHECKABLE_TEXT_BUTTON_LARGE_STYLE = "checkable_text_button_large"
@@ -40,7 +43,7 @@ const val PINK_BUTTON_STYLE = "pink_button"
 const val GRAY_BUTTON_STYLE = "gray_button"
 const val SET_GIVENS_BUTTON_STYLE = "set_givens_button"
 const val THERMO_BUTTON_STYLE = "thermo_button"
-const val SOFT_THERMO_BUTTON_STYLE = "soft_thermo_button"
+const val SLOW_THERMO_BUTTON_STYLE = "slow_thermo_button"
 const val EMPTY_THERMO_BUTTON_STYLE = "empty_thermo_button"
 const val SANDWICH_BUTTON_STYLE = "sandwich_button"
 const val TEXT_DECORATION_BUTTON_STYLE = "text_decoration_button"
@@ -78,3 +81,7 @@ val decorationColor1: Color
 	get() = Scene2DSkin.defaultSkin[DECORATION_COLOR_1]
 val decorationColor2: Color
 	get() = Scene2DSkin.defaultSkin[DECORATION_COLOR_2]
+val notoSans: BitmapFont
+	get() = Scene2DSkin.defaultSkin[NOTO_SANS]
+val notoSansLarge: BitmapFont
+	get() = Scene2DSkin.defaultSkin[NOTO_SANS_LARGE]

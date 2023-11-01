@@ -1,5 +1,7 @@
 package misterbander.commitsudoku.scene2d.dialogs
 
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.actors.centerPosition
 import ktx.actors.onChange
@@ -7,17 +9,13 @@ import ktx.scene2d.*
 import ktx.scene2d.defaultStyle
 import ktx.style.*
 import misterbander.commitsudoku.CLOSE_BUTTON_STYLE
-import misterbander.commitsudoku.CommitSudokuScreen
 import misterbander.commitsudoku.scene2d.updateStyle
 import misterbander.gframework.scene2d.AccessibleInputDialog
 
-abstract class CommitSudokuDialog(
-	protected val screen: CommitSudokuScreen,
-	title: String
-) : AccessibleInputDialog(title, Scene2DSkin.defaultSkin, defaultStyle)
+abstract class CommitSudokuDialog(title: String) : AccessibleInputDialog(title, Scene2DSkin.defaultSkin, defaultStyle)
 {
 	private val closeButton = scene2d.button(CLOSE_BUTTON_STYLE) { onChange { hide() } }
-	
+
 	init
 	{
 		titleTable.add(closeButton).size(32F).right()
@@ -25,15 +23,16 @@ abstract class CommitSudokuDialog(
 		contentTable.pad(24F)
 		buttonTable.pad(0F, 24F, 24F, 24F)
 	}
-	
-	open fun show()
+
+	override fun show(stage: Stage): Dialog
 	{
-		show(screen.uiStage, null)
+		super.show(stage, null)
 		centerPosition()
+		return this
 	}
-	
+
 	override fun hide() = hide(null)
-	
+
 	fun updateStyle(skin: Skin, oldSkin: Skin)
 	{
 		oldSkin.find(style)?.let { style = skin[it] }

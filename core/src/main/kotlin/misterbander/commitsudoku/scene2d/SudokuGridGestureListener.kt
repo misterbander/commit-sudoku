@@ -12,6 +12,6 @@ class SudokuGridGestureListener(
 	{
 		grid.modifier?.tap(event, x, y, count, button)
 	}
-	
+
 	override fun longPress(actor: Actor?, x: Float, y: Float): Boolean = grid.modifier?.longPress(x, y) ?: false
 }

@@ -13,14 +13,14 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid) : GridModfier<T>(grid)
+abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid) : GridModifier<T>(grid)
 {
-	private val lineDecorations: GdxArray<T> = GdxArray()
+	private val lineDecorations = GdxArray<T>()
 	private var currentLine: T? = null
-	
-	override val isValidIndex
+
+	private val isValidIndex
 		get() = selectI in -1..9 && selectJ in -1..9
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x, y)
@@ -31,14 +31,14 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 			tryDelete()
 			return
 		}
-		
+
 		currentLine = newLine(grid, selectI, selectJ)
 		currentLine!!.isHighlighted = true
 		addModification(currentLine!!)
 	}
-	
+
 	abstract fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int): T
-	
+
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		if (currentLine != null)
@@ -53,7 +53,7 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 		}
 		currentLine = null
 	}
-	
+
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
@@ -63,11 +63,11 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
 		if (Vector2.dst2(x, y, cellCenterX, cellCenterY) > grid.cellSize*grid.cellSize*0.16F)
 			return
-		
+
 		if (currentLine != null)
 			currentLine!!.addLineCell(selectI, selectJ)
 	}
-	
+
 	override fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int)
 	{
 		if (count > 1)
@@ -76,7 +76,7 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 			tryDelete()
 		}
 	}
-	
+
 	private fun tryDelete()
 	{
 		for (lineDecoration: T in lineDecorations)
@@ -88,21 +88,21 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 			}
 		}
 	}
-	
+
 	override fun addModification(modification: T)
 	{
 		lineDecorations.insert(0, modification)
 		grid.decorations += modification
 	}
-	
+
 	override fun removeModification(modification: T)
 	{
 		lineDecorations -= modification
 		grid.decorations -= modification
 	}
-	
+
 	override fun clear() = lineDecorations.clear()
-	
+
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
@@ -118,11 +118,11 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 			addModification(lineDecoration)
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper[dataObjectKey()] = lineDecorations.map { it.dataObject }.toTypedArray()
 	}
-	
+
 	abstract fun dataObjectKey(): String
 }

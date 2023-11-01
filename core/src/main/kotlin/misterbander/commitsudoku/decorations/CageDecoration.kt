@@ -1,13 +1,13 @@
 package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.backgroundColor
 import misterbander.commitsudoku.constraints.KillerConstraint
 import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.blend
 import misterbander.gframework.util.dashedLine
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 import kotlin.math.min
 
@@ -17,7 +17,7 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 	{
 		val dashSegmentLengths = floatArrayOf(4F, 4F)
 	}
-	
+
 	val mask = Array(9) { BooleanArray(9) }
 	var topLeftI = i
 	var topLeftJ = j
@@ -25,12 +25,12 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 	private val internalColor = Color()
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf("cageMask" to mask, "killerSum" to (killerConstraint?.killerSum ?: -1))
-	
+
 	init
 	{
 		addCell(i, j)
 	}
-	
+
 	fun addCell(i: Int, j: Int)
 	{
 		if (mask[i][j])
@@ -44,10 +44,9 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 		else if (j == topLeftJ)
 			topLeftI = min(topLeftI, i)
 	}
-	
-	override fun draw(batch: Batch)
+
+	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val shapeDrawer = game.shapeDrawer
 		for (i in mask.indices)
 		{
 			for (j in mask[i].indices)
@@ -65,11 +64,11 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 				val bottomRightConnected = bottomConnected && rightConnected && mask[i + 1][j - 1]
 				val topLeftConnected = topConnected && leftConnected && mask[i - 1][j + 1]
 				val topRightConnected = topConnected && rightConnected && mask[i + 1][j + 1]
-				
+
 				internalColor.set(primaryColor)
 				if (color != null)
 					internalColor.blend(color!!, backgroundColor)
-				
+
 				if (!bottomConnected)
 					shapeDrawer.dashedLine(
 						x + 4, y + 4, x + size - 4, y + 4,

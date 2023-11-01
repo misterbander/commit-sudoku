@@ -2,6 +2,7 @@ package misterbander.commitsudoku.scene2d
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
@@ -25,73 +26,52 @@ import misterbander.commitsudoku.LITTLE_ARROW_DECORATION_BUTTON_STYLE
 import misterbander.commitsudoku.NON_CONSECUTIVE_BUTTON_STYLE
 import misterbander.commitsudoku.SANDWICH_BUTTON_STYLE
 import misterbander.commitsudoku.SET_GIVENS_BUTTON_STYLE
-import misterbander.commitsudoku.SOFT_THERMO_BUTTON_STYLE
+import misterbander.commitsudoku.SLOW_THERMO_BUTTON_STYLE
 import misterbander.commitsudoku.TEXT_DECORATION_BUTTON_STYLE
 import misterbander.commitsudoku.THERMO_BUTTON_STYLE
 import misterbander.commitsudoku.X_BUTTON_STYLE
+import misterbander.commitsudoku.constraints.ConstraintsChecker
+import misterbander.commitsudoku.constraints.ThermoConstraint
 import misterbander.commitsudoku.toolbarBackgroundColor
+import space.earlygrey.shapedrawer.ShapeDrawer
 
-class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
+class Toolbar(
+	private val screen: CommitSudokuScreen,
+	constraintsChecker: ConstraintsChecker,
+	isDarkMode: Boolean
+) : VerticalGroup()
 {
-	private val game = screen.game
-	private val grid
-		get() = screen.panel.grid
-	private val constraintsChecker
-		get() = grid.constraintsChecker
-	
-	private val thermoMultibutton = ToolbarMultibutton(screen, THERMO_BUTTON_STYLE)
+	private val grid: SudokuGrid
+		get() = screen.grid
+	private val shapeDrawer: ShapeDrawer
+		get() = screen.game.shapeDrawer
+
+	private val thermoMultibutton = ToolbarMultibutton(THERMO_BUTTON_STYLE, isDarkMode)
 	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
-		screen,
 		thermoMultibutton,
-		scene2d.imageButton(THERMO_BUTTON_STYLE),
-		scene2d.imageButton(SOFT_THERMO_BUTTON_STYLE),
-		scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE)
+		isDarkMode,
+		scene2d.imageButton(THERMO_BUTTON_STYLE) {
+			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.NORMAL }
+		},
+		scene2d.imageButton(SLOW_THERMO_BUTTON_STYLE) {
+			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.SLOW }
+		},
+		scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE) {
+			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.DECORATION }
+		}
 	)
-	private val cageMultibutton = ToolbarMultibutton(screen, KILLER_CAGE_BUTTON_STYLE)
+	private val cageMultibutton = ToolbarMultibutton(KILLER_CAGE_BUTTON_STYLE, isDarkMode)
 	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
-		screen,
 		cageMultibutton,
-		scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) { onClick { screen.panel.showZero = true } },
-		scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) { onClick { screen.panel.showZero = false } }
+		isDarkMode,
+		scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) {
+			onClick { grid.modifiers.cageSetter.isKillerMode = true }
+		},
+		scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) {
+			onClick { grid.modifiers.cageSetter.isKillerMode = false }
+		}
 	)
-	
-	val xButton = scene2d.imageButton(X_BUTTON_STYLE).apply {
-		setProgrammaticChangeEvents(true)
-		onChange {
-			if (isChecked)
-				constraintsChecker += constraintsChecker.xConstraint
-			else
-				constraintsChecker -= constraintsChecker.xConstraint
-		}
-	}
-	val antiKingButton = scene2d.imageButton(ANTIKING_BUTTON_STYLE).apply {
-		setProgrammaticChangeEvents(true)
-		onChange {
-			if (isChecked)
-				constraintsChecker += constraintsChecker.antiKingStatement
-			else
-				constraintsChecker -= constraintsChecker.antiKingStatement
-		}
-	}
-	val antiKnightButton = scene2d.imageButton(ANTIKNIGHT_BUTTON_STYLE).apply {
-		setProgrammaticChangeEvents(true)
-		onChange {
-			if (isChecked)
-				constraintsChecker += constraintsChecker.antiKnightStatement
-			else
-				constraintsChecker -= constraintsChecker.antiKnightStatement
-		}
-	}
-	val nonconsecutiveButton = scene2d.imageButton(NON_CONSECUTIVE_BUTTON_STYLE).apply {
-		setProgrammaticChangeEvents(true)
-		onChange {
-			if (isChecked)
-				constraintsChecker += constraintsChecker.nonconsecutiveStatement
-			else
-				constraintsChecker -= constraintsChecker.nonconsecutiveStatement
-		}
-	}
-	
+
 	init
 	{
 		this += scene2d.buttonGroup(1, 1) {
@@ -138,18 +118,52 @@ class Toolbar(private val screen: CommitSudokuScreen) : VerticalGroup()
 			}
 		}
 		this += Image(Scene2DSkin.defaultSkin["divider"], Scaling.none, Align.center)
+
+		val xButton: ImageButton
+		val antiKingButton: ImageButton
+		val antiKnightButton: ImageButton
+		val nonconsecutiveButton: ImageButton
 		this += scene2d.table {
-			actor(xButton)
-			actor(antiKingButton)
+			xButton = imageButton(X_BUTTON_STYLE).apply {
+				setProgrammaticChangeEvents(true)
+				onChange {
+					constraintsChecker.x = isChecked
+					constraintsChecker.check(grid)
+				}
+			}
+			antiKingButton = imageButton(ANTIKING_BUTTON_STYLE).apply {
+				setProgrammaticChangeEvents(true)
+				onChange {
+					constraintsChecker.antiKing = isChecked
+					constraintsChecker.check(grid)
+				}
+			}
 			row()
-			actor(antiKnightButton)
-			actor(nonconsecutiveButton)
+			antiKnightButton = imageButton(ANTIKNIGHT_BUTTON_STYLE).apply {
+				setProgrammaticChangeEvents(true)
+				onChange {
+					constraintsChecker.antiKnight = isChecked
+					constraintsChecker.check(grid)
+				}
+			}
+			nonconsecutiveButton = imageButton(NON_CONSECUTIVE_BUTTON_STYLE).apply {
+				setProgrammaticChangeEvents(true)
+				onChange {
+					constraintsChecker.nonconsecutive = isChecked
+					constraintsChecker.check(grid)
+				}
+			}
 		}
+
+		constraintsChecker.xObservable.addObserver { value -> xButton.isChecked = value }
+		constraintsChecker.antiKingObservable.addObserver { value -> antiKingButton.isChecked = value }
+		constraintsChecker.antiKnightObservable.addObserver { value -> antiKnightButton.isChecked = value }
+		constraintsChecker.nonconsecutiveObservable.addObserver { value -> nonconsecutiveButton.isChecked = value }
 	}
-	
+
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
-		game.shapeDrawer.filledRectangle(0F, 0F, width, screen.viewport.worldHeight, toolbarBackgroundColor)
+		shapeDrawer.filledRectangle(x, y, width, height, toolbarBackgroundColor)
 		super.draw(batch, parentAlpha)
 	}
 }

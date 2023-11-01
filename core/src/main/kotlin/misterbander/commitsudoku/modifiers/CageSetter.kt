@@ -5,16 +5,23 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.GdxSet
 import ktx.collections.minusAssign
 import ktx.collections.plusAssign
+import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.constraints.KillerConstraint
 import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import misterbander.gframework.util.Observable
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
+class CageSetter(
+	grid: SudokuGrid,
+	private val constraintsChecker: ConstraintsChecker
+) : GridModifier<CageDecoration>(grid)
 {
+	val isKillerModeObservable = Observable(true)
+	var isKillerMode by isKillerModeObservable
 	private val cageMap: Array<Array<CageDecoration?>> = Array(9) { arrayOfNulls(9) }
 	private var currentCage: CageDecoration? = null
 		set(value)
@@ -24,10 +31,10 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 			field = value
 		}
 	private var justRemovedCage = false
-	
-	override val isValidIndex
+
+	private val isValidIndex
 		get() = selectI in 0..8 && selectJ in 0..8
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x, y)
@@ -53,7 +60,7 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 			cageMap[selectI][selectJ] = currentCage
 		}
 	}
-	
+
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
 		updateSelect(x, y)
@@ -62,28 +69,28 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 		currentCage!!.addCell(selectI, selectJ)
 		cageMap[selectI][selectJ] = currentCage
 	}
-	
+
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		justRemovedCage = false
-		if (grid.panel.screen.toolbar.cageMultibuttonMenu.checkedIndex == 0 && currentCage != null)
+		if (isKillerMode && currentCage != null)
 		{
-			val killerConstraint = KillerConstraint(grid, currentCage!!)
+			val killerConstraint = KillerConstraint(grid, currentCage!!, constraintsChecker)
 			currentCage!!.killerConstraint = killerConstraint
-			grid.constraintsChecker += killerConstraint
+			constraintsChecker += killerConstraint
 			grid.decorations += killerConstraint.cornerTextDecoration
 			grid.cells[currentCage!!.topLeftI][currentCage!!.topLeftJ].cornerTextDecorationCount++
 		}
 	}
-	
+
 	fun unselect()
 	{
 		currentCage = null
 	}
-	
+
 	override fun typedDigit(digit: Int)
 	{
-		if (grid.panel.screen.toolbar.cageMultibuttonMenu.checkedIndex == 0 && currentCage?.killerConstraint != null)
+		if (isKillerMode && currentCage?.killerConstraint != null)
 		{
 			val killerConstraint = currentCage!!.killerConstraint!!
 			if (digit == -1) // Backspace
@@ -92,12 +99,12 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 				killerConstraint.killerSum = killerConstraint.killerSum*10 + digit
 		}
 	}
-	
+
 	override fun addModification(modification: CageDecoration)
 	{
 		grid.decorations += modification
 	}
-	
+
 	override fun removeModification(modification: CageDecoration)
 	{
 		for (i in modification.mask.indices)
@@ -111,14 +118,14 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 		grid.decorations -= modification
 		if (modification.killerConstraint != null)
 		{
-			grid.constraintsChecker -= modification.killerConstraint!!
+			constraintsChecker -= modification.killerConstraint!!
 			grid.decorations -= modification.killerConstraint!!.cornerTextDecoration
 			grid.cells[modification.topLeftI][modification.topLeftJ].cornerTextDecorationCount--
 		}
 	}
-	
+
 	override fun clear() = cageMap.forEach { it.fill(null) }
-	
+
 	@Suppress("UNCHECKED_CAST")
 	override fun readState(mapper: PersistentStateMapper)
 	{
@@ -146,19 +153,19 @@ class CageSetter(grid: SudokuGrid) : GridModfier<CageDecoration>(grid)
 			}
 			if (killerSum != -1)
 			{
-				val killerConstraint = KillerConstraint(grid, cageDecoration!!)
+				val killerConstraint = KillerConstraint(grid, cageDecoration!!, constraintsChecker)
 				cageDecoration.killerConstraint = killerConstraint
 				killerConstraint.killerSum = killerSum
-				grid.constraintsChecker += killerConstraint
+				constraintsChecker += killerConstraint
 				grid.decorations += killerConstraint.cornerTextDecoration
 				grid.cells[cageDecoration.topLeftI][cageDecoration.topLeftJ].cornerTextDecorationCount++
 			}
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		val cageDecorations: GdxSet<CageDecoration> = GdxSet()
+		val cageDecorations = GdxSet<CageDecoration>()
 		for (cages in cageMap)
 		{
 			for (cage in cages)

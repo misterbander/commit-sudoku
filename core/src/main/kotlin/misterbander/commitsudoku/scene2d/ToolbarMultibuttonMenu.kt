@@ -13,25 +13,22 @@ import ktx.actors.onTouchEvent
 import ktx.actors.plusAssign
 import ktx.scene2d.*
 import ktx.style.*
-import misterbander.commitsudoku.CommitSudokuScreen
 
 class ToolbarMultibuttonMenu(
-	private val screen: CommitSudokuScreen,
-	private val parentMultibutton: ToolbarMultibutton,
+	parentMultibutton: ToolbarMultibutton,
+	isDarkMode: Boolean,
 	vararg buttons: ImageButton
 ) : Stack()
 {
 	private val background = Image()
-	private val buttonGroup: ButtonGroup<ImageButton> = ButtonGroup()
-	val checkedIndex
-		get() = buttonGroup.checkedIndex
-	
+
 	init
 	{
 		background.drawable =
-			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (screen.isDarkMode) "_dark" else ""}"]
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (isDarkMode) "_dark" else ""}"]
 		this += background
 		val horizontalGroup = HorizontalGroup()
+		val buttonGroup = ButtonGroup<ImageButton>()
 		for (button in buttons)
 		{
 			buttonGroup.add(button)
@@ -44,7 +41,7 @@ class ToolbarMultibuttonMenu(
 		val container = scene2d.container(horizontalGroup)
 		this += container
 		setSize(container.minWidth, container.minHeight)
-		
+
 		onTouchEvent { event, x, y ->
 			if (event.type == InputEvent.Type.touchDown)
 			{
@@ -53,14 +50,14 @@ class ToolbarMultibuttonMenu(
 			}
 		}
 	}
-	
+
 	fun updateStyle(skin: Skin, oldSkin: Skin)
 	{
 		background.drawable =
-			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (screen.isDarkMode) "_dark" else ""}"]
+			Scene2DSkin.defaultSkin["toolbar_multibutton_menu_background${if (false) "_dark" else ""}"] // FIXME
 		children.forEach { it.updateStyle(skin, oldSkin) }
 	}
-	
+
 	override fun hit(x: Float, y: Float, touchable: Boolean): Actor?
 	{
 		val hit: Actor? = super.hit(x, y, touchable)

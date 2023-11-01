@@ -1,18 +1,18 @@
 package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.utils.IntIntMap
-import ktx.collections.get
-import ktx.collections.set
+import ktx.collections.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
 
-class XConstraint(private val cells: Array<Array<SudokuGrid.Cell>>) : Constraint
+class XConstraint : Constraint
 {
-	private val digitIndexMap: IntIntMap = IntIntMap()
-	
-	override fun check(): Boolean
+	private val digitIndexMap = IntIntMap()
+
+	override fun check(grid: SudokuGrid): Boolean
 	{
+		val cells = grid.cells
 		var correctFlag = true
-		
+
 		digitIndexMap.clear()
 		for (i in 0..8)
 		{

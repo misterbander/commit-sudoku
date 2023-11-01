@@ -1,13 +1,14 @@
 package misterbander.commitsudoku.constraints
 
-import com.badlogic.gdx.graphics.g2d.Batch
+import misterbander.commitsudoku.scene2d.SudokuGrid
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 interface Constraint
 {
 	/**
 	 * @return True if the Sudoku satisfies the constraint, false otherwise
 	 */
-	fun check(): Boolean
-	
-	fun drawConstraint(batch: Batch) = Unit
+	fun check(grid: SudokuGrid): Boolean
+
+	fun drawConstraint(shapeDrawer: ShapeDrawer) = Unit
 }

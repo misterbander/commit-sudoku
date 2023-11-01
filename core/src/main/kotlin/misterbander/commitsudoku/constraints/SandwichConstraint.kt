@@ -1,14 +1,14 @@
 package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.decorations.TextDecoration
 import misterbander.commitsudoku.modifiers.GridModification
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
 class SandwichConstraint(
-	private val grid: SudokuGrid,
+	grid: SudokuGrid,
 	private val index: Int,
 	private val isColumn: Boolean,
 	sandwichValue: Int
@@ -20,7 +20,7 @@ class SandwichConstraint(
 			field = value
 			textDecoration.text = value.toString()
 		}
-	
+
 	private val textDecoration = TextDecoration(
 		grid,
 		if (isColumn) index else -1,
@@ -28,15 +28,15 @@ class SandwichConstraint(
 		sandwichValue.toString()
 	)
 	private var correctFlag = true
-	
+
 	val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf(
 			"index" to index,
 			"isColumn" to isColumn,
 			"sandwichValue" to sandwichValue,
 		)
-	
-	override fun check(): Boolean
+
+	override fun check(grid: SudokuGrid): Boolean
 	{
 		correctFlag = true
 		var sandwichStart = -1
@@ -73,10 +73,10 @@ class SandwichConstraint(
 		}
 		return correctFlag
 	}
-	
-	override fun drawConstraint(batch: Batch)
+
+	override fun drawConstraint(shapeDrawer: ShapeDrawer)
 	{
 		textDecoration.color = if (correctFlag) null else Color.RED
-		textDecoration.draw(batch)
+		textDecoration.draw(shapeDrawer)
 	}
 }

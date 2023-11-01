@@ -1,107 +1,123 @@
 package misterbander.commitsudoku.scene2d.actions
 
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import ktx.actors.plusAssign
 import ktx.collections.*
 import misterbander.commitsudoku.scene2d.SudokuGrid
-import misterbander.gframework.util.PersistentState
 import misterbander.gframework.util.PersistentStateMapper
 import java.io.Serializable
 
-class ActionController(private val grid: SudokuGrid) : PersistentState
+class ActionController
 {
-	private val actionHistory: GdxArray<GdxArray<ModifyCellAction>> = GdxArray()
+	private val history = GdxArray<Array<ModifyCellAction>>()
 	private var undidActionCount: Int = 0
-	
-	fun addActions(actions: GdxArray<ModifyCellAction>)
+	private val onChangeListeners = GdxArray<(Int, Int) -> Unit>()
+
+	fun addActions(actions: Array<ModifyCellAction>)
 	{
 		if (undidActionCount > 0)
 		{
-			actionHistory.removeRange(actionHistory.size - undidActionCount, actionHistory.size - 1)
+			history.removeRange(history.size - undidActionCount, history.size - 1)
 			undidActionCount = 0
 		}
-		actionHistory += actions
-		updateUndoRedoButtons()
+		history += actions
+		for (i in 0 until onChangeListeners.size)
+			onChangeListeners[i](history.size, undidActionCount)
 	}
-	
+
 	fun undo()
 	{
-		if (undidActionCount == actionHistory.size)
+		if (undidActionCount == history.size)
 			return
 		undidActionCount++
-		val lastAction: GdxArray<ModifyCellAction> = actionHistory[actionHistory.size - undidActionCount]
-		for (action: ModifyCellAction in lastAction)
-		{
-			action.inverse = true
-			action.restart()
-			grid += action
-		}
-		updateUndoRedoButtons()
-		grid += Actions.run { grid.constraintsChecker.check() }
+		val lastActions: Array<ModifyCellAction> = history[history.size - undidActionCount]
+		for (action in lastActions)
+			action.run(true)
+		for (i in 0 until onChangeListeners.size)
+			onChangeListeners[i](history.size, undidActionCount)
 	}
-	
+
 	fun redo()
 	{
 		if (undidActionCount == 0)
 			return
-		val nextAction: GdxArray<ModifyCellAction> = actionHistory[actionHistory.size - undidActionCount]
+		val nextActions: Array<ModifyCellAction> = history[history.size - undidActionCount]
 		undidActionCount--
-		for (action: ModifyCellAction in nextAction)
-		{
-			action.inverse = false
-			action.restart()
-			grid += action
-		}
-		updateUndoRedoButtons()
-		grid += Actions.run { grid.constraintsChecker.check() }
+		for (action: ModifyCellAction in nextActions)
+			action.run()
+		for (i in 0 until onChangeListeners.size)
+			onChangeListeners[i](history.size, undidActionCount)
 	}
-	
+
 	fun clearHistory()
 	{
-		actionHistory.clear()
+		history.clear()
 		undidActionCount = 0
-		updateUndoRedoButtons()
+		for (i in 0 until onChangeListeners.size)
+			onChangeListeners[i](history.size, undidActionCount)
 	}
-	
-	private fun updateUndoRedoButtons()
+
+	fun onChange(callback: (historySize: Int, undidActionCount: Int) -> Unit)
 	{
-		grid.panel.undoButton.isDisabled = undidActionCount == actionHistory.size
-		grid.panel.redoButton.isDisabled = undidActionCount == 0
+		onChangeListeners += callback
 	}
-	
-	override fun readState(mapper: PersistentStateMapper)
+
+	fun readState(grid: SudokuGrid, mapper: PersistentStateMapper)
 	{
 		val actionHistoryDataObjects: Array<Array<HashMap<String, Serializable>>>? = mapper["actionHistory"]
-		actionHistoryDataObjects?.forEach { dataObjectGroup ->
-			val actionHistoryGroup: GdxArray<ModifyCellAction> = GdxArray()
-			for (dataObject in dataObjectGroup)
+		if (actionHistoryDataObjects != null)
+		{
+			for (dataObjectGroup in actionHistoryDataObjects)
 			{
-				val type = dataObject["type"] as ModifyCellAction.Type
-				val i = dataObject["i"] as Int
-				val j = dataObject["j"] as Int
-				val cell = grid.cells[i][j]
-				when (type)
+				val actionHistoryGroup = GdxArray<ModifyCellAction>()
+				for (dataObject in dataObjectGroup)
 				{
-					ModifyCellAction.Type.DIGIT ->
-						actionHistoryGroup += ModifyDigitAction(cell, dataObject["from"] as Int, dataObject["to"] as Int)
-					ModifyCellAction.Type.CORNER ->
-						actionHistoryGroup += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, dataObject["digit"] as Int, dataObject["from"] as Boolean, dataObject["to"] as Boolean)
-					ModifyCellAction.Type.CENTER ->
-						actionHistoryGroup += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, dataObject["digit"] as Int, dataObject["from"] as Boolean, dataObject["to"] as Boolean)
-					ModifyCellAction.Type.COLOR ->
-						actionHistoryGroup += ModifyColorAction(cell, dataObject["from"] as Int, dataObject["to"] as Int)
+					val type = dataObject["type"] as ModifyCellAction.Type
+					val i = dataObject["i"] as Int
+					val j = dataObject["j"] as Int
+					val cell = grid.cells[i][j]
+					when (type)
+					{
+						ModifyCellAction.Type.DIGIT ->
+							actionHistoryGroup += ModifyDigitAction(
+								cell,
+								dataObject["from"] as Int,
+								dataObject["to"] as Int
+							)
+						ModifyCellAction.Type.CORNER ->
+							actionHistoryGroup += ModifyMarkAction(
+								cell,
+								ModifyCellAction.Type.CORNER,
+								dataObject["digit"] as Int,
+								dataObject["from"] as Boolean,
+								dataObject["to"] as Boolean
+							)
+						ModifyCellAction.Type.CENTER ->
+							actionHistoryGroup += ModifyMarkAction(
+								cell,
+								ModifyCellAction.Type.CENTER,
+								dataObject["digit"] as Int,
+								dataObject["from"] as Boolean,
+								dataObject["to"] as Boolean
+							)
+						ModifyCellAction.Type.COLOR ->
+							actionHistoryGroup += ModifyColorAction(
+								cell,
+								dataObject["from"] as Int,
+								dataObject["to"] as Int
+							)
+					}
 				}
+				history += actionHistoryGroup.toArray(ModifyCellAction::class.java)
 			}
-			actionHistory += actionHistoryGroup
 		}
 		undidActionCount = mapper["undidActionCount"] ?: undidActionCount
-		updateUndoRedoButtons()
+		for (i in 0 until onChangeListeners.size)
+			onChangeListeners[i](history.size, undidActionCount)
 	}
-	
-	override fun writeState(mapper: PersistentStateMapper)
+
+	fun writeState(mapper: PersistentStateMapper)
 	{
-		val actionHistoryDataObjects = Array(actionHistory.size) { i ->
-			Array(actionHistory[i].size) { j -> actionHistory[i][j].dataObject }
+		val actionHistoryDataObjects = Array(history.size) { i ->
+			Array(history[i].size) { j -> history[i][j].dataObject }
 		}
 		mapper["actionHistory"] = actionHistoryDataObjects
 		mapper["undidActionCount"] = undidActionCount

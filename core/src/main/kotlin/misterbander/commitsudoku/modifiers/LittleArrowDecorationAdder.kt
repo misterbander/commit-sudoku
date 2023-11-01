@@ -12,13 +12,13 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDecoration>(grid)
+class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModifier<LittleArrowDecoration>(grid)
 {
 	private val arrowMap: Array<Array<LittleArrowDecoration?>> = Array(11) { arrayOfNulls(11) }
-	
-	override val isValidIndex: Boolean
+
+	private val isValidIndex: Boolean
 		get() = selectI in -1..9 && selectJ in -1..9
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x, y)
@@ -37,7 +37,7 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDeco
 		else
 			addModification(LittleArrowDecoration(grid, selectI, selectJ))
 	}
-	
+
 	override fun longPress(x: Float, y: Float): Boolean
 	{
 		updateSelect(x, y)
@@ -51,22 +51,21 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDeco
 		}
 		return false
 	}
-	
+
 	override fun addModification(modification: LittleArrowDecoration)
 	{
 		arrowMap[modification.i + 1][modification.j + 1] = modification
 		grid.decorations += modification
 	}
-	
+
 	override fun removeModification(modification: LittleArrowDecoration)
 	{
 		arrowMap[modification.i + 1][modification.j + 1] = null
 		grid.decorations -= modification
 	}
-	
+
 	override fun clear() = arrowMap.forEach { it.fill(null) }
-	
-	@Suppress("UNCHECKED_CAST")
+
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val littleArrowDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["littleArrowDecorations"]
@@ -77,10 +76,10 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModfier<LittleArrowDeco
 			addModification(LittleArrowDecoration(grid, i, j, pointingDirection))
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
-		val littleArrowDecorations: GdxSet<LittleArrowDecoration> = GdxSet()
+		val littleArrowDecorations = GdxSet<LittleArrowDecoration>()
 		for (arrows in arrowMap)
 		{
 			for (arrow in arrows)

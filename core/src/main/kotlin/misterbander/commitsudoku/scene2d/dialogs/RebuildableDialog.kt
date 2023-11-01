@@ -1,12 +1,13 @@
 package misterbander.commitsudoku.scene2d.dialogs
 
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
 import com.badlogic.gdx.utils.Align
-import misterbander.commitsudoku.CommitSudokuScreen
 
-abstract class RebuildableDialog(screen: CommitSudokuScreen, title: String) : CommitSudokuDialog(screen, title)
+abstract class RebuildableDialog(title: String) : CommitSudokuDialog(title)
 {
 	abstract fun build()
-	
+
 	fun rebuild()
 	{
 		val centerX = x + width/2
@@ -17,10 +18,10 @@ abstract class RebuildableDialog(screen: CommitSudokuScreen, title: String) : Co
 		pack()
 		setPosition(centerX, centerY, Align.center)
 	}
-	
-	override fun show()
+
+	override fun show(stage: Stage): Dialog
 	{
 		rebuild()
-		super.show()
+		return super.show(stage)
 	}
 }

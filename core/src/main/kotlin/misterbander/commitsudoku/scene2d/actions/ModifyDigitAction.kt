@@ -17,8 +17,8 @@ class ModifyDigitAction(
 		"from" to from,
 		"to" to to
 	)
-	
-	override fun run()
+
+	override fun run(inverse: Boolean)
 	{
 		val from = if (inverse) this.to else this.from
 		val to = if (inverse) this.from else this.to

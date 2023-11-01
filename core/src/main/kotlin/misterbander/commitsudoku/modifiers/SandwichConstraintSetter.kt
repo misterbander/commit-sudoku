@@ -1,29 +1,33 @@
 package misterbander.commitsudoku.modifiers
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import ktx.collections.*
 import ktx.collections.set
+import misterbander.commitsudoku.constraints.ConstraintsChecker
 import misterbander.commitsudoku.constraints.SandwichConstraint
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.commitsudoku.selectedColor
 import misterbander.gframework.util.PersistentStateMapper
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
-class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstraint>(grid)
+class SandwichConstraintSetter(
+	grid: SudokuGrid,
+	private val constraintsChecker: ConstraintsChecker
+) : GridModifier<SandwichConstraint>(grid)
 {
-	private val sandwichConstraints: GdxMap<Int, SandwichConstraint> = GdxMap()
-	
+	private val sandwichConstraints = GdxMap<Int, SandwichConstraint>()
+
 	private val key
 		get() = if (selectI == -1) selectJ + 9 else selectI
-	override val isValidIndex
+	private val isValidIndex
 		get() = selectI == -1 && selectJ in 0..8 || selectJ == 9 && selectI in 0..8
-	
+
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) = updateSelect(x, y)
-	
+
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
 		if (!isValidIndex)
@@ -31,7 +35,7 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 			selectI = 0
 			selectJ = 9
 		}
-		
+
 		val di = right - left
 		val dj = up - down
 		if (di != 0)
@@ -47,14 +51,14 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 			selectI = if (selectJ == 9) 0 else -1
 		}
 	}
-	
+
 	override fun enter() = Unit
-	
+
 	override fun typedDigit(digit: Int)
 	{
 		if (!isValidIndex)
 			return
-		
+
 		val sandwichConstraint: SandwichConstraint? = sandwichConstraints[key]
 		if (sandwichConstraint != null)
 		{
@@ -78,23 +82,23 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 			)
 			addModification(newSandwichConstraint)
 		}
-		grid.constraintsChecker.check()
+		constraintsChecker.check(grid)
 	}
-	
+
 	override fun addModification(modification: SandwichConstraint)
 	{
 		sandwichConstraints[key] = modification
-		grid.constraintsChecker += modification
+		constraintsChecker += modification
 	}
-	
+
 	override fun removeModification(modification: SandwichConstraint)
 	{
 		sandwichConstraints.remove(key)
-		grid.constraintsChecker -= modification
+		constraintsChecker -= modification
 	}
-	
+
 	override fun clear() = sandwichConstraints.clear()
-	
+
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val sandwichConstraintDataObjects: Array<HashMap<String, Serializable>>? = mapper["sandwichConstraints"]
@@ -105,28 +109,28 @@ class SandwichConstraintSetter(grid: SudokuGrid) : GridModfier<SandwichConstrain
 			val sandwichConstraint = SandwichConstraint(grid, index, isColumn, sandwichValue)
 			val key = if (isColumn) index else index + 9
 			sandwichConstraints[key] = sandwichConstraint
-			grid.constraintsChecker += sandwichConstraint
+			constraintsChecker += sandwichConstraint
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper["sandwichConstraints"] = sandwichConstraints.values().map { it.dataObject }.toTypedArray()
 	}
-	
-	override fun draw(batch: Batch)
+
+	override fun draw(shapeDrawer: ShapeDrawer)
 	{
 		for (i in 0..8)
-			drawClickableArea(i, 9)
+			drawClickableArea(shapeDrawer, i, 9)
 		for (j in 0..8)
-			drawClickableArea(-1, j)
+			drawClickableArea(shapeDrawer, -1, j)
 	}
-	
-	private fun drawClickableArea(i: Int, j: Int)
+
+	private fun drawClickableArea(shapeDrawer: ShapeDrawer, i: Int, j: Int)
 	{
 		val x = grid.iToX(i.toFloat())
 		val y = grid.jToY(j.toFloat())
 		val isSelected = i == selectI && j == selectJ
-		game.shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
+		shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
 	}
 }

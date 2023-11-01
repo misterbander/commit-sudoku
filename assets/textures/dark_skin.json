@@ -118,8 +118,8 @@
       "name": "set_givens_icon",
       "color": "tint"
     },
-    "soft_thermo_icon_dark": {
-      "name": "soft_thermo_icon",
+    "slow_thermo_icon_dark": {
+      "name": "slow_thermo_icon",
       "color": "tint"
     },
     "sync_icon_dark": {
@@ -278,9 +278,9 @@
       "parent": "toolbar_button",
       "imageUp": "thermo_icon_dark"
     },
-    "soft_thermo_button": {
+    "slow_thermo_button": {
       "parent": "toolbar_button",
-      "imageUp": "soft_thermo_icon_dark"
+      "imageUp": "slow_thermo_icon_dark"
     },
     "empty_thermo_button": {
       "parent": "toolbar_button",

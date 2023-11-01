@@ -12,15 +12,15 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(grid)
+class BorderDecorationSetter(grid: SudokuGrid) : GridModifier<BorderDecoration>(grid)
 {
-	private val borderDecorations: GdxArray<BorderDecoration> = GdxArray()
-	
+	private val borderDecorations = GdxArray<BorderDecoration>()
+
 	private var selectIF = 0F
 	private var selectJF = 0F
-	override val isValidIndex: Boolean
+	private val isValidIndex: Boolean
 		get() = selectIF in 0F..9F && selectJF in 0F..9F
-	
+
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
 		updateSelect(x + grid.cellSize/4, y + grid.cellSize/4)
@@ -38,13 +38,13 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 		else
 			addModification(BorderDecoration(grid, selectIF, selectJF))
 	}
-	
+
 	override fun updateSelect(x: Float, y: Float)
 	{
 		selectIF = grid.xToI(x, 0.5F)
 		selectJF = grid.yToJ(y, 0.5F)
 	}
-	
+
 	private fun findBorderDecoration(): BorderDecoration?
 	{
 		for (borderDecoration: BorderDecoration in borderDecorations)
@@ -54,21 +54,21 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 		}
 		return null
 	}
-	
+
 	override fun addModification(modification: BorderDecoration)
 	{
 		borderDecorations += modification
 		grid.foreDecorations += modification
 	}
-	
+
 	override fun removeModification(modification: BorderDecoration)
 	{
 		borderDecorations -= modification
 		grid.foreDecorations -= modification
 	}
-	
+
 	override fun clear() = borderDecorations.clear()
-	
+
 	override fun readState(mapper: PersistentStateMapper)
 	{
 		val borderDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["borderDecorations"]
@@ -79,7 +79,7 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModfier<BorderDecoration>(g
 			addModification(BorderDecoration(grid, i, j, type))
 		}
 	}
-	
+
 	override fun writeState(mapper: PersistentStateMapper)
 	{
 		mapper["borderDecorations"] = borderDecorations.map { it.dataObject }.toTypedArray()

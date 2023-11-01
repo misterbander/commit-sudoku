@@ -8,10 +8,14 @@ import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.GdxStringBuilder
 
-class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Constraint
+class KillerConstraint(
+	private val grid: SudokuGrid,
+	cage: CageDecoration,
+	private val constraintsChecker: ConstraintsChecker
+) : Constraint
 {
-	private val killerCells: GdxArray<SudokuGrid.Cell> = GdxArray()
-	val cornerTextDecoration: CornerTextDecoration = CornerTextDecoration(grid, cage.topLeftI, cage.topLeftJ, "")
+	private val killerCells = GdxArray<SudokuGrid.Cell>()
+	val cornerTextDecoration = CornerTextDecoration(grid, cage.topLeftI, cage.topLeftJ, "")
 	private var killerStatement: SingleStatement? = null
 	var killerSum = 0
 		set(value)
@@ -20,8 +24,8 @@ class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Con
 			cornerTextDecoration.text = if (value > 0) value.toString() else ""
 			generateKillerStatement()
 		}
-	private val digitCellMap: IntMap<SudokuGrid.Cell> = IntMap()
-	
+	private val digitCellMap = IntMap<SudokuGrid.Cell>()
+
 	init
 	{
 		for (i in cage.mask.indices.reversed())
@@ -33,7 +37,7 @@ class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Con
 			}
 		}
 	}
-	
+
 	private fun generateKillerStatement()
 	{
 		if (killerSum == 0)
@@ -51,15 +55,15 @@ class KillerConstraint(private val grid: SudokuGrid, cage: CageDecoration) : Con
 				statementBuilder.append("[r${9 - cell.j}c${cell.i + 1}]")
 			}
 			statementBuilder.append("=$killerSum")
-			killerStatement = SingleStatement(grid.cells, statementBuilder.toString())
+			killerStatement = SingleStatement(statementBuilder.toString())
 		}
-		grid.constraintsChecker.check()
+		constraintsChecker.check(grid)
 	}
-	
-	override fun check(): Boolean
+
+	override fun check(grid: SudokuGrid): Boolean
 	{
 		var correctFlag = true
-		correctFlag = killerStatement?.check() ?: true && correctFlag
+		correctFlag = killerStatement?.check(grid) ?: true && correctFlag
 		digitCellMap.clear()
 		for (cell: SudokuGrid.Cell in killerCells)
 		{

@@ -1,9 +1,9 @@
 package misterbander.commitsudoku.decorations
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
 import misterbander.commitsudoku.primaryColor
 import misterbander.commitsudoku.scene2d.SudokuGrid
+import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
 class BorderDecoration(
@@ -24,33 +24,32 @@ class BorderDecoration(
 				Type.WHITE_DOT -> Color.WHITE
 			}
 		}
-	
+
 	override val dataObject: HashMap<String, Serializable>
 		get() = hashMapOf(
 			"i" to i,
 			"j" to j,
 			"type" to type,
 		)
-	
+
 	init
 	{
 		this.type = type
 	}
-	
-	override fun draw(batch: Batch)
+
+	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val shapeDrawer = game.shapeDrawer
 		val x = grid.iToX(i)
 		val y = grid.jToY(j)
 		shapeDrawer.setColor(primaryColor)
 		shapeDrawer.circle(x, y, 8F, 2F)
 		shapeDrawer.filledCircle(x, y, 8F, color)
 	}
-	
+
 	enum class Type
 	{
 		BLACK_DOT, GRAY_DOT, WHITE_DOT;
-		
+
 		fun nextType(): Type?
 		{
 			val types = values()
