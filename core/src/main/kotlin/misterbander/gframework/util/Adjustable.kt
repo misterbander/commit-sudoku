@@ -3,7 +3,7 @@ package misterbander.gframework.util
 import com.badlogic.gdx.Gdx
 import kotlin.reflect.KProperty
 
-class AdjustableValue(
+class Adjustable(
 	private var value: Float,
 	private val positiveKey: Int,
 	private val negativeKey: Int,
@@ -27,7 +27,7 @@ class AdjustableValue(
 			println("${property.name} = $value")
 		return value
 	}
-	
+
 	operator fun setValue(from: Any?, property: KProperty<*>, value: Float)
 	{
 		this.value = value
