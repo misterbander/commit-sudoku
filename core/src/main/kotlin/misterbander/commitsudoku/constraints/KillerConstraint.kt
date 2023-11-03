@@ -15,7 +15,7 @@ class KillerConstraint(
 ) : Constraint
 {
 	private val killerCells = GdxArray<SudokuGrid.Cell>()
-	val cornerTextDecoration = CornerTextDecoration(grid, cage.topLeftI, cage.topLeftJ, "")
+	val cornerTextDecoration = CornerTextDecoration(grid, cage.topLeftRow, cage.topLeftCol, "")
 	private var killerStatement: SingleStatement? = null
 	var killerSum = 0
 		set(value)
@@ -52,7 +52,7 @@ class KillerConstraint(
 					first = false
 				else
 					statementBuilder.append("+")
-				statementBuilder.append("[r${9 - cell.j}c${cell.i + 1}]")
+				statementBuilder.append("[r${cell.row + 1}c${cell.col + 1}]")
 			}
 			statementBuilder.append("=$killerSum")
 			killerStatement = SingleStatement(statementBuilder.toString())

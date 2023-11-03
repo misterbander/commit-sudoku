@@ -3,7 +3,6 @@ package misterbander.commitsudoku.decorations
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils.cosDeg
 import com.badlogic.gdx.math.MathUtils.sinDeg
-import com.badlogic.gdx.math.Vector2
 import ktx.collections.*
 import ktx.math.minusAssign
 import ktx.math.vec2
@@ -16,35 +15,36 @@ import misterbander.gframework.util.tempVec
 import space.earlygrey.shapedrawer.JoinType
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-class ArrowDecoration(grid: SudokuGrid, startX: Int, startY: Int) : LineDecoration(grid, startX, startY)
+class ArrowDecoration(grid: SudokuGrid, startRow: Int, startCol: Int) : LineDecoration(grid, startRow, startCol)
 {
-	private val arrowVertices = GdxArray<Vector2>().apply { this += vec2() }
-	private val arrowHeadVertices = GdxArray<Vector2>().apply { repeat(3) { this += vec2() } }
+	private val arrowVertices = gdxArrayOf(vec2())
+	private val arrowHeadVertices = gdxArrayOf(vec2(), vec2(), vec2())
 
-	override fun addLineCell(endI: Int, endJ: Int)
+	override fun generateJoints()
 	{
-		super.addLineCell(endI, endJ)
-		if (lineJoints.size > arrowVertices.size)
-			arrowVertices += vec2()
+		super.generateJoints()
+		arrowVertices.clear()
+		repeat(lineJoints.size) { arrowVertices += vec2() }
 	}
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
 		if (lineJoints.size < 2)
 			return
-		val startDirection = angle(lineJoints[0].first, lineJoints[0].second, lineJoints[1].first, lineJoints[1].second)
-		val endDirection = angle(
-			lineJoints[lineJoints.size - 2].first, lineJoints[lineJoints.size - 2].second,
-			lineJoints.peek().first, lineJoints.peek().second
-		)
+		if (lineJoints.size < 2)
+			return
+		val (startRow0, startCol0) = lineJoints[0]
+		val (startRow1, startCol1) = lineJoints[1]
+		val (endRow0, endCol0) = lineJoints[lineJoints.size - 2]
+		val (endRow1, endCol1) = lineJoints.peek()
+		val startDirection = -angle(startCol0, startRow0, startCol1, startRow1)
+		val endDirection = -angle(endCol0, endRow0, endCol1, endRow1)
 		val offsetX = cosDeg(startDirection)*28F
 		val offsetY = sinDeg(startDirection)*28F
-		// Convert grid coordinates to stage coordinates
-		arrowVertices.forEachIndexed { index, vec2 ->
-			val arrowJoint = lineJoints[index]
-			vec2.set(
-				grid.iToX(arrowJoint.first + 0.5F) + if (index == 0) offsetX else 0F,
-				grid.jToY(arrowJoint.second + 0.5F) + if (index == 0) offsetY else 0F
+		lineJoints.forEachIndexed { index, (jointRow, jointCol) ->
+			arrowVertices[index].set(
+				grid.colToX(jointCol.toFloat() + 0.5F) + if (index == 0) offsetX else 0F,
+				grid.rowToY(jointRow.toFloat() + 0.5F) + if (index == 0) offsetY else 0F
 			)
 		}
 		shapeDrawer.setColor(

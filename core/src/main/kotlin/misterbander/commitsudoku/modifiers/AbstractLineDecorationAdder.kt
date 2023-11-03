@@ -13,17 +13,20 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid) : GridModifier<T>(grid)
+abstract class AbstractLineDecorationAdder<T : LineDecoration>(private val grid: SudokuGrid) : GridModifier<T>
 {
 	private val lineDecorations = GdxArray<T>()
 	private var currentLine: T? = null
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val isValidIndex
-		get() = selectI in -1..9 && selectJ in -1..9
+		get() = selectedRow in -1..9 && selectedCol in -1..9
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return
 		if (button == Input.Buttons.RIGHT)
@@ -32,12 +35,12 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 			return
 		}
 
-		currentLine = newLine(grid, selectI, selectJ)
+		currentLine = newLine(grid, selectedRow, selectedCol)
 		currentLine!!.isHighlighted = true
 		addModification(currentLine!!)
 	}
 
-	abstract fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int): T
+	abstract fun newLine(grid: SudokuGrid, selectRow: Int, selectCol: Int): T
 
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
@@ -56,23 +59,25 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return
-		val cellCenterX = grid.iToX(selectI.toFloat() + 0.5F)
-		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
+		val cellCenterX = grid.colToX(selectedCol.toFloat() + 0.5F)
+		val cellCenterY = grid.rowToY(selectedRow.toFloat() + 0.5F)
 		if (Vector2.dst2(x, y, cellCenterX, cellCenterY) > grid.cellSize*grid.cellSize*0.16F)
 			return
 
 		if (currentLine != null)
-			currentLine!!.addLineCell(selectI, selectJ)
+			currentLine!!.addLineCell(selectedRow, selectedCol)
 	}
 
 	override fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int)
 	{
 		if (count > 1)
 		{
-			updateSelect(x, y)
+			selectedRow = grid.yToRow(y)
+			selectedCol = grid.xToCol(x)
 			tryDelete()
 		}
 	}
@@ -81,7 +86,7 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 	{
 		for (lineDecoration: T in lineDecorations)
 		{
-			if (lineDecoration.isOver(selectI, selectJ))
+			if (lineDecoration.isOver(selectedRow, selectedCol))
 			{
 				removeModification(lineDecoration)
 				return
@@ -110,10 +115,10 @@ abstract class AbstractLineDecorationAdder<T : LineDecoration>(grid: SudokuGrid)
 		lineDecorationDataObjects?.forEach {
 			val lineCells = it["cells"] as Array<Pair<Int, Int>>
 			val lineDecoration = newLine(grid, lineCells[0].first, lineCells[0].second)
-			lineCells.forEachIndexed { index, pair ->
+			lineCells.forEachIndexed { index, (row, col) ->
 				if (index == 0)
 					return@forEachIndexed
-				lineDecoration.addLineCell(pair.first, pair.second)
+				lineDecoration.addLineCell(row, col)
 			}
 			addModification(lineDecoration)
 		}

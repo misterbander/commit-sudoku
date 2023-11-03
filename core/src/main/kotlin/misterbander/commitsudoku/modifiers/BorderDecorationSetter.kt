@@ -12,18 +12,19 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class BorderDecorationSetter(grid: SudokuGrid) : GridModifier<BorderDecoration>(grid)
+class BorderDecorationSetter(private val grid: SudokuGrid) : GridModifier<BorderDecoration>
 {
 	private val borderDecorations = GdxArray<BorderDecoration>()
 
-	private var selectIF = 0F
-	private var selectJF = 0F
+	private var selectedRow = 0F
+	private var selectedCol = 0F
 	private val isValidIndex: Boolean
-		get() = selectIF in 0F..9F && selectJF in 0F..9F
+		get() = selectedRow in 0F..9F && selectedCol in 0F..9F
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x + grid.cellSize/4, y + grid.cellSize/4)
+		selectedRow = grid.yToRow(y - grid.cellSize/4, 0.5F)
+		selectedCol = grid.xToCol(x + grid.cellSize/4, 0.5F)
 		if (!isValidIndex)
 			return
 		val existingBorderDecoration = findBorderDecoration()
@@ -36,20 +37,14 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModifier<BorderDecoration>(
 				existingBorderDecoration.type = nextType
 		}
 		else
-			addModification(BorderDecoration(grid, selectIF, selectJF))
-	}
-
-	override fun updateSelect(x: Float, y: Float)
-	{
-		selectIF = grid.xToI(x, 0.5F)
-		selectJF = grid.yToJ(y, 0.5F)
+			addModification(BorderDecoration(grid, selectedRow, selectedCol))
 	}
 
 	private fun findBorderDecoration(): BorderDecoration?
 	{
 		for (borderDecoration: BorderDecoration in borderDecorations)
 		{
-			if (MathUtils.isEqual(borderDecoration.i, selectIF) && MathUtils.isEqual(borderDecoration.j, selectJF))
+			if (MathUtils.isEqual(borderDecoration.row, selectedRow) && MathUtils.isEqual(borderDecoration.col, selectedCol))
 				return borderDecoration
 		}
 		return null
@@ -73,10 +68,10 @@ class BorderDecorationSetter(grid: SudokuGrid) : GridModifier<BorderDecoration>(
 	{
 		val borderDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["borderDecorations"]
 		borderDecorationDataObjects?.forEach { dataObject ->
-			val i = dataObject["i"] as Float
-			val j = dataObject["j"] as Float
+			val row = dataObject["row"] as Float
+			val col = dataObject["col"] as Float
 			val type = dataObject["type"] as BorderDecoration.Type
-			addModification(BorderDecoration(grid, i, j, type))
+			addModification(BorderDecoration(grid, row, col, type))
 		}
 	}
 

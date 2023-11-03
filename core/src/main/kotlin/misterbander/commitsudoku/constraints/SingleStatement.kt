@@ -32,13 +32,13 @@ class SingleStatement(val statementStr: String) : Statement
 		var correctFlag = true
 		if (isGlobal)
 		{
-			for (i in 0..8)
+			for (row in 0..8)
 			{
-				for (j in 0..8)
+				for (col in 0..8)
 				{
-					if (!grid.evaluate(i, j))
+					if (!grid.evaluate(row, col))
 					{
-						cells[i][j].isCorrect = false
+						cells[row][col].isCorrect = false
 						involvingCells.forEach { it.isCorrect = false }
 						correctFlag = false
 					}
@@ -54,20 +54,20 @@ class SingleStatement(val statementStr: String) : Statement
 	}
 
 	/**
-	 * Evaluate this statement at cell (i, j).
-	 * @param i column number
-	 * @param j row number
+	 * Evaluate this statement at cell (row, col).
+	 * @param row row number, top-most row is 0
+	 * @param col column number, left-most column is 0
 	 * @return True if statement evaluates to true, false otherwise. If statement contains variables that are undefined
 	 * then true is returned.
 	 */
-	private fun SudokuGrid.evaluate(i: Int, j: Int): Boolean
+	private fun SudokuGrid.evaluate(row: Int, col: Int): Boolean
 	{
-		val cell = cells[i][j]
+		val cell = cells[row][col]
 		if (isGlobal && cell.digit == 0)
 			return true
 
 		// Plug variables, or return true if statement contains undefined variables
-		val statementStr2 = plugVariables(i, j) ?: return true
+		val statementStr2 = plugVariables(row, col) ?: return true
 		var predicate: (Double, Double) -> Boolean = { _, _ -> true }
 		var operatorCount = 0
 
@@ -101,18 +101,18 @@ class SingleStatement(val statementStr: String) : Statement
 	}
 
 	/**
-	 * Substitutes all variables such as \[rxcy\], \[~x~y\], `#` etc. with values.
-	 * @param i column number
-	 * @param j row number
+	 * Substitutes all variables such as `[rxcy]`, `[~x~y]`, `#` etc. with values.
+	 * @param row row number, top-most row is 0
+	 * @param col column number, left-most column is 0
 	 * @return Statement with variables plugged in if parsed successfully, null if one of the variables is empty or out of bounds.
 	 * @throws IllegalArgumentException if statement contains syntax errors, i.e. mismatched brackets
 	 */
-	private fun SudokuGrid.plugVariables(i: Int, j: Int): String?
+	private fun SudokuGrid.plugVariables(row: Int, col: Int): String?
 	{
 		involvingCells.clear()
 
 		// Remove all spaces and replace all #s with the cell digit
-		val builder = GdxStringBuilder(statementStr.replace("#".toRegex(), cells[i][j].toString()))
+		val builder = GdxStringBuilder(statementStr.replace("#".toRegex(), cells[row][col].toString()))
 
 		// Plug in variables
 		while (true)
@@ -128,11 +128,11 @@ class SingleStatement(val statementStr: String) : Statement
 			val tildeIndex = builder.indexOf("~")
 			if (end - start == 5 && builder[start + 1] == 'r' && builder[start + 3] == 'c') // [rxcy] notation, absolute cell reference
 			{
-				val r = 8 - builder[start + 2].toString().toInt() + 1
+				val r = builder[start + 2].toString().toInt() - 1
 				val c = builder[start + 4].toString().toInt() - 1
 				if (!isValidCell(r, c))
 					return null
-				val cell = cells[c][r]
+				val cell = cells[r][c]
 				if (cell.digit == 0)
 					return null
 				involvingCells += cell
@@ -146,9 +146,9 @@ class SingleStatement(val statementStr: String) : Statement
 				}
 				val x = builder.substring(tildeIndex + 1, secondTildeIndex).toInt()
 				val y = -builder.substring(secondTildeIndex + 1, end).toInt()
-				if (!isValidCell(i + x, j + y))
+				if (!isValidCell(row + x, col + y))
 					return null
-				val cell = cells[i][j].offset(x, y)
+				val cell = cells[row][col].offset(x, y)
 				if (cell.digit == 0)
 					return null
 				involvingCells += cell
@@ -162,5 +162,5 @@ class SingleStatement(val statementStr: String) : Statement
 		return builder.toString()
 	}
 
-	private fun isValidCell(i: Int, j: Int): Boolean = i in 0..8 && j in 0..8
+	private fun isValidCell(row: Int, col: Int): Boolean = row in 0..8 && col in 0..8
 }

@@ -100,9 +100,9 @@ class SudokuGridKeyListener(
 			grid.modifier!!.navigate(up, down, left, right)
 			return
 		}
-		if (grid.mainSelectedCell == null)
-			grid.select(grid.cells[0][8])
+		if (grid.selectedCell == null)
+			grid.select(grid.cells[0][0])
 		else
-			grid.select(grid.mainSelectedCell!!.offset(right - left, up - down))
+			grid.select(grid.selectedCell!!.offset(down - up, right - left))
 	}
 }

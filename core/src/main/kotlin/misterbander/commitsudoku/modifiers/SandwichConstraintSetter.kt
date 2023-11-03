@@ -13,42 +13,48 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
 
 class SandwichConstraintSetter(
-	grid: SudokuGrid,
+	private val grid: SudokuGrid,
 	private val constraintsChecker: ConstraintsChecker
-) : GridModifier<SandwichConstraint>(grid)
+) : GridModifier<SandwichConstraint>
 {
 	private val sandwichConstraints = GdxMap<Int, SandwichConstraint>()
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val key
-		get() = if (selectI == -1) selectJ + 9 else selectI
+		get() = if (selectedCol == -1) selectedRow + 9 else selectedCol
 	private val isValidIndex
-		get() = selectI == -1 && selectJ in 0..8 || selectJ == 9 && selectI in 0..8
+		get() = selectedRow in 0..8 && selectedCol == -1 || selectedRow == -1 && selectedCol in 0..8
 
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 
-	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) = updateSelect(x, y)
+	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
+	{
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
+	}
 
 	override fun navigate(up: Int, down: Int, left: Int, right: Int)
 	{
 		if (!isValidIndex)
 		{
-			selectI = 0
-			selectJ = 9
+			selectedRow = 0
+			selectedCol = 0
 		}
 
-		val di = right - left
-		val dj = up - down
-		if (di != 0)
+		val dRow = down - up
+		val dCol = right - left
+		if (dRow != 0)
 		{
-			selectI += di
-			selectI = (selectI + 1).mod(10) - 1
-			selectJ = if (selectI == -1) 8 else 9
+			selectedRow += dRow
+			selectedRow = (selectedRow + 1).mod(10) - 1
+			selectedCol = if (selectedRow == -1) 0 else -1
 		}
-		else if (dj != 0)
+		else if (dCol != 0)
 		{
-			selectJ += dj
-			selectJ = (selectJ + 1).mod(10) - 1
-			selectI = if (selectJ == 9) 0 else -1
+			selectedCol += dCol
+			selectedCol = (selectedCol + 1).mod(10) - 1
+			selectedRow = if (selectedCol == -1) 0 else -1
 		}
 	}
 
@@ -76,8 +82,8 @@ class SandwichConstraintSetter(
 		{
 			val newSandwichConstraint = SandwichConstraint(
 				grid,
-				if (selectI == -1) selectJ else selectI,
-				selectJ == 9,
+				if (selectedCol == -1) selectedRow else selectedCol,
+				selectedRow == 9,
 				digit
 			)
 			addModification(newSandwichConstraint)
@@ -120,17 +126,17 @@ class SandwichConstraintSetter(
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		for (i in 0..8)
-			drawClickableArea(shapeDrawer, i, 9)
-		for (j in 0..8)
-			drawClickableArea(shapeDrawer, -1, j)
+		for (row in 0..8)
+			drawClickableArea(shapeDrawer, row, -1)
+		for (col in 0..8)
+			drawClickableArea(shapeDrawer, -1, col)
 	}
 
-	private fun drawClickableArea(shapeDrawer: ShapeDrawer, i: Int, j: Int)
+	private fun drawClickableArea(shapeDrawer: ShapeDrawer, row: Int, col: Int)
 	{
-		val x = grid.iToX(i.toFloat())
-		val y = grid.jToY(j.toFloat())
-		val isSelected = i == selectI && j == selectJ
+		val x = grid.colToX(col.toFloat())
+		val y = grid.rowToY(row + 1F)
+		val isSelected = row == selectedRow && col == selectedCol
 		shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
 	}
 }

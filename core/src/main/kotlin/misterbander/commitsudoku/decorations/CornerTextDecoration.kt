@@ -9,15 +9,15 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 
 class CornerTextDecoration(
 	grid: SudokuGrid,
-	i: Int,
-	j: Int,
+	row: Int,
+	col: Int,
 	text: String,
-) : TextDecoration(grid, i, j, text)
+) : TextDecoration(grid, row, col, text)
 {
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val x = grid.iToX(i + 0.05F)
-		val y = grid.jToY(j + 0.95F)
+		val x = grid.colToX(col + 0.05F)
+		val y = grid.rowToY(row + 0.05F)
 		val textSize = notoSans.textSize(text)
 		shapeDrawer.filledRectangle(x, y - textSize.y, textSize.x, textSize.y, backgroundColor)
 		notoSans.color = color ?: primaryColor

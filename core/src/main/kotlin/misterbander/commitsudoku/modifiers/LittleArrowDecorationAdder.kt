@@ -12,19 +12,22 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModifier<LittleArrowDecoration>(grid)
+class LittleArrowDecorationAdder(private val grid: SudokuGrid) : GridModifier<LittleArrowDecoration>
 {
 	private val arrowMap: Array<Array<LittleArrowDecoration?>> = Array(11) { arrayOfNulls(11) }
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val isValidIndex: Boolean
-		get() = selectI in -1..9 && selectJ in -1..9
+		get() = selectedRow in -1..9 && selectedCol in -1..9
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return
-		val existingLittleArrow = arrowMap[selectI + 1][selectJ + 1]
+		val existingLittleArrow = arrowMap[selectedRow + 1][selectedCol + 1]
 		if (existingLittleArrow != null)
 		{
 			if (button == Input.Buttons.RIGHT)
@@ -35,15 +38,16 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModifier<LittleArrowDec
 			existingLittleArrow.pointingDirection -= 45F
 		}
 		else
-			addModification(LittleArrowDecoration(grid, selectI, selectJ))
+			addModification(LittleArrowDecoration(grid, selectedRow, selectedCol))
 	}
 
 	override fun longPress(x: Float, y: Float): Boolean
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return false
-		val existingLittleArrow = arrowMap[selectI + 1][selectJ + 1]
+		val existingLittleArrow = arrowMap[selectedRow + 1][selectedCol + 1]
 		if (existingLittleArrow != null)
 		{
 			removeModification(existingLittleArrow)
@@ -54,13 +58,13 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModifier<LittleArrowDec
 
 	override fun addModification(modification: LittleArrowDecoration)
 	{
-		arrowMap[modification.i + 1][modification.j + 1] = modification
+		arrowMap[modification.row + 1][modification.col + 1] = modification
 		grid.decorations += modification
 	}
 
 	override fun removeModification(modification: LittleArrowDecoration)
 	{
-		arrowMap[modification.i + 1][modification.j + 1] = null
+		arrowMap[modification.row + 1][modification.col + 1] = null
 		grid.decorations -= modification
 	}
 
@@ -70,10 +74,10 @@ class LittleArrowDecorationAdder(grid: SudokuGrid) : GridModifier<LittleArrowDec
 	{
 		val littleArrowDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["littleArrowDecorations"]
 		littleArrowDecorationDataObjects?.forEach { dataObject ->
-			val i = dataObject["i"] as Int
-			val j = dataObject["j"] as Int
+			val row = dataObject["row"] as Int
+			val col = dataObject["col"] as Int
 			val pointingDirection = dataObject["pointingDirection"] as Float
-			addModification(LittleArrowDecoration(grid, i, j, pointingDirection))
+			addModification(LittleArrowDecoration(grid, row, col, pointingDirection))
 		}
 	}
 

@@ -19,8 +19,8 @@ class ModifyMarkAction(
 {
 	override val dataObject: HashMap<String, Serializable> = hashMapOf(
 		"type" to type,
-		"i" to cell.i,
-		"j" to cell.j,
+		"row" to cell.row,
+		"col" to cell.col,
 		"digit" to digit,
 		"from" to from,
 		"to" to to
@@ -30,7 +30,7 @@ class ModifyMarkAction(
 	{
 		val from = if (inverse) this.to else this.from
 		val to = if (inverse) this.from else this.to
-		info("ModifyMarkAction      | INFO") { "Set cell (${cell.i}, ${cell.j}) ${type.name} mark from $from to $to" }
+		info("ModifyMarkAction      | INFO") { "Set cell (${cell.col}, ${cell.row}) ${type.name} mark from $from to $to" }
 		if (type == Type.CORNER)
 			cell.cornerMarks[digit - 1] = to
 		else if (type == Type.CENTER)

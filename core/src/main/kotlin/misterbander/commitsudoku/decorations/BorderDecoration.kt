@@ -8,8 +8,8 @@ import java.io.Serializable
 
 class BorderDecoration(
 	grid: SudokuGrid,
-	val i: Float,
-	val j: Float,
+	val row: Float,
+	val col: Float,
 	type: Type = Type.BLACK_DOT
 ) : Decoration(grid)
 {
@@ -26,11 +26,7 @@ class BorderDecoration(
 		}
 
 	override val dataObject: HashMap<String, Serializable>
-		get() = hashMapOf(
-			"i" to i,
-			"j" to j,
-			"type" to type,
-		)
+		get() = hashMapOf("row" to row, "col" to col, "type" to type)
 
 	init
 	{
@@ -39,8 +35,8 @@ class BorderDecoration(
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val x = grid.iToX(i)
-		val y = grid.jToY(j)
+		val x = grid.colToX(col)
+		val y = grid.rowToY(row)
 		shapeDrawer.setColor(primaryColor)
 		shapeDrawer.circle(x, y, 8F, 2F)
 		shapeDrawer.filledCircle(x, y, 8F, color)

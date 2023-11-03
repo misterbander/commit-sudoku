@@ -23,8 +23,8 @@ class SandwichConstraint(
 
 	private val textDecoration = TextDecoration(
 		grid,
+		if (isColumn) -1 else index,
 		if (isColumn) index else -1,
-		if (isColumn) 9 else index,
 		sandwichValue.toString()
 	)
 	private var correctFlag = true
@@ -45,14 +45,14 @@ class SandwichConstraint(
 		var sum = 0
 		for (i in 0..8)
 		{
-			val theDigit = if (isColumn) grid.cells[index][i].digit else grid.cells[i][index].digit
+			val digit = if (isColumn) grid.cells[i][index].digit else grid.cells[index][i].digit
 			if (sandwichStart != -1) // Sandwich has begun
 			{
-				if (theDigit != if (sandwichStartNum == 9) 1 else 9) // Keep on adding until the sandwich terminates
+				if (digit != if (sandwichStartNum == 9) 1 else 9) // Keep on adding until the sandwich terminates
 				{
-					if (theDigit == 0)
+					if (digit == 0)
 						break
-					sum += theDigit
+					sum += digit
 				}
 				else
 				{
@@ -60,10 +60,10 @@ class SandwichConstraint(
 					break
 				}
 			}
-			else if (theDigit == 1 || theDigit == 9)
+			else if (digit == 1 || digit == 9)
 			{
 				sandwichStart = i
-				sandwichStartNum = theDigit
+				sandwichStartNum = digit
 			}
 		}
 		if (sandwichStart != -1 && sandwichEnd != -1) // Complete sandwich

@@ -9,9 +9,8 @@ import misterbander.gframework.util.blend
 import misterbander.gframework.util.dashedLine
 import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
-import kotlin.math.min
 
-class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
+class CageDecoration(grid: SudokuGrid, row: Int, col: Int) : Decoration(grid)
 {
 	object Defaults
 	{
@@ -19,8 +18,32 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 	}
 
 	val mask = Array(9) { BooleanArray(9) }
-	var topLeftI = i
-	var topLeftJ = j
+	val topLeftRow: Int
+		get()
+		{
+			for (row in mask.indices)
+			{
+				for (col in mask[row].indices)
+				{
+					if (mask[row][col])
+						return row
+				}
+			}
+			return -1
+		}
+	val topLeftCol: Int
+		get()
+		{
+			for (row in mask.indices)
+			{
+				for (col in mask[row].indices)
+				{
+					if (mask[row][col])
+						return col
+				}
+			}
+			return -1
+		}
 	var killerConstraint: KillerConstraint? = null
 	private val internalColor = Color()
 	override val dataObject: HashMap<String, Serializable>
@@ -28,55 +51,46 @@ class CageDecoration(grid: SudokuGrid, i: Int, j: Int) : Decoration(grid)
 
 	init
 	{
-		addCell(i, j)
+		addCell(row, col)
 	}
 
-	fun addCell(i: Int, j: Int)
+	fun addCell(row: Int, col: Int)
 	{
-		if (mask[i][j])
-			return
-		mask[i][j] = true
-		if (j > topLeftJ)
-		{
-			topLeftI = i
-			topLeftJ = j
-		}
-		else if (j == topLeftJ)
-			topLeftI = min(topLeftI, i)
+		mask[row][col] = true
 	}
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		for (i in mask.indices)
+		for (row in mask.indices)
 		{
-			for (j in mask[i].indices)
+			for (col in mask[row].indices)
 			{
-				if (!mask[i][j])
+				if (!mask[row][col])
 					continue
-				val x = grid.iToX(i.toFloat())
-				val y = grid.jToY(j.toFloat())
+				val x = grid.colToX(col.toFloat())
+				val y = grid.rowToY(row.toFloat() + 1)
 				val size = grid.cellSize
-				val bottomConnected = j > 0 && mask[i][j - 1]
-				val topConnected = j < 8 && mask[i][j + 1]
-				val leftConnected = i > 0 && mask[i - 1][j]
-				val rightConnected = i < 8 && mask[i + 1][j]
-				val bottomLeftConnected = bottomConnected && leftConnected && mask[i - 1][j - 1]
-				val bottomRightConnected = bottomConnected && rightConnected && mask[i + 1][j - 1]
-				val topLeftConnected = topConnected && leftConnected && mask[i - 1][j + 1]
-				val topRightConnected = topConnected && rightConnected && mask[i + 1][j + 1]
+				val topConnected = row > 0 && mask[row - 1][col]
+				val bottomConnected = row < 8 && mask[row + 1][col]
+				val leftConnected = col > 0 && mask[row][col - 1]
+				val rightConnected = col < 8 && mask[row][col + 1]
+				val topLeftConnected = topConnected && leftConnected && mask[row - 1][col - 1]
+				val topRightConnected = topConnected && rightConnected && mask[row - 1][col + 1]
+				val bottomLeftConnected = bottomConnected && leftConnected && mask[row + 1][col - 1]
+				val bottomRightConnected = bottomConnected && rightConnected && mask[row + 1][col + 1]
 
 				internalColor.set(primaryColor)
 				if (color != null)
 					internalColor.blend(color!!, backgroundColor)
 
-				if (!bottomConnected)
-					shapeDrawer.dashedLine(
-						x + 4, y + 4, x + size - 4, y + 4,
-						internalColor, 1F, Defaults.dashSegmentLengths, 2F
-					)
 				if (!topConnected)
 					shapeDrawer.dashedLine(
 						x + 4, y + size - 4, x + size - 4, y + size - 4,
+						internalColor, 1F, Defaults.dashSegmentLengths, 2F
+					)
+				if (!bottomConnected)
+					shapeDrawer.dashedLine(
+						x + 4, y + 4, x + size - 4, y + 4,
 						internalColor, 1F, Defaults.dashSegmentLengths, 2F
 					)
 				if (!leftConnected)

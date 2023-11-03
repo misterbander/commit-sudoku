@@ -12,8 +12,8 @@ class ModifyDigitAction(
 {
 	override val dataObject: HashMap<String, Serializable> = hashMapOf(
 		"type" to Type.DIGIT,
-		"i" to cell.i,
-		"j" to cell.j,
+		"row" to cell.row,
+		"col" to cell.col,
 		"from" to from,
 		"to" to to
 	)
@@ -22,7 +22,7 @@ class ModifyDigitAction(
 	{
 		val from = if (inverse) this.to else this.from
 		val to = if (inverse) this.from else this.to
-		info("ModifyDigitAction     | INFO") { "Set cell (${cell.i}, ${cell.j}) digit from $from to $to" }
+		info("ModifyDigitAction     | INFO") { "Set cell (${cell.col}, ${cell.row}) digit from $from to $to" }
 		cell.digit = to
 	}
 }

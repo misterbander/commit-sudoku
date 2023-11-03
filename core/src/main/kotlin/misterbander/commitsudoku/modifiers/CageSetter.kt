@@ -16,9 +16,9 @@ import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
 class CageSetter(
-	grid: SudokuGrid,
+	private val grid: SudokuGrid,
 	private val constraintsChecker: ConstraintsChecker
-) : GridModifier<CageDecoration>(grid)
+) : GridModifier<CageDecoration>
 {
 	val isKillerModeObservable = Observable(true)
 	var isKillerMode by isKillerModeObservable
@@ -32,42 +32,46 @@ class CageSetter(
 		}
 	private var justRemovedCage = false
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val isValidIndex
-		get() = selectI in 0..8 && selectJ in 0..8
+		get() = selectedRow in 0..8 && selectedCol in 0..8
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		currentCage = null
 		if (!isValidIndex)
 			return
-		val cage = cageMap[selectI][selectJ]
+		val cage = cageMap[selectedRow][selectedCol]
 		if (cage != null)
 		{
 			removeModification(cage)
 			justRemovedCage = true
 		}
-		else if (cageMap[selectI][selectJ] == null && !justRemovedCage)
+		else if (cageMap[selectedRow][selectedCol] == null && !justRemovedCage)
 		{
 			if (currentCage == null)
 			{
-				currentCage = CageDecoration(grid, selectI, selectJ)
+				currentCage = CageDecoration(grid, selectedRow, selectedCol)
 				currentCage!!.color = Color.ORANGE
 				addModification(currentCage!!)
 			}
 			else
-				currentCage!!.addCell(selectI, selectJ)
-			cageMap[selectI][selectJ] = currentCage
+				currentCage!!.addCell(selectedRow, selectedCol)
+			cageMap[selectedRow][selectedCol] = currentCage
 		}
 	}
 
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		updateSelect(x, y)
-		if (!isValidIndex || justRemovedCage || currentCage == null || cageMap[selectI][selectJ] != null)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
+		if (!isValidIndex || justRemovedCage || currentCage == null || cageMap[selectedRow][selectedCol] != null)
 			return
-		currentCage!!.addCell(selectI, selectJ)
-		cageMap[selectI][selectJ] = currentCage
+		currentCage!!.addCell(selectedRow, selectedCol)
+		cageMap[selectedRow][selectedCol] = currentCage
 	}
 
 	override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
@@ -79,7 +83,7 @@ class CageSetter(
 			currentCage!!.killerConstraint = killerConstraint
 			constraintsChecker += killerConstraint
 			grid.decorations += killerConstraint.cornerTextDecoration
-			grid.cells[currentCage!!.topLeftI][currentCage!!.topLeftJ].cornerTextDecorationCount++
+			grid.cells[currentCage!!.topLeftRow][currentCage!!.topLeftCol].cornerTextDecorationCount++
 		}
 	}
 
@@ -107,12 +111,12 @@ class CageSetter(
 
 	override fun removeModification(modification: CageDecoration)
 	{
-		for (i in modification.mask.indices)
+		for (row in modification.mask.indices)
 		{
-			for (j in modification.mask[i].indices)
+			for (col in modification.mask[row].indices)
 			{
-				if (modification.mask[i][j])
-					cageMap[i][j] = null
+				if (modification.mask[row][col])
+					cageMap[row][col] = null
 			}
 		}
 		grid.decorations -= modification
@@ -120,7 +124,8 @@ class CageSetter(
 		{
 			constraintsChecker -= modification.killerConstraint!!
 			grid.decorations -= modification.killerConstraint!!.cornerTextDecoration
-			grid.cells[modification.topLeftI][modification.topLeftJ].cornerTextDecorationCount--
+			grid.cells[modification.topLeftRow][modification.topLeftCol].cornerTextDecorationCount--
+			constraintsChecker.check(grid)
 		}
 	}
 
@@ -134,20 +139,20 @@ class CageSetter(
 			var cageDecoration: CageDecoration? = null
 			val cageMask = dataObject["cageMask"] as Array<BooleanArray>
 			val killerSum = dataObject["killerSum"] as Int
-			for (i in cageMask.indices)
+			for (row in cageMask.indices)
 			{
-				for (j in cageMask[i].indices)
+				for (col in cageMask[row].indices)
 				{
-					if (cageMask[i][j])
+					if (cageMask[row][col])
 					{
 						if (cageDecoration == null)
 						{
-							cageDecoration = CageDecoration(grid, i, j)
+							cageDecoration = CageDecoration(grid, row, col)
 							addModification(cageDecoration)
 						}
 						else
-							cageDecoration.addCell(i, j)
-						cageMap[i][j] = cageDecoration
+							cageDecoration.addCell(row, col)
+						cageMap[row][col] = cageDecoration
 					}
 				}
 			}
@@ -158,7 +163,7 @@ class CageSetter(
 				killerConstraint.killerSum = killerSum
 				constraintsChecker += killerConstraint
 				grid.decorations += killerConstraint.cornerTextDecoration
-				grid.cells[cageDecoration.topLeftI][cageDecoration.topLeftJ].cornerTextDecorationCount++
+				grid.cells[cageDecoration.topLeftCol][cageDecoration.topLeftRow].cornerTextDecorationCount++
 			}
 		}
 	}

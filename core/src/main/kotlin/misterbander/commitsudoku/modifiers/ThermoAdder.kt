@@ -14,23 +14,26 @@ import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
 class ThermoAdder(
-	grid: SudokuGrid,
+	private val grid: SudokuGrid,
 	private val constraintsChecker: ConstraintsChecker
-) : GridModifier<ThermoConstraint>(grid)
+) : GridModifier<ThermoConstraint>
 {
 	var type = ThermoConstraint.Type.NORMAL
 	private val thermoConstraints = GdxArray<ThermoConstraint>()
 	private var currentThermoConstraint: ThermoConstraint? = null
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val isValidIndex
 		get() = if (type == ThermoConstraint.Type.DECORATION)
-			selectI in -1..9 && selectJ in -1..9
+			selectedRow in -1..9 && selectedCol in -1..9
 		else
-			selectI in 0..8 && selectJ in 0..8
+			selectedRow in 0..8 && selectedCol in 0..8
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return
 		if (button == Input.Buttons.RIGHT)
@@ -39,7 +42,7 @@ class ThermoAdder(
 			return
 		}
 
-		currentThermoConstraint = ThermoConstraint(grid, selectI, selectJ, type)
+		currentThermoConstraint = ThermoConstraint(grid, selectedRow, selectedCol, type)
 		addModification(currentThermoConstraint!!)
 	}
 
@@ -63,23 +66,25 @@ class ThermoAdder(
 
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex)
 			return
-		val cellCenterX = grid.iToX(selectI.toFloat() + 0.5F)
-		val cellCenterY = grid.jToY(selectJ.toFloat() + 0.5F)
+		val cellCenterX = grid.colToX(selectedCol.toFloat() + 0.5F)
+		val cellCenterY = grid.rowToY(selectedRow.toFloat() + 0.5F)
 		if (dst2(x, y, cellCenterX, cellCenterY) > grid.cellSize*grid.cellSize*0.16F)
 			return
 
 		if (currentThermoConstraint != null)
-			currentThermoConstraint!!.addThermoCell(selectI, selectJ)
+			currentThermoConstraint!!.addThermoCell(selectedRow, selectedCol)
 	}
 
 	override fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int)
 	{
 		if (count > 1)
 		{
-			updateSelect(x, y)
+			selectedRow = grid.yToRow(y)
+			selectedCol = grid.xToCol(x)
 			tryDeleteThermo()
 		}
 	}
@@ -88,7 +93,7 @@ class ThermoAdder(
 	{
 		for (thermoConstraint: ThermoConstraint in thermoConstraints)
 		{
-			if (thermoConstraint.isOver(selectI, selectJ))
+			if (thermoConstraint.isOver(selectedRow, selectedCol))
 			{
 				removeModification(thermoConstraint)
 				return
@@ -99,7 +104,6 @@ class ThermoAdder(
 	override fun addModification(modification: ThermoConstraint)
 	{
 		thermoConstraints.insert(0, modification)
-
 		constraintsChecker += modification
 	}
 
@@ -121,10 +125,10 @@ class ThermoAdder(
 			val modeStr = it["type"] as String
 			val type = ThermoConstraint.Type.valueOf(modeStr)
 			val thermoConstraint = ThermoConstraint(grid, thermoCells[0].first, thermoCells[0].second, type)
-			thermoCells.forEachIndexed { index, pair ->
+			thermoCells.forEachIndexed { index, (row, col) ->
 				if (index == 0)
 					return@forEachIndexed
-				thermoConstraint.addThermoCell(pair.first, pair.second)
+				thermoConstraint.addThermoCell(row, col)
 			}
 			thermoConstraint.generateThermoStatement()
 			addModification(thermoConstraint)

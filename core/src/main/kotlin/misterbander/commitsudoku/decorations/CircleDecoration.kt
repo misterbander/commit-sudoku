@@ -14,36 +14,36 @@ import java.io.Serializable
 
 class CircleDecoration(
 	grid: SudokuGrid,
-	private val i1: Int,
-	private val j1: Int,
+	private val row1: Int,
+	private val col1: Int,
 	private val radius: Float,
 ) : Decoration(grid)
 {
-	var i2: Int = i1
-	var j2: Int = j1
+	var row2: Int = row1
+	var col2: Int = col1
 	override val dataObject: HashMap<String, Serializable>
-		get() = hashMapOf("i1" to i1, "j1" to j1, "i2" to i2, "j2" to j2, "radius" to radius)
+		get() = hashMapOf("row1" to row1, "col1" to col1, "row2" to row2, "col2" to col2, "radius" to radius)
 
 	private val vertices = GdxArray<Vector2>().apply {
 		repeat(122) { this += vec2() }
 	}
 
-	fun isOver(i: Int, j: Int): Boolean =
+	fun isOver(row: Int, col: Int): Boolean =
 		Intersector.distanceSegmentPoint(
-			i1.toFloat(),
-			j1.toFloat(),
-			i2.toFloat(),
-			j2.toFloat(),
-			i.toFloat(),
-			j.toFloat()
+			col1.toFloat(),
+			row1.toFloat(),
+			col2.toFloat(),
+			row2.toFloat(),
+			col.toFloat(),
+			row.toFloat()
 		) < radius/grid.cellSize
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val x1 = grid.iToX(i1 + 0.5F)
-		val y1 = grid.jToY(j1 + 0.5F)
-		val x2 = grid.iToX(i2 + 0.5F)
-		val y2 = grid.jToY(j2 + 0.5F)
+		val x1 = grid.colToX(col1 + 0.5F)
+		val y1 = grid.rowToY(row1 + 0.5F)
+		val x2 = grid.colToX(col2 + 0.5F)
+		val y2 = grid.rowToY(row2 + 0.5F)
 		for (i in 0 until vertices.size)
 		{
 			val dir = angle(x1, y1, x2, y2)

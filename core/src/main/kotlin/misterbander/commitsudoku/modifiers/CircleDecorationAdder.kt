@@ -15,20 +15,23 @@ import kotlin.collections.toTypedArray
 import kotlin.math.abs
 import kotlin.math.max
 
-class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(grid)
+class CircleDecorationAdder(private val grid: SudokuGrid) : GridModifier<CircleDecoration>
 {
 	private val circleDecorations = GdxArray<CircleDecoration>()
 	private var currentCircleDecoration: CircleDecoration? = null
 	private var justRemovedCircle = false
 
-	private var startI = -1
-	private var startJ = -1
+	private var selectedRow = 0
+	private var selectedCol = 0
+	private var startRow = -1
+	private var startCol = -1
 	private val isValidIndex
-		get() = selectI in -1..9 && selectJ in -1..9
+		get() = selectedRow in -1..9 && selectedCol in -1..9
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		currentCircleDecoration = null
 		if (!isValidIndex)
 			return
@@ -40,11 +43,11 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(g
 		}
 		else
 		{
-			currentCircleDecoration = CircleDecoration(grid, selectI, selectJ, 28F)
+			currentCircleDecoration = CircleDecoration(grid, selectedRow, selectedCol, 28F)
 			currentCircleDecoration!!.color = Color.ORANGE
 			addModification(currentCircleDecoration!!)
-			startI = selectI
-			startJ = selectJ
+			startRow = selectedRow
+			startCol = selectedCol
 		}
 	}
 
@@ -52,65 +55,66 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(g
 	{
 		currentCircleDecoration?.color = null
 		currentCircleDecoration = null
-		startI = -1
-		startJ = -1
+		startRow = -1
+		startCol = -1
 	}
 
 	override fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		if (!isValidIndex || currentCircleDecoration == null)
 			return
-		val d = max(abs(selectI - startI), abs(selectJ - startJ))
-		val angleFromStart = angle(startI, startJ, selectI, selectJ)
-		val snappedI: Int
-		val snappedJ: Int
+		val d = max(abs(selectedCol - startCol), abs(selectedRow - startRow))
+		val angleFromStart = 360 - angle(startCol, startRow, selectedCol, selectedRow)
+		val snappedRow: Int
+		val snappedCol: Int
 
 		if (angleFromStart < 22.5F || angleFromStart >= 337.5F)
 		{
-			snappedI = startI + d
-			snappedJ = startJ
+			snappedRow = startRow
+			snappedCol = startCol + d
 		}
 		else if (angleFromStart < 67.5F)
 		{
-			snappedI = startI + d
-			snappedJ = startJ + d
+			snappedRow = startRow - d
+			snappedCol = startCol + d
 		}
 		else if (angleFromStart < 112.5F)
 		{
-			snappedI = startI
-			snappedJ = startJ + d
+			snappedRow = startRow - d
+			snappedCol = startCol
 		}
 		else if (angleFromStart < 157.5F)
 		{
-			snappedI = startI - d
-			snappedJ = startJ + d
+			snappedRow = startRow - d
+			snappedCol = startCol - d
 		}
 		else if (angleFromStart < 202.5F)
 		{
-			snappedI = startI - d
-			snappedJ = startJ
+			snappedRow = startRow
+			snappedCol = startCol - d
 		}
 		else if (angleFromStart < 247.5F)
 		{
-			snappedI = startI - d
-			snappedJ = startJ - d
+			snappedRow = startRow + d
+			snappedCol = startCol - d
 		}
 		else if (angleFromStart < 292.5F)
 		{
-			snappedI = startI
-			snappedJ = startJ - d
+			snappedRow = startRow + d
+			snappedCol = startCol
 		}
 		else
 		{
-			snappedI = startI + d
-			snappedJ = startJ - d
+			snappedRow = startRow + d
+			snappedCol = startCol + d
 		}
 
-		if (snappedI in -1..9 && snappedJ in -1..9)
+		if (snappedRow in -1..9 && snappedCol in -1..9)
 		{
-			currentCircleDecoration!!.i2 = snappedI
-			currentCircleDecoration!!.j2 = snappedJ
+			currentCircleDecoration!!.row2 = snappedRow
+			currentCircleDecoration!!.col2 = snappedCol
 		}
 	}
 
@@ -118,7 +122,7 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(g
 	{
 		for (circleDecoration: CircleDecoration in circleDecorations)
 		{
-			if (circleDecoration.isOver(selectI, selectJ))
+			if (circleDecoration.isOver(selectedRow, selectedCol))
 				return circleDecoration
 		}
 		return null
@@ -142,13 +146,13 @@ class CircleDecorationAdder(grid: SudokuGrid) : GridModifier<CircleDecoration>(g
 	{
 		val circleDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["circleDecorations"]
 		circleDecorationDataObjects?.forEach { dataObject ->
-			val i1 = dataObject["i1"] as Int
-			val j1 = dataObject["j1"] as Int
-			val i2 = dataObject["i2"] as Int
-			val j2 = dataObject["j2"] as Int
-			val circleDecoration = CircleDecoration(grid, i1, j1, 28F)
-			circleDecoration.i2 = i2
-			circleDecoration.j2 = j2
+			val row1 = dataObject["row1"] as Int
+			val col1 = dataObject["col1"] as Int
+			val row2 = dataObject["row2"] as Int
+			val col2 = dataObject["col2"] as Int
+			val circleDecoration = CircleDecoration(grid, row1, col1, 28F)
+			circleDecoration.row2 = row2
+			circleDecoration.col2 = col2
 			circleDecorations.insert(0, circleDecoration)
 			grid.decorations += circleDecoration
 		}

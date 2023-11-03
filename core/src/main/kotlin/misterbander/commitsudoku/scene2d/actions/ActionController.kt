@@ -71,9 +71,9 @@ class ActionController
 				for (dataObject in dataObjectGroup)
 				{
 					val type = dataObject["type"] as ModifyCellAction.Type
-					val i = dataObject["i"] as Int
-					val j = dataObject["j"] as Int
-					val cell = grid.cells[i][j]
+					val row = dataObject["row"] as Int
+					val col = dataObject["col"] as Int
+					val cell = grid.cells[row][col]
 					when (type)
 					{
 						ModifyCellAction.Type.DIGIT ->

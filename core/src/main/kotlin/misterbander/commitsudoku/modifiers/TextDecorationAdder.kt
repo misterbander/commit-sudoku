@@ -16,18 +16,24 @@ import java.io.Serializable
 import kotlin.collections.map
 import kotlin.collections.toTypedArray
 
-class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGrid) : GridModifier<TextDecoration>(grid)
+class TextDecorationAdder(
+	private val screen: CommitSudokuScreen,
+	private val grid: SudokuGrid
+) : GridModifier<TextDecoration>
 {
 	private val textDecorations = GdxSet<TextDecoration>()
 
+	private var selectedRow = 0
+	private var selectedCol = 0
 	private val isValidIndex
-		get() = selectI in -1..9 && selectJ in -1..9 && (selectI == -1 || selectI == 9 || selectJ == -1 || selectJ == 9)
+		get() = selectedRow in -1..9 && selectedCol in -1..9 && (selectedRow == -1 || selectedRow == 9 || selectedCol == -1 || selectedCol == 9)
 
 	private val gray = Color(0.5F, 0.5F, 0.5F, 0.4F)
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 	{
-		updateSelect(x, y)
+		selectedRow = grid.yToRow(y)
+		selectedCol = grid.xToCol(x)
 		enter()
 	}
 
@@ -35,27 +41,27 @@ class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGr
 	{
 		if (!isValidIndex)
 		{
-			selectI = -1
-			selectJ = 9
+			selectedRow = -1
+			selectedCol = -1
 		}
 
-		val di = right - left
-		val dj = up - down
-		if (di != 0)
+		val dRow = down - up
+		val dCol = right - left
+		if (dRow != 0)
 		{
-			if (selectJ in 0..8)
-				selectI = if (selectI == 9) -1 else 9
+			if (selectedCol in 0..8)
+				selectedRow = if (selectedRow == 9) -1 else 9
 			else
-				selectI += di
-			selectI = (selectI + 1).mod(11) - 1
+				selectedRow += dRow
+			selectedRow = (selectedRow + 1).mod(11) - 1
 		}
-		else if (dj != 0)
+		else if (dCol != 0)
 		{
-			if (selectI in 0..8)
-				selectJ = if (selectJ == 9) -1 else 9
+			if (selectedRow in 0..8)
+				selectedCol = if (selectedCol == 9) -1 else 9
 			else
-				selectJ += dj
-			selectJ = (selectJ + 1).mod(11) - 1
+				selectedCol += dCol
+			selectedCol = (selectedCol + 1).mod(11) - 1
 		}
 	}
 
@@ -71,7 +77,7 @@ class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGr
 			SingleInputDialog(screen, "Add Text Decoration", "Enter Text:") { result ->
 				if (result.isEmpty())
 					return@SingleInputDialog
-				addModification(TextDecoration(grid, selectI, selectJ, result))
+				addModification(TextDecoration(grid, selectedRow, selectedCol, result))
 			}.show(grid.stage)
 		}
 	}
@@ -80,7 +86,7 @@ class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGr
 	{
 		for (textDecoration: TextDecoration in textDecorations)
 		{
-			if (textDecoration.i == selectI && textDecoration.j == selectJ)
+			if (textDecoration.col == selectedCol && textDecoration.row == selectedRow)
 				return textDecoration
 		}
 		return null
@@ -104,10 +110,10 @@ class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGr
 	{
 		val textDecorationDataObjects: Array<HashMap<String, Serializable>>? = mapper["textDecorations"]
 		textDecorationDataObjects?.forEach { dataObject ->
-			val i = dataObject["i"] as Int
-			val j = dataObject["j"] as Int
+			val row = dataObject["row"] as Int
+			val col = dataObject["col"] as Int
 			val text = dataObject["text"] as String
-			addModification(TextDecoration(grid, i, j, text))
+			addModification(TextDecoration(grid, row, col, text))
 		}
 	}
 
@@ -118,23 +124,23 @@ class TextDecorationAdder(private val screen: CommitSudokuScreen, grid: SudokuGr
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		for (i in -1..9)
+		for (row in -1..9)
 		{
-			drawClickableArea(shapeDrawer, i, -1)
-			drawClickableArea(shapeDrawer, i, 9)
+			drawClickableArea(shapeDrawer, row, -1)
+			drawClickableArea(shapeDrawer, row, 9)
 		}
-		for (j in 0..8)
+		for (col in 0..8)
 		{
-			drawClickableArea(shapeDrawer, -1, j)
-			drawClickableArea(shapeDrawer, 9, j)
+			drawClickableArea(shapeDrawer, -1, col)
+			drawClickableArea(shapeDrawer, 9, col)
 		}
 	}
 
-	private fun drawClickableArea(shapeDrawer: ShapeDrawer, i: Int, j: Int)
+	private fun drawClickableArea(shapeDrawer: ShapeDrawer, row: Int, col: Int)
 	{
-		val x = grid.iToX(i.toFloat())
-		val y = grid.jToY(j.toFloat())
-		val isSelected = i == selectI && j == selectJ
+		val x = grid.colToX(col.toFloat())
+		val y = grid.rowToY(row + 1F)
+		val isSelected = row == selectedRow && col == selectedCol
 		shapeDrawer.filledRectangle(x + 8, y + 8, 48F, 48F, if (isSelected) selectedColor else gray)
 	}
 }

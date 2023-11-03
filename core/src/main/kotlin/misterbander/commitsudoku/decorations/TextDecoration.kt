@@ -9,18 +9,18 @@ import java.io.Serializable
 
 open class TextDecoration(
 	grid: SudokuGrid,
-	val i: Int,
-	val j: Int,
+	val row: Int,
+	val col: Int,
 	var text: String
 ) : Decoration(grid)
 {
 	override val dataObject: HashMap<String, Serializable>
-		get() = hashMapOf("i" to i, "j" to j, "text" to text)
+		get() = hashMapOf("row" to row, "col" to col, "text" to text)
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val x = grid.iToX(i + 0.5F)
-		val y = grid.jToY(j + 0.5F)
+		val x = grid.colToX(col + 0.5F)
+		val y = grid.rowToY(row + 0.5F)
 		notoSansLarge.color = color ?: primaryColor
 		notoSansLarge.drawCenter(shapeDrawer.batch, text, x, y)
 	}

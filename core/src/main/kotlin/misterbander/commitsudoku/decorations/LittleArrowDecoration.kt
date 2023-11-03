@@ -3,7 +3,6 @@ package misterbander.commitsudoku.decorations
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.MathUtils.cosDeg
 import com.badlogic.gdx.math.MathUtils.sinDeg
-import com.badlogic.gdx.math.Vector2
 import ktx.collections.*
 import ktx.math.minusAssign
 import ktx.math.vec2
@@ -16,12 +15,12 @@ import java.io.Serializable
 
 class LittleArrowDecoration(
 	grid: SudokuGrid,
-	val i: Int,
-	val j: Int,
+	val row: Int,
+	val col: Int,
 	pointingDirection: Float = 315F
 ) : Decoration(grid)
 {
-	private val arrowHeadVertices = GdxArray<Vector2>().apply { repeat(3) { this += vec2() } }
+	private val arrowHeadVertices = gdxArrayOf(vec2(), vec2(), vec2())
 	var pointingDirection = pointingDirection
 		set(value)
 		{
@@ -29,17 +28,17 @@ class LittleArrowDecoration(
 		}
 
 	override val dataObject: HashMap<String, Serializable>
-		get() = hashMapOf("i" to i, "j" to j, "pointingDirection" to pointingDirection)
+		get() = hashMapOf("row" to row, "col" to col, "pointingDirection" to pointingDirection)
 
 	override fun draw(shapeDrawer: ShapeDrawer)
 	{
-		val x = grid.iToX(i + 0.5F) + when
+		val x = grid.colToX(col + 0.5F) + when
 		{
 			MathUtils.isEqual(cosDeg(pointingDirection), 0F) -> 0F
 			cosDeg(pointingDirection) > 0 -> 28F
 			else -> -28F
 		}
-		val y = grid.jToY(j + 0.5F) + when
+		val y = grid.rowToY(row + 0.5F) + when
 		{
 			MathUtils.isEqual(sinDeg(pointingDirection), 0F) -> 0F
 			sinDeg(pointingDirection) > 0 -> 28F

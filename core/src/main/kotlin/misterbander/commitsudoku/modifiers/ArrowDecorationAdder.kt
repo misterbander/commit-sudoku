@@ -5,8 +5,8 @@ import misterbander.commitsudoku.scene2d.SudokuGrid
 
 class ArrowDecorationAdder(grid: SudokuGrid) : AbstractLineDecorationAdder<ArrowDecoration>(grid)
 {
-	override fun newLine(grid: SudokuGrid, selectI: Int, selectJ: Int): ArrowDecoration =
-		ArrowDecoration(grid, selectI, selectJ)
+	override fun newLine(grid: SudokuGrid, selectRow: Int, selectCol: Int): ArrowDecoration =
+		ArrowDecoration(grid, selectRow, selectCol)
 
 	override fun dataObjectKey(): String = "arrowDecorations"
 }

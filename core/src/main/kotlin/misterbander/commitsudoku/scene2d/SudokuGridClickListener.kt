@@ -7,27 +7,27 @@ import ktx.actors.setKeyboardFocus
 
 class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 {
-	private var selectI = -1
-	private var selectJ = -1
+	private var selectRow = -1
+	private var selectCol = -1
 	private var isUnselecting = false
 
 	override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean
 	{
 		super.touchDown(event, x, y, pointer, button)
 		grid.setKeyboardFocus(true)
-		selectI = grid.xToI(x)
-		selectJ = grid.yToJ(y)
+		selectRow = grid.yToRow(y)
+		selectCol = grid.xToCol(x)
 		if (pointer == 0 && !UIUtils.shift() && !UIUtils.ctrl())
 			grid.unselect()
 		val modifier = grid.modifier
 		if (modifier == null)
 		{
 			isUnselecting =
-				selectI in 0..8 && selectJ in 0..8 && UIUtils.ctrl() && grid.cells[selectI][selectJ].isSelected
+				selectRow in 0..8 && selectCol in 0..8 && UIUtils.ctrl() && grid.cells[selectRow][selectCol].isSelected
 			if (isUnselecting)
-				grid.unselect(selectI, selectJ)
+				grid.unselect(selectRow, selectCol)
 			else
-				grid.select(selectI, selectJ)
+				grid.select(selectRow, selectCol)
 		}
 		else
 			modifier.touchDown(event, x, y, pointer, button)
@@ -49,15 +49,15 @@ class SudokuGridClickListener(private val grid: SudokuGrid) : ClickListener(-1)
 			return
 		}
 
-		val i = grid.xToI(x)
-		val j = grid.yToJ(y)
-		if (i == selectI && j == selectJ)
+		val row = grid.yToRow(y)
+		val col = grid.xToCol(x)
+		if (row == selectRow && col == selectCol)
 			return
-		selectI = i
-		selectJ = j
+		selectRow = row
+		selectCol = col
 		if (isUnselecting)
-			grid.unselect(selectI, selectJ)
+			grid.unselect(selectRow, selectCol)
 		else
-			grid.select(selectI, selectJ)
+			grid.select(selectRow, selectCol)
 	}
 }

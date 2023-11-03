@@ -33,6 +33,7 @@ import misterbander.gframework.util.PersistentStateMapper
 import misterbander.gframework.util.drawCenter
 import space.earlygrey.shapedrawer.ShapeDrawer
 import java.io.Serializable
+import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -46,12 +47,12 @@ class SudokuGrid(
 	private val shapeDrawer: ShapeDrawer
 		get() = screen.game.shapeDrawer
 
-	val cells = Array(9) { i -> Array(9) { j -> Cell(i, j) } }
+	val cells = Array(9) { row -> Array(9) { col -> Cell(row, col) } }
 	// Assuming width = height
 	val cellSize: Float
 		get() = width/9
 
-	var mainSelectedCell: Cell? = null
+	var selectedCell: Cell? = null
 		private set
 	var completionCharmT = 0F
 		private set
@@ -95,41 +96,41 @@ class SudokuGrid(
 			completionCharmT = 0F
 	}
 
-	fun iToX(i: Float): Float = x + i*cellSize
+	fun colToX(col: Float): Float = x + col*cellSize
 
-	fun jToY(j: Float): Float = y + j*cellSize
+	fun rowToY(row: Float): Float = y + (9 - row)*cellSize
 
-	fun xToI(x: Float): Int = floor(x/cellSize).toInt()
+	fun xToCol(x: Float): Int = floor(x/cellSize).toInt()
 
-	fun xToI(x: Float, precision: Float): Float = floor(x/(cellSize*precision))*precision
+	fun xToCol(x: Float, precision: Float): Float = floor(x/(cellSize*precision))*precision
 
-	fun yToJ(y: Float): Int = floor(y/cellSize).toInt()
+	fun yToRow(y: Float): Int = 9 - ceil(y/cellSize).toInt()
 
-	fun yToJ(y: Float, precision: Float): Float = floor(y/(cellSize*precision))*precision
+	fun yToRow(y: Float, precision: Float): Float = 9 - ceil(y/(cellSize*precision))*precision
 
-	fun select(i: Int, j: Int)
+	fun select(row: Int, col: Int)
 	{
-		if (i in 0..8 && j in 0..8)
-			select(cells[i][j])
+		if (row in 0..8 && col in 0..8)
+			select(cells[row][col])
 	}
 
 	fun select(cell: Cell)
 	{
-		mainSelectedCell = cell
+		selectedCell = cell
 		cell.isSelected = true
 	}
 
 	fun unselect() = cells.forEach { it.forEach { cell -> cell.isSelected = false } }
 
-	fun unselect(i: Int, j: Int)
+	fun unselect(row: Int, col: Int)
 	{
-		if (i in 0..8 && j in 0..8)
-			unselect(cells[i][j])
+		if (row in 0..8 && col in 0..8)
+			unselect(cells[row][col])
 	}
 
 	private fun unselect(cell: Cell)
 	{
-		mainSelectedCell = cell
+		selectedCell = cell
 		cell.isSelected = false
 	}
 
@@ -171,7 +172,7 @@ class SudokuGrid(
 			modifier!!.typedDigit(digit)
 			return
 		}
-		val digit = max(digit, 0)
+		val nonNegativeDigit = max(digit, 0)
 
 		val selectedCells = getSelectedCells()
 		if (selectedCells.isEmpty())
@@ -182,7 +183,7 @@ class SudokuGrid(
 		when
 		{
 			// Clear cell except color
-			digit <= 0 && inputMode != InputMode.COLOR ->
+			nonNegativeDigit <= 0 && inputMode != InputMode.COLOR ->
 			{
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
@@ -205,7 +206,7 @@ class SudokuGrid(
 				var to = false
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
-					if (cell.digit == 0 && !cell.cornerMarks[digit - 1])
+					if (cell.digit == 0 && !cell.cornerMarks[nonNegativeDigit - 1])
 					{
 						to = true
 						break
@@ -214,7 +215,12 @@ class SudokuGrid(
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CORNER, digit, to = to)
+						modifyCellActions += ModifyMarkAction(
+							cell,
+							ModifyCellAction.Type.CORNER,
+							nonNegativeDigit,
+							to = to
+						)
 				}
 			}
 			// Insert center mark
@@ -224,7 +230,7 @@ class SudokuGrid(
 				var to = false
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
-					if (cell.digit == 0 && !cell.centerMarks[digit - 1])
+					if (cell.digit == 0 && !cell.centerMarks[nonNegativeDigit - 1])
 					{
 						to = true
 						break
@@ -233,14 +239,19 @@ class SudokuGrid(
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
 					if (!cell.isGiven)
-						modifyCellActions += ModifyMarkAction(cell, ModifyCellAction.Type.CENTER, digit, to = to)
+						modifyCellActions += ModifyMarkAction(
+							cell,
+							ModifyCellAction.Type.CENTER,
+							nonNegativeDigit,
+							to = to
+						)
 				}
 			}
 			// Highlight color
 			inputMode == InputMode.COLOR -> selectedCells.forEach { cell ->
 				modifyCellActions += ModifyColorAction(
 					cell,
-					to = digit
+					to = nonNegativeDigit
 				)
 			}
 			// Insert digit
@@ -250,7 +261,7 @@ class SudokuGrid(
 				for (cell: SudokuGrid.Cell in selectedCells)
 				{
 					if (!cell.isGiven)
-						modifyCellActions += ModifyDigitAction(cell, to = digit)
+						modifyCellActions += ModifyDigitAction(cell, to = nonNegativeDigit)
 				}
 			}
 		}
@@ -399,10 +410,10 @@ class SudokuGrid(
 	}
 
 	/**
-	 * @property i 0 based horizontal index of the cell
-	 * @property j 0 based vertical index of the cell
+	 * @property row row number, the top-most row is 0
+	 * @property col column number, the left-most column is 0
 	 */
-	inner class Cell(val i: Int, val j: Int) : Serializable
+	inner class Cell(val row: Int, val col: Int) : Serializable
 	{
 		var digit = 0
 		var colorCode = 0
@@ -415,17 +426,11 @@ class SudokuGrid(
 		private val white: Color = Color.WHITE.cpy()
 		private val lightGray: Color = Color.LIGHT_GRAY.cpy()
 
-		private val x
-			get() = iToX(i.toFloat())
-
-		private val y
-			get() = jToY(j.toFloat())
-
-		fun offset(iOffset: Int, jOffset: Int): Cell
+		fun offset(row: Int, col: Int): Cell
 		{
-			val i2 = (i + iOffset).mod(9)
-			val j2 = (j + jOffset).mod(9)
-			return cells[i2][j2]
+			val row2 = (this.row + row).mod(9)
+			val col2 = (this.col + col).mod(9)
+			return cells[row2][col2]
 		}
 
 		fun reset()
@@ -444,29 +449,29 @@ class SudokuGrid(
 
 			val highlightColorsMap = highlightColors
 
-			if (constraintsChecker.x && (i == j || i == 8 - j)) // Color X
+			if (constraintsChecker.x && (row == col || row == 8 - col)) // Color X
 			{
 				shapeDrawer.setColor(highlightColorsMap[9])
-				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
+				shapeDrawer.filledRectangle(colToX(col.toFloat()), rowToY(row + 1F), cellSize, cellSize)
 			}
 
 			val highlightColor: Color? = highlightColorsMap[colorCode]
 			if (highlightColor != null) // Draw highlight
 			{
 				shapeDrawer.setColor(highlightColor)
-				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
+				shapeDrawer.filledRectangle(colToX(col.toFloat()), rowToY(row + 1F), cellSize, cellSize)
 			}
 
 			if (isSelected) // Draw selection
 			{
 				shapeDrawer.setColor(selectedColor)
-				shapeDrawer.filledRectangle(x, y, cellSize, cellSize)
+				shapeDrawer.filledRectangle(colToX(col.toFloat()), rowToY(row + 1F), cellSize, cellSize)
 			}
 
 			if (digit != 0) // Draw digits
 			{
 				notoSansLarge.color = if (isGiven) primaryColor else if (isCorrect) nonGivenColor else Color.RED
-				notoSansLarge.drawCenter(batch, digit.toString(), x + cellSize/2, y + cellSize/2)
+				notoSansLarge.drawCenter(batch, digit.toString(), colToX(col + 0.5F), rowToY(row + 0.5F))
 			}
 			else // Draw marks
 			{
@@ -479,41 +484,49 @@ class SudokuGrid(
 				{
 					if (cornerMarks[k])
 					{
-						var drawX = iToX(i.toFloat())
-						var drawY = jToY(j.toFloat() + 1)
+						var drawX: Float
+						var drawY: Float
 						when (markCount)
 						{
 							1 ->
 							{
-								drawX += 5*cellSize/6; drawY -= cellSize/6
+								drawX = colToX(col + 5/6F)
+								drawY = rowToY(row + 1/6F)
 							}
 							2 ->
 							{
-								drawX += cellSize/6; drawY -= 5*cellSize/6
+								drawX = colToX(col + 1/6F)
+								drawY = rowToY(row + 5/6F)
 							}
 							3 ->
 							{
-								drawX += 5*cellSize/6; drawY -= 5*cellSize/6
+								drawX = colToX(col + 5/6F)
+								drawY = rowToY(row + 5/6F)
 							}
 							4 ->
 							{
-								drawX += cellSize/2; drawY -= cellSize/6
+								drawX = colToX(col + 1/2F)
+								drawY = rowToY(row + 1/6F)
 							}
 							5 ->
 							{
-								drawX += cellSize/6; drawY -= cellSize/2
+								drawX = colToX(col + 1/6F)
+								drawY = rowToY(row + 1/2F)
 							}
 							6 ->
 							{
-								drawX += 5*cellSize/6; drawY -= cellSize/2
+								drawX = colToX(col + 5/6F)
+								drawY = rowToY(row + 1/2F)
 							}
 							7 ->
 							{
-								drawX += cellSize/2; drawY -= 5*cellSize/6
+								drawX = colToX(col + 1/2F)
+								drawY = rowToY(row + 5/6F)
 							}
 							else ->
 							{
-								drawX += cellSize/6; drawY -= cellSize/6
+								drawX = colToX(col + 1/6F)
+								drawY = rowToY(row + 1/6F)
 							}
 						}
 						val cornerMarkStr = (k + 1).toString()
@@ -532,15 +545,15 @@ class SudokuGrid(
 				notoSans.drawCenter(
 					batch,
 					centerMarkBuilder.toString(),
-					iToX(i.toFloat() + 0.5F),
-					jToY(j.toFloat() + 0.5F)
+					colToX(col.toFloat() + 0.5F),
+					rowToY(row.toFloat() + 0.5F)
 				)
 			}
 
 			// Draw completion charm
 			if (screen.isFinished)
 			{
-				val shift = (i + j)/16F
+				val shift = (row + col)/16F
 				var t = MathUtils.clamp((completionCharmT - shift)*2, 0F, 1F)
 				if (t > 0.5F)
 					t = 1 - t

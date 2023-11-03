@@ -1,42 +1,32 @@
 package misterbander.commitsudoku.modifiers
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import misterbander.commitsudoku.scene2d.SudokuGrid
 import misterbander.gframework.util.PersistentState
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-abstract class GridModifier<T : GridModification>(protected val grid: SudokuGrid) : PersistentState
+interface GridModifier<T : GridModification> : PersistentState
 {
-	protected var selectI = 0
-	protected var selectJ = 0
+	fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
 
-	abstract fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int)
+	fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) = Unit
 
-	open fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) = Unit
+	fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) = Unit
 
-	open fun touchDragged(event: InputEvent, x: Float, y: Float, pointer: Int) = Unit
+	fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int) = Unit
 
-	open fun tap(event: InputEvent, x: Float, y: Float, count: Int, button: Int) = Unit
+	fun longPress(x: Float, y: Float): Boolean = false
 
-	open fun longPress(x: Float, y: Float): Boolean = false
+	fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0) = Unit
 
-	protected open fun updateSelect(x: Float, y: Float)
-	{
-		selectI = grid.xToI(x)
-		selectJ = grid.yToJ(y)
-	}
+	fun enter() = Unit
 
-	open fun navigate(up: Int = 0, down: Int = 0, left: Int = 0, right: Int = 0) = Unit
+	fun typedDigit(digit: Int) = Unit
 
-	open fun enter() = Unit
+	fun addModification(modification: T)
 
-	open fun typedDigit(digit: Int) = Unit
+	fun removeModification(modification: T)
 
-	abstract fun addModification(modification: T)
+	fun clear()
 
-	abstract fun removeModification(modification: T)
-
-	abstract fun clear()
-
-	open fun draw(shapeDrawer: ShapeDrawer) = Unit
+	fun draw(shapeDrawer: ShapeDrawer) = Unit
 }
