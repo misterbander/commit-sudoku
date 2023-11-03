@@ -1,30 +1,21 @@
 package misterbander.commitsudoku.constraints
 
-import com.badlogic.gdx.utils.IntMap
 import ktx.collections.*
-import ktx.collections.set
 import misterbander.commitsudoku.decorations.CageDecoration
 import misterbander.commitsudoku.decorations.CornerTextDecoration
 import misterbander.commitsudoku.scene2d.SudokuGrid
-import misterbander.gframework.util.GdxStringBuilder
 
-class KillerConstraint(
-	private val grid: SudokuGrid,
-	cage: CageDecoration,
-	private val constraintsChecker: ConstraintsChecker
-) : Constraint
+class KillerConstraint(grid: SudokuGrid, cage: CageDecoration) : Constraint
 {
 	private val killerCells = GdxArray<SudokuGrid.Cell>()
 	val cornerTextDecoration = CornerTextDecoration(grid, cage.topLeftRow, cage.topLeftCol, "")
-	private var killerStatement: SingleStatement? = null
 	var killerSum = 0
 		set(value)
 		{
 			field = value
 			cornerTextDecoration.text = if (value > 0) value.toString() else ""
-			generateKillerStatement()
 		}
-	private val digitCellMap = IntMap<SudokuGrid.Cell>()
+	private val digitCellMap = Array<SudokuGrid.Cell?>(9) { null }
 
 	init
 	{
@@ -38,46 +29,38 @@ class KillerConstraint(
 		}
 	}
 
-	private fun generateKillerStatement()
-	{
-		if (killerSum == 0)
-			killerStatement = null
-		else
-		{
-			var first = true
-			val statementBuilder = GdxStringBuilder()
-			for (cell: SudokuGrid.Cell in killerCells)
-			{
-				if (first)
-					first = false
-				else
-					statementBuilder.append("+")
-				statementBuilder.append("[r${cell.row + 1}c${cell.col + 1}]")
-			}
-			statementBuilder.append("=$killerSum")
-			killerStatement = SingleStatement(statementBuilder.toString())
-		}
-		constraintsChecker.check(grid)
-	}
-
-	override fun check(grid: SudokuGrid): Boolean
+	override fun check(cells: Array<Array<SudokuGrid.Cell>>): Boolean
 	{
 		var correctFlag = true
-		correctFlag = killerStatement?.check(grid) ?: true && correctFlag
-		digitCellMap.clear()
+		var allFilled = true
+		var sum = 0
+
+		digitCellMap.fill(null)
 		for (cell: SudokuGrid.Cell in killerCells)
 		{
 			if (cell.digit == 0)
-				break
-			if (digitCellMap[cell.digit] != null)
+			{
+				allFilled = false
+				continue
+			}
+			val conflictingCell = digitCellMap[cell.digit - 1]
+			if (conflictingCell != null)
 			{
 				cell.isCorrect = false
-				digitCellMap[cell.digit].isCorrect = false
+				conflictingCell.isCorrect = false
 				correctFlag = false
 			}
 			else
-				digitCellMap[cell.digit] = cell
+				digitCellMap[cell.digit - 1] = cell
+			sum += cell.digit
 		}
+
+		if (killerSum > 0 && allFilled && sum != killerSum)
+		{
+			killerCells.forEach { cell -> cell.isCorrect = false }
+			correctFlag = false
+		}
+
 		return correctFlag
 	}
 }

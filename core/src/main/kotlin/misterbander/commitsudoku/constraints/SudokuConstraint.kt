@@ -1,92 +1,89 @@
 package misterbander.commitsudoku.constraints
 
-import com.badlogic.gdx.utils.IntIntMap
-import ktx.collections.set
 import misterbander.commitsudoku.scene2d.SudokuGrid
 
-class SudokuConstraint : Constraint
+object SudokuConstraint : Constraint
 {
-	private val digitIndexMap = IntIntMap()
+	private val digitIndexMap = IntArray(9) { -1 }
 
-	override fun check(grid: SudokuGrid): Boolean
+	override fun check(cells: Array<Array<SudokuGrid.Cell>>): Boolean
 	{
-		val cells = grid.cells
 		var allFilled = true
 		var correctFlag = true
 
 		// Check row for duplicates
-		for (j in 0..8)
+		for (row in 0..8)
 		{
-			digitIndexMap.clear()
-			for (i in 0..8)
+			digitIndexMap.fill(-1)
+			for (col in 0..8)
 			{
-				val cell = cells[i][j]
+				val cell = cells[row][col]
 				if (cell.digit == 0)
 				{
 					allFilled = false
 					continue
 				}
-				val digitIndex = digitIndexMap.get(cell.digit, -1)
-				if (digitIndex != -1)
+				val conflictingIndex = digitIndexMap[cell.digit - 1]
+				if (conflictingIndex != -1)
 				{
 					cell.isCorrect = false
-					cells[digitIndex][j].isCorrect = false
+					cells[row][conflictingIndex].isCorrect = false
 					correctFlag = false
 				}
 				else
-					digitIndexMap[cell.digit] = i
+					digitIndexMap[cell.digit - 1] = col
 			}
 		}
 
 		// Check column for duplicates
-		for (i in 0..8)
+		for (col in 0..8)
 		{
-			digitIndexMap.clear()
-			for (j in 0..8)
+			digitIndexMap.fill(-1)
+			for (row in 0..8)
 			{
-				val cell = cells[i][j]
+				val cell = cells[row][col]
 				if (cell.digit == 0)
 				{
 					allFilled = false
 					continue
 				}
-				val digitIndex = digitIndexMap.get(cell.digit, -1)
-				if (digitIndex != -1)
+				val conflictingIndex = digitIndexMap[cell.digit - 1]
+				if (conflictingIndex != -1)
 				{
 					cell.isCorrect = false
-					cells[i][digitIndex].isCorrect = false
+					cells[conflictingIndex][col].isCorrect = false
 					correctFlag = false
 				}
 				else
-					digitIndexMap[cell.digit] = j
+					digitIndexMap[cell.digit - 1] = row
 			}
 		}
 
 		// Check boxes for duplicates
-		for (i1 in 0 until 9 step 3)
+		for (i in 0 until 9 step 3)
 		{
-			for (j1 in 0 until 9 step 3)
+			for (j in 0 until 9 step 3)
 			{
-				digitIndexMap.clear()
+				digitIndexMap.fill(-1)
 				for (k in 0..8)
 				{
-					val i = k%3 + i1
-					val j = k/3 + j1
-					val cell = cells[i][j]
+					val row = k%3 + i
+					val col = k/3 + j
+					val cell = cells[row][col]
 					if (cell.digit == 0)
 					{
 						allFilled = false
 						continue
 					}
-					val digitIndex = digitIndexMap.get(cell.digit, -1)
-					if (digitIndex != -1)
+					val conflictingIndex = digitIndexMap[cell.digit - 1]
+					if (conflictingIndex != -1)
 					{
 						cell.isCorrect = false
-						cells[digitIndex%3 + i1][digitIndex/3 + j1].isCorrect = false
+						cells[conflictingIndex%3 + i][conflictingIndex/3 + j].isCorrect = false
 						correctFlag = false
 					}
 					else
-						digitIndexMap[cell.digit] = k
+						digitIndexMap[cell.digit - 1] = k
 				}
 			}
 		}

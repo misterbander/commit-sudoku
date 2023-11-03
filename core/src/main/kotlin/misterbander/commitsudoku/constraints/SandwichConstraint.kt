@@ -36,7 +36,7 @@ class SandwichConstraint(
 			"sandwichValue" to sandwichValue,
 		)
 
-	override fun check(grid: SudokuGrid): Boolean
+	override fun check(cells: Array<Array<SudokuGrid.Cell>>): Boolean
 	{
 		correctFlag = true
 		var sandwichStart = -1
@@ -45,7 +45,7 @@ class SandwichConstraint(
 		var sum = 0
 		for (i in 0..8)
 		{
-			val digit = if (isColumn) grid.cells[i][index].digit else grid.cells[index][i].digit
+			val digit = if (isColumn) cells[i][index].digit else cells[index][i].digit
 			if (sandwichStart != -1) // Sandwich has begun
 			{
 				if (digit != if (sandwichStartNum == 9) 1 else 9) // Keep on adding until the sandwich terminates

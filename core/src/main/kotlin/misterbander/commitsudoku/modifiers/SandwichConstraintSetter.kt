@@ -88,7 +88,7 @@ class SandwichConstraintSetter(
 			)
 			addModification(newSandwichConstraint)
 		}
-		constraintsChecker.check(grid)
+		constraintsChecker.check(grid.cells)
 	}
 
 	override fun addModification(modification: SandwichConstraint)

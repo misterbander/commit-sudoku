@@ -79,7 +79,7 @@ class CageSetter(
 		justRemovedCage = false
 		if (isKillerMode && currentCage != null)
 		{
-			val killerConstraint = KillerConstraint(grid, currentCage!!, constraintsChecker)
+			val killerConstraint = KillerConstraint(grid, currentCage!!)
 			currentCage!!.killerConstraint = killerConstraint
 			constraintsChecker += killerConstraint
 			grid.decorations += killerConstraint.cornerTextDecoration
@@ -101,6 +101,7 @@ class CageSetter(
 				killerConstraint.killerSum /= 10
 			else
 				killerConstraint.killerSum = killerConstraint.killerSum*10 + digit
+			constraintsChecker.check(grid.cells)
 		}
 	}
 
@@ -125,7 +126,7 @@ class CageSetter(
 			constraintsChecker -= modification.killerConstraint!!
 			grid.decorations -= modification.killerConstraint!!.cornerTextDecoration
 			grid.cells[modification.topLeftRow][modification.topLeftCol].cornerTextDecorationCount--
-			constraintsChecker.check(grid)
+			constraintsChecker.check(grid.cells)
 		}
 	}
 
@@ -158,7 +159,7 @@ class CageSetter(
 			}
 			if (killerSum != -1)
 			{
-				val killerConstraint = KillerConstraint(grid, cageDecoration!!, constraintsChecker)
+				val killerConstraint = KillerConstraint(grid, cageDecoration!!)
 				cageDecoration.killerConstraint = killerConstraint
 				killerConstraint.killerSum = killerSum
 				constraintsChecker += killerConstraint

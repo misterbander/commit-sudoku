@@ -123,7 +123,7 @@ class CommitSudokuScreen(
 		panel.readState(mapper)
 		actionController.readState(grid, mapper)
 		constraintsChecker.readState(mapper)
-		constraintsChecker.check(grid)
+		constraintsChecker.check(grid.cells)
 		Gdx.graphics.requestRendering()
 	}
 

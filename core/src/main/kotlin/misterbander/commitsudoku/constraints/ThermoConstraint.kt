@@ -1,7 +1,6 @@
 package misterbander.commitsudoku.constraints
 
 import com.badlogic.gdx.graphics.Color
-import ktx.collections.*
 import misterbander.commitsudoku.backgroundColor
 import misterbander.commitsudoku.decorationColor1
 import misterbander.commitsudoku.decorations.LineDecoration
@@ -19,7 +18,6 @@ class ThermoConstraint(
 	private val type: Type
 ) : Constraint, GridModification
 {
-	private var thermoStatement = CompoundStatement()
 	private val thermoLine = LineDecoration(grid, bulbRow, bulbCol)
 	val length: Int
 		get() = thermoLine.length
@@ -35,35 +33,39 @@ class ThermoConstraint(
 
 	fun addThermoCell(endRow: Int, endCol: Int) = thermoLine.addLineCell(endRow, endCol)
 
-	fun generateThermoStatement()
+	fun unhighlight()
 	{
-		val operator = when (type)
-		{
-			Type.NORMAL -> "<"
-			Type.SLOW -> "<="
-			else -> null
-		}
-		if (operator != null)
-		{
-			val statementStrs = GdxArray<String>()
-			for (i in 0 until thermoLine.lineCells.size)
-			{
-				for (j in i + 1 until thermoLine.lineCells.size)
-				{
-					val (row1, col1) = thermoLine.lineCells[i]
-					val (row2, col2) = thermoLine.lineCells[j]
-					val statement = "[r${row1 + 1}c${col1 + 1}]$operator[r${row2 + 1}c${col2 + 1}]"
-					statementStrs.add(statement)
-				}
-			}
-			thermoStatement = CompoundStatement(*statementStrs.toArray(String::class.java))
-		}
 		isHighlighted = false
 	}
 
 	fun isOver(row: Int, col: Int): Boolean = thermoLine.isOver(row, col)
 
-	override fun check(grid: SudokuGrid): Boolean = thermoStatement.check(grid)
+	override fun check(cells: Array<Array<SudokuGrid.Cell>>): Boolean
+	{
+		if (type == Type.DECORATION)
+			return true
+		var correctFlag = true
+
+		for (i in 0 until thermoLine.lineCells.size)
+		{
+			for (j in i + 1 until thermoLine.lineCells.size)
+			{
+				val (row1, col1) = thermoLine.lineCells[i]
+				val (row2, col2) = thermoLine.lineCells[j]
+				val cell1 = cells[row1][col1]
+				val cell2 = cells[row2][col2]
+				if (cell1.digit == 0 || cell2.digit == 0)
+					continue
+				if (type == Type.NORMAL && cell1.digit >= cell2.digit || type == Type.SLOW && cell1.digit > cell2.digit)
+				{
+					cell1.isCorrect = false
+					cell2.isCorrect = false
+					correctFlag = false
+				}
+			}
+		}
+		return correctFlag
+	}
 
 	override fun drawConstraint(shapeDrawer: ShapeDrawer)
 	{

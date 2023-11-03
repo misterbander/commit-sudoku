@@ -128,14 +128,14 @@ class Toolbar(
 				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.x = isChecked
-					constraintsChecker.check(grid)
+					constraintsChecker.check(grid.cells)
 				}
 			}
 			antiKingButton = imageButton(ANTIKING_BUTTON_STYLE).apply {
 				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.antiKing = isChecked
-					constraintsChecker.check(grid)
+					constraintsChecker.check(grid.cells)
 				}
 			}
 			row()
@@ -143,14 +143,14 @@ class Toolbar(
 				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.antiKnight = isChecked
-					constraintsChecker.check(grid)
+					constraintsChecker.check(grid.cells)
 				}
 			}
 			nonconsecutiveButton = imageButton(NON_CONSECUTIVE_BUTTON_STYLE).apply {
 				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.nonconsecutive = isChecked
-					constraintsChecker.check(grid)
+					constraintsChecker.check(grid.cells)
 				}
 			}
 		}

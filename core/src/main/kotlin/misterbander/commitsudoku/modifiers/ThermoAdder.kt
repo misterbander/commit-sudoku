@@ -52,8 +52,8 @@ class ThermoAdder(
 		{
 			if (currentThermoConstraint!!.length >= 2)
 			{
-				currentThermoConstraint!!.generateThermoStatement()
-				constraintsChecker.check(grid)
+				currentThermoConstraint!!.unhighlight()
+				constraintsChecker.check(grid.cells)
 			}
 			else
 			{
@@ -111,7 +111,7 @@ class ThermoAdder(
 	{
 		thermoConstraints -= modification
 		constraintsChecker -= modification
-		constraintsChecker.check(grid)
+		constraintsChecker.check(grid.cells)
 	}
 
 	override fun clear() = thermoConstraints.clear()
@@ -130,7 +130,7 @@ class ThermoAdder(
 					return@forEachIndexed
 				thermoConstraint.addThermoCell(row, col)
 			}
-			thermoConstraint.generateThermoStatement()
+			thermoConstraint.unhighlight()
 			addModification(thermoConstraint)
 		}
 	}

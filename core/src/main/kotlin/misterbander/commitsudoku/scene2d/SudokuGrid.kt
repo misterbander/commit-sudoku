@@ -270,7 +270,7 @@ class SudokuGrid(
 		modifyCellActions.forEach { it.run() }
 		actionController.addActions(modifyCellActions.toArray(ModifyCellAction::class.java))
 		if (shouldCheck)
-			constraintsChecker.check(this)
+			constraintsChecker.check(cells)
 	}
 
 	fun clearGrid()
@@ -372,7 +372,7 @@ class SudokuGrid(
 
 	override fun draw(batch: Batch, parentAlpha: Float)
 	{
-		constraintsChecker.drawAdditionalConstraints(shapeDrawer)
+		constraintsChecker.drawConstraints(shapeDrawer)
 		decorations.forEach { it.draw(shapeDrawer) }
 
 		val lineColor = secondaryColor
