@@ -16,8 +16,8 @@ const val SELECTED_COLOR = "selected_color"
 const val HIGHLIGHT_COLORS = "highlight_colors"
 const val DECORATION_COLOR_1 = "decoration_color_1"
 const val DECORATION_COLOR_2 = "decoration_color_2"
-const val NOTO_SANS = "noto_sans"
-const val NOTO_SANS_LARGE = "noto_sans_large"
+const val NOTO_SANS_UI = "noto_sans_ui"
+const val NOTO_SANS_UI_LARGE = "noto_sans_ui_large"
 const val TEXT_BUTTON_LARGE_STYLE = "text_button_large"
 const val CHECKABLE_TEXT_BUTTON_STYLE = "checkable_text_button"
 const val CHECKABLE_TEXT_BUTTON_LARGE_STYLE = "checkable_text_button_large"
@@ -82,6 +82,6 @@ val decorationColor1: Color
 val decorationColor2: Color
 	get() = Scene2DSkin.defaultSkin[DECORATION_COLOR_2]
 val notoSans: BitmapFont
-	get() = Scene2DSkin.defaultSkin[NOTO_SANS]
+	get() = Scene2DSkin.defaultSkin[NOTO_SANS_UI]
 val notoSansLarge: BitmapFont
-	get() = Scene2DSkin.defaultSkin[NOTO_SANS_LARGE]
+	get() = Scene2DSkin.defaultSkin[NOTO_SANS_UI_LARGE]

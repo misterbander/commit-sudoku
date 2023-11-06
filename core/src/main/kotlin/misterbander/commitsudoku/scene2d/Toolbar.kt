@@ -37,8 +37,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 
 class Toolbar(
 	private val screen: CommitSudokuScreen,
-	constraintsChecker: ConstraintsChecker,
-	isDarkMode: Boolean
+	private val constraintsChecker: ConstraintsChecker
 ) : VerticalGroup()
 {
 	private val grid: SudokuGrid
@@ -46,41 +45,42 @@ class Toolbar(
 	private val shapeDrawer: ShapeDrawer
 		get() = screen.game.shapeDrawer
 
-	private val thermoMultibutton = ToolbarMultibutton(THERMO_BUTTON_STYLE, isDarkMode)
-	val thermoMultibuttonMenu = ToolbarMultibuttonMenu(
-		thermoMultibutton,
-		isDarkMode,
-		scene2d.imageButton(THERMO_BUTTON_STYLE) {
-			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.NORMAL }
-		},
-		scene2d.imageButton(SLOW_THERMO_BUTTON_STYLE) {
-			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.SLOW }
-		},
-		scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE) {
-			onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.DECORATION }
-		}
-	)
-	private val cageMultibutton = ToolbarMultibutton(KILLER_CAGE_BUTTON_STYLE, isDarkMode)
-	val cageMultibuttonMenu = ToolbarMultibuttonMenu(
-		cageMultibutton,
-		isDarkMode,
-		scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) {
-			onClick { grid.modifiers.cageSetter.isKillerMode = true }
-		},
-		scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) {
-			onClick { grid.modifiers.cageSetter.isKillerMode = false }
-		}
-	)
+	private lateinit var xButton: ImageButton
+	private lateinit var antiKingButton: ImageButton
+	private lateinit var antiKnightButton: ImageButton
+	private lateinit var nonconsecutiveButton: ImageButton
 
 	init
 	{
+		build()
+
+		constraintsChecker.xObservable.addObserver { value -> xButton.isChecked = value }
+		constraintsChecker.antiKingObservable.addObserver { value -> antiKingButton.isChecked = value }
+		constraintsChecker.antiKnightObservable.addObserver { value -> antiKnightButton.isChecked = value }
+		constraintsChecker.nonconsecutiveObservable.addObserver { value -> nonconsecutiveButton.isChecked = value }
+	}
+
+	fun build()
+	{
+		clear()
 		this += scene2d.buttonGroup(1, 1) {
 			imageButton(SET_GIVENS_BUTTON_STYLE) {
 				isChecked = true
 				onChange { grid.modifier = null }
 			}
-			actor(thermoMultibutton) {
-				multibuttonMenu = thermoMultibuttonMenu
+			actor(ToolbarMultibutton(THERMO_BUTTON_STYLE) {
+				ToolbarMultibuttonMenu(
+					scene2d.imageButton(THERMO_BUTTON_STYLE) {
+						onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.NORMAL }
+					},
+					scene2d.imageButton(SLOW_THERMO_BUTTON_STYLE) {
+						onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.SLOW }
+					},
+					scene2d.imageButton(EMPTY_THERMO_BUTTON_STYLE) {
+						onClick { grid.modifiers.thermoAdder.type = ThermoConstraint.Type.DECORATION }
+					}
+				)
+			}) {
 				onChange { grid.modifier = grid.modifiers.thermoAdder }
 			}
 			row()
@@ -108,8 +108,16 @@ class Toolbar(
 			imageButton(LITTLE_ARROW_DECORATION_BUTTON_STYLE) {
 				onChange { grid.modifier = grid.modifiers.littleArrowDecorationAdder }
 			}
-			actor(cageMultibutton) {
-				multibuttonMenu = cageMultibuttonMenu
+			actor(ToolbarMultibutton(CAGE_DECORATION_BUTTON_STYLE) {
+				ToolbarMultibuttonMenu(
+					scene2d.imageButton(KILLER_CAGE_BUTTON_STYLE) {
+						onClick { grid.modifiers.cageSetter.isKillerMode = true }
+					},
+					scene2d.imageButton(CAGE_DECORATION_BUTTON_STYLE) {
+						onClick { grid.modifiers.cageSetter.isKillerMode = false }
+					}
+				)
+			}) {
 				onChange { grid.modifier = grid.modifiers.cageSetter }
 			}
 			row()
@@ -119,20 +127,14 @@ class Toolbar(
 		}
 		this += Image(Scene2DSkin.defaultSkin["divider"], Scaling.none, Align.center)
 
-		val xButton: ImageButton
-		val antiKingButton: ImageButton
-		val antiKnightButton: ImageButton
-		val nonconsecutiveButton: ImageButton
 		this += scene2d.table {
 			xButton = imageButton(X_BUTTON_STYLE).apply {
-				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.x = isChecked
 					constraintsChecker.check(grid.cells)
 				}
 			}
 			antiKingButton = imageButton(ANTIKING_BUTTON_STYLE).apply {
-				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.antiKing = isChecked
 					constraintsChecker.check(grid.cells)
@@ -140,25 +142,18 @@ class Toolbar(
 			}
 			row()
 			antiKnightButton = imageButton(ANTIKNIGHT_BUTTON_STYLE).apply {
-				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.antiKnight = isChecked
 					constraintsChecker.check(grid.cells)
 				}
 			}
 			nonconsecutiveButton = imageButton(NON_CONSECUTIVE_BUTTON_STYLE).apply {
-				setProgrammaticChangeEvents(true)
 				onChange {
 					constraintsChecker.nonconsecutive = isChecked
 					constraintsChecker.check(grid.cells)
 				}
 			}
 		}
-
-		constraintsChecker.xObservable.addObserver { value -> xButton.isChecked = value }
-		constraintsChecker.antiKingObservable.addObserver { value -> antiKingButton.isChecked = value }
-		constraintsChecker.antiKnightObservable.addObserver { value -> antiKnightButton.isChecked = value }
-		constraintsChecker.nonconsecutiveObservable.addObserver { value -> nonconsecutiveButton.isChecked = value }
 	}
 
 	override fun draw(batch: Batch, parentAlpha: Float)

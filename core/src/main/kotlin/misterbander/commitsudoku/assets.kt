@@ -6,7 +6,8 @@ import ktx.assets.assetDescriptor
 
 object TextureAtlases
 {
-	val gui = assetDescriptor<TextureAtlas>("textures/gui.atlas")
+	val guiLight = assetDescriptor<TextureAtlas>("textures/gui_light.atlas")
+	val guiDark = assetDescriptor<TextureAtlas>("textures/gui_dark.atlas")
 }
 
 object Fonts

@@ -4,43 +4,40 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import ktx.actors.onClick
+import ktx.actors.plusAssign
 import ktx.math.vec2
 import ktx.scene2d.*
 import ktx.style.*
 
 class ToolbarMultibutton(
 	styleName: String,
-	private val isDarkMode: Boolean
+	val buttonMenuProvider: () -> ToolbarMultibuttonMenu
 ) : ImageButton(Scene2DSkin.defaultSkin, styleName)
 {
 	private val multibuttonIcon: Drawable
-		get() = Scene2DSkin.defaultSkin[if (isDarkMode) "multibutton_icon_dark" else "multibutton_icon_light"]
-	private val posVector = vec2()
+		get() = Scene2DSkin.defaultSkin["multibutton_icon"]
+	private val positionVec = vec2()
 	private var shouldExpand = false
-	var multibuttonMenu: ToolbarMultibuttonMenu? = null
-		set(value)
-		{
-			field = value
-			value?.isVisible = false
-		}
 
 	init
 	{
 		onClick {
 			if (shouldExpand)
 			{
-				localToStageCoordinates(posVector.set(0F, 0F))
-				multibuttonMenu?.setPosition(posVector.x, posVector.y)
-				multibuttonMenu?.isVisible = true
+				localToStageCoordinates(positionVec.set(0F, 0F))
+				val buttonMenu =  buttonMenuProvider()
+				buttonMenu.setPosition(positionVec.x, positionVec.y)
+				buttonMenu.parentMultibutton = this
+				stage += buttonMenu
 			}
 			else
 				shouldExpand = true
 		}
 	}
 
-	override fun act(delta: Float)
+	override fun setChecked(isChecked: Boolean)
 	{
-		super.act(delta)
+		super.setChecked(isChecked)
 		if (!isChecked && shouldExpand)
 			shouldExpand = false
 	}

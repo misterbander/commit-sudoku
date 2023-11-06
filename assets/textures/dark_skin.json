@@ -26,123 +26,123 @@
     }
   },
   "TintedDrawable": {
-    "antiking_icon_dark": {
+    "antiking_icon": {
       "name": "antiking_icon",
       "color": "tint"
     },
-    "antiknight_icon_dark": {
+    "antiknight_icon": {
       "name": "antiknight_icon",
       "color": "tint"
     },
-    "arrow_decoration_icon_dark": {
+    "arrow_decoration_icon": {
       "name": "arrow_decoration_icon",
       "color": "tint"
     },
-    "border_decoration_icon_dark": {
+    "border_decoration_icon": {
       "name": "border_decoration_icon",
       "color": "tint"
     },
-    "cage_decoration_icon_dark": {
+    "cage_decoration_icon": {
       "name": "cage_decoration_icon",
       "color": "tint"
     },
-    "circle_decoration_icon_dark": {
+    "circle_decoration_icon": {
       "name": "circle_decoration_icon",
       "color": "tint"
     },
-    "clear_icon_dark": {
+    "clear_icon": {
       "name": "clear_icon",
       "color": "tint"
     },
-    "corner_text_decoration_icon_dark": {
+    "corner_text_decoration_icon": {
       "name": "corner_text_decoration_icon",
       "color": "tint"
     },
-    "delete_icon_dark": {
+    "delete_icon": {
       "name": "delete_icon",
       "color": "tint"
     },
-    "edit_icon_dark": {
+    "edit_icon": {
       "name": "edit_icon",
       "color": "tint"
     },
-    "empty_thermo_icon_dark": {
+    "empty_thermo_icon": {
       "name": "empty_thermo_icon",
       "color": "tint"
     },
-    "killer_cage_icon_dark": {
+    "killer_cage_icon": {
       "name": "killer_cage_icon",
       "color": "tint"
     },
-    "line_decoration_icon_dark": {
+    "line_decoration_icon": {
       "name": "line_decoration_icon",
       "color": "tint"
     },
-    "little_arrow_decoration_icon_dark": {
+    "little_arrow_decoration_icon": {
       "name": "little_arrow_decoration_icon",
       "color": "tint"
     },
-    "moon_icon_dark": {
+    "moon_icon": {
       "name": "moon_icon",
       "color": "tint"
     },
-    "multibutton_icon_dark": {
+    "multibutton_icon": {
       "name": "multibutton_icon",
       "color": "tint"
     },
-    "new_icon_dark": {
+    "new_icon": {
       "name": "new_icon",
       "color": "tint"
     },
-    "non_consecutive_icon_dark": {
+    "non_consecutive_icon": {
       "name": "non_consecutive_icon",
       "color": "tint"
     },
-    "pause_icon_dark": {
+    "pause_icon": {
       "name": "pause_icon",
       "color": "tint"
     },
-    "play_icon_dark": {
+    "play_icon": {
       "name": "play_icon",
       "color": "tint"
     },
-    "redo_icon_dark": {
+    "redo_icon": {
       "name": "redo_icon",
       "color": "tint"
     },
-    "sandwich_icon_dark": {
+    "sandwich_icon": {
       "name": "sandwich_icon",
       "color": "tint"
     },
-    "set_givens_icon_dark": {
+    "set_givens_icon": {
       "name": "set_givens_icon",
       "color": "tint"
     },
-    "slow_thermo_icon_dark": {
+    "slow_thermo_icon": {
       "name": "slow_thermo_icon",
       "color": "tint"
     },
-    "sync_icon_dark": {
+    "sync_icon": {
       "name": "sync_icon",
       "color": "tint"
     },
-    "text_cursor_dark": {
+    "text_cursor": {
       "name": "text_cursor",
       "color": "tint"
     },
-    "text_decoration_icon_dark": {
+    "text_decoration_icon": {
       "name": "text_decoration_icon",
       "color": "tint"
     },
-    "thermo_icon_dark": {
+    "thermo_icon": {
       "name": "thermo_icon",
       "color": "tint"
     },
-    "undo_icon_dark": {
+    "undo_icon": {
       "name": "undo_icon",
       "color": "tint"
     },
-    "x_icon_dark": {
+    "x_icon": {
       "name": "x_icon",
       "color": "tint"
     },
@@ -157,31 +157,30 @@
   },
   "misterbander.gframework.scene2d.GTextField$GTextFieldStyle": {
     "default": {
-      "background": "text_field_dark",
-      "font": "noto_sans",
+      "background": "text_field",
       "fontColor": "white",
       "selectionFontColor": "white",
-      "cursor": "text_cursor_dark",
+      "cursor": "text_cursor",
       "selection": "text_selection"
     }
   },
   "ButtonStyle": {
     "close_button": {
-      "up": "close_button_dark",
+      "up": "close_button",
       "down": "close_button_down",
       "over": "close_button_over"
     }
   },
   "ImageButtonStyle": {
     "default": {
-      "up": "button_dark",
-      "down": "button_down_dark",
-      "over": "button_over_dark",
-      "disabled": "button_disabled_dark"
+      "up": "button",
+      "down": "button_down",
+      "over": "button_over",
+      "disabled": "button_disabled"
     },
     "checkable_image_button": {
       "parent": "default",
-      "checked": "button_down_dark"
+      "checked": "button_down"
     },
     "toolbar_button": {
       "down": "toolbar_button_down",
@@ -190,44 +189,44 @@
     },
     "new_button": {
       "parent": "default",
-      "imageUp": "new_icon_dark"
+      "imageUp": "new_icon"
     },
     "edit_button": {
       "parent": "default",
-      "imageUp": "edit_icon_dark"
+      "imageUp": "edit_icon"
     },
     "play_button": {
       "parent": "default",
-      "imageUp": "play_icon_dark"
+      "imageUp": "play_icon"
     },
     "pause_button": {
       "parent": "default",
-      "imageUp": "pause_icon_dark"
+      "imageUp": "pause_icon"
     },
     "clear_button": {
       "parent": "default",
-      "imageUp": "clear_icon_dark"
+      "imageUp": "clear_icon"
     },
     "dark_mode_button": {
       "parent": "checkable_image_button",
-      "imageUp": "moon_icon_dark"
+      "imageUp": "moon_icon"
     },
     "sync_button": {
       "parent": "default",
-      "imageUp": "sync_icon_dark"
+      "imageUp": "sync_icon"
     },
     "delete_button": {
       "parent": "default",
-      "imageUp": "delete_icon_dark"
+      "imageUp": "delete_icon"
     },
     "undo_button": {
       "parent": "default",
-      "imageUp": "undo_icon_dark",
+      "imageUp": "undo_icon",
       "imageDisabled": "undo_icon_disabled"
     },
     "redo_button": {
       "parent": "default",
-      "imageUp": "redo_icon_dark",
+      "imageUp": "redo_icon",
       "imageDisabled": "redo_icon_disabled"
     },
     "color_button": {
@@ -272,104 +271,104 @@
     },
     "set_givens_button": {
       "parent": "toolbar_button",
-      "imageUp": "set_givens_icon_dark"
+      "imageUp": "set_givens_icon"
     },
     "thermo_button": {
       "parent": "toolbar_button",
-      "imageUp": "thermo_icon_dark"
+      "imageUp": "thermo_icon"
     },
     "slow_thermo_button": {
       "parent": "toolbar_button",
-      "imageUp": "slow_thermo_icon_dark"
+      "imageUp": "slow_thermo_icon"
     },
     "empty_thermo_button": {
       "parent": "toolbar_button",
-      "imageUp": "empty_thermo_icon_dark"
+      "imageUp": "empty_thermo_icon"
     },
     "sandwich_button": {
       "parent": "toolbar_button",
-      "imageUp": "sandwich_icon_dark"
+      "imageUp": "sandwich_icon"
     },
     "text_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "text_decoration_icon_dark"
+      "imageUp": "text_decoration_icon"
     },
     "corner_text_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "corner_text_decoration_icon_dark"
+      "imageUp": "corner_text_decoration_icon"
     },
     "circle_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "circle_decoration_icon_dark"
+      "imageUp": "circle_decoration_icon"
     },
     "line_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "line_decoration_icon_dark"
+      "imageUp": "line_decoration_icon"
     },
     "arrow_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "arrow_decoration_icon_dark"
+      "imageUp": "arrow_decoration_icon"
     },
     "little_arrow_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "little_arrow_decoration_icon_dark"
+      "imageUp": "little_arrow_decoration_icon"
     },
     "killer_cage_button": {
       "parent": "toolbar_button",
-      "imageUp": "killer_cage_icon_dark"
+      "imageUp": "killer_cage_icon"
     },
     "cage_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "cage_decoration_icon_dark"
+      "imageUp": "cage_decoration_icon"
     },
     "border_decoration_button": {
       "parent": "toolbar_button",
-      "imageUp": "border_decoration_icon_dark"
+      "imageUp": "border_decoration_icon"
     },
     "x_button": {
       "parent": "toolbar_button",
-      "imageUp": "x_icon_dark"
+      "imageUp": "x_icon"
     },
     "antiking_button": {
       "parent": "toolbar_button",
-      "imageUp": "antiking_icon_dark"
+      "imageUp": "antiking_icon"
     },
     "antiknight_button": {
       "parent": "toolbar_button",
-      "imageUp": "antiknight_icon_dark"
+      "imageUp": "antiknight_icon"
     },
     "non_consecutive_button": {
       "parent": "toolbar_button",
-      "imageUp": "non_consecutive_icon_dark"
+      "imageUp": "non_consecutive_icon"
     }
   },
   "LabelStyle": {
     "default": {
-      "font": "noto_sans",
-      "fontColor": "white"
+      "font": "noto_sans_ui",
+      "fontColor": "black"
     }
   },
   "TextButtonStyle": {
     "default": {
-      "font": "noto_sans",
+      "font": "noto_sans_ui",
       "fontColor": "white",
       "disabledFontColor": "disabled_gray",
-      "up": "button_dark",
-      "down": "button_down_dark",
-      "over": "button_over_dark",
-      "disabled": "button_disabled_dark"
+      "up": "button",
+      "down": "button_down",
+      "over": "button_over",
+      "disabled": "button_disabled"
     },
     "checkable_text_button": {
       "parent": "default",
-      "checked": "button_down_dark"
+      "checked": "button_down"
     },
     "text_button_large": {
       "parent": "default",
-      "font": "noto_sans_large"
+      "font": "noto_sans_ui_large"
     },
     "checkable_text_button_large": {
       "parent": "checkable_text_button",
-      "font": "noto_sans_large"
+      "font": "noto_sans_ui_large"
     }
   },
   "TextTooltipStyle": {
@@ -379,9 +378,9 @@
   },
   "WindowStyle": {
     "default": {
-      "background": "window_dark",
-      "titleFont": "noto_sans",
-      "titleFontColor": "white"
+      "background": "window",
+      "titleFont": "noto_sans_ui",
+      "titleFontColor": "black"
     }
   }
 }

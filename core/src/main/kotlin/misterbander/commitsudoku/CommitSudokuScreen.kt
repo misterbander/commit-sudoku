@@ -40,7 +40,7 @@ class CommitSudokuScreen(
 	var isFinished by isFinishedObservable
 
 	// UI
-	private val toolbar = Toolbar(this, constraintsChecker, isDarkMode)
+	private val toolbar = Toolbar(this, constraintsChecker)
 	val grid = SudokuGrid(this, constraintsChecker, actionController)
 	val panel = SidePanel(this, actionController, isDarkMode)
 	val messageDialog = MessageDialog()
@@ -71,8 +71,6 @@ class CommitSudokuScreen(
 			actor(panel).cell(padBottom = 64F).inCell.bottom()
 		}
 		uiStage.keyboardFocus = grid
-		uiStage += toolbar.thermoMultibuttonMenu
-		uiStage += toolbar.cageMultibuttonMenu
 
 		if (mapper.read("commit_sudoku_state"))
 			readState(mapper)

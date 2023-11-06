@@ -30,9 +30,11 @@ class CommitSudoku(
 		KtxAsync.initiate()
 
 		KtxAsync.launch {
-			val guiAtlasDeferred = assetStorage.loadAsync(TextureAtlases.gui)
+			val guiLightAtlasDeferred = assetStorage.loadAsync(TextureAtlases.guiLight)
+			val guiDarkAtlasDeferred = assetStorage.loadAsync(TextureAtlases.guiDark)
 			val generatorDeferred = assetStorage.loadAsync(Fonts.notoSans)
-			val guiAtlas = guiAtlasDeferred.await()
+			val guiLight = guiLightAtlasDeferred.await()
+			val guiDark = guiDarkAtlasDeferred.await()
 			val notoSansGenerator = generatorDeferred.await()
 			val highlightColors = gdxIntMapOf(
 				0 to Color.CLEAR,
@@ -58,7 +60,7 @@ class CommitSudoku(
 			}.alsoRegister()
 
 			val lightSkin = skin {
-				addRegions(guiAtlas)
+				addRegions(guiLight)
 				add(PRIMARY_COLOR, Color.BLACK)
 				add(SECONDARY_COLOR, Color.GRAY)
 				add(BACKGROUND_COLOR, Color.WHITE)
@@ -69,34 +71,34 @@ class CommitSudoku(
 				add(HIGHLIGHT_COLORS, highlightColors)
 				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
 				add(DECORATION_COLOR_2, Color(0.39875F, 0.39875F, 0.39875F, 0.417431F))
-				add(NOTO_SANS, notoSans)
-				add(NOTO_SANS_LARGE, notoSansLarge)
+				add(NOTO_SANS_UI, notoSans)
+				add(NOTO_SANS_UI_LARGE, notoSansLarge)
 				load(Gdx.files.internal("textures/light_skin.json"))
 			}
-			val darkSkin = skin {
-				addRegions(guiAtlas)
-				add(PRIMARY_COLOR, Color.WHITE)
-				add(SECONDARY_COLOR, Color.GRAY)
-				add(BACKGROUND_COLOR, Color(0x252525FF))
-				add(TOOLBAR_BACKGROUND_COLOR, Color(0x0F0F0FFF))
-				add(NON_GIVEN_COLOR, Color(0x00DB15FF))
-				add(MARK_COLOR, Color(0x7F92FFFF))
-				add(SELECTED_COLOR, Color(0xFFF27F60.toInt()))
-				add(HIGHLIGHT_COLORS, highlightColors)
-				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
-				add(DECORATION_COLOR_2, Color(0.6F, 0.6F, 0.6F, 0.5F))
-				add(NOTO_SANS, notoSans)
-				add(NOTO_SANS_LARGE, notoSansLarge)
-				load(Gdx.files.internal("textures/dark_skin.json"))
-			}
-			Scene2DSkin.defaultSkin = if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
+//			val darkSkin = skin {
+//				addRegions(guiLight)
+//				add(PRIMARY_COLOR, Color.WHITE)
+//				add(SECONDARY_COLOR, Color.GRAY)
+//				add(BACKGROUND_COLOR, Color(0x252525FF))
+//				add(TOOLBAR_BACKGROUND_COLOR, Color(0x0F0F0FFF))
+//				add(NON_GIVEN_COLOR, Color(0x00DB15FF))
+//				add(MARK_COLOR, Color(0x7F92FFFF))
+//				add(SELECTED_COLOR, Color(0xFFF27F60.toInt()))
+//				add(HIGHLIGHT_COLORS, highlightColors)
+//				add(DECORATION_COLOR_1, Color(0.4822198F, 0.4822198F, 0.4822198F, 0.266055F))
+//				add(DECORATION_COLOR_2, Color(0.6F, 0.6F, 0.6F, 0.5F))
+//				add(NOTO_SANS, notoSans)
+//				add(NOTO_SANS_LARGE, notoSansLarge)
+//				load(Gdx.files.internal("textures/dark_skin.json"))
+//			}
+			Scene2DSkin.defaultSkin = lightSkin //if (darkModeSettingsProvider.defaultDarkModeEnabled) darkSkin else lightSkin
 
-			shapeDrawer.setTextureRegion(guiAtlas.findRegion("pixel"))
+			shapeDrawer.setTextureRegion(guiLight.findRegion("pixel"))
 
 			info("CommitSudoku          | INFO") { "Finished loading assets!" }
 			info("CommitSudoku          | INFO") { "Resolution = ${Gdx.graphics.width}x${Gdx.graphics.height}" }
 
-			addScreen(CommitSudokuScreen(this@CommitSudoku, lightSkin, darkSkin))
+			addScreen(CommitSudokuScreen(this@CommitSudoku, lightSkin, lightSkin))
 			setScreen<CommitSudokuScreen>()
 		}
 	}
