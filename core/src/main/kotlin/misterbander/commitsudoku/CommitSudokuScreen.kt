@@ -34,7 +34,7 @@ class CommitSudokuScreen(
 	private val actionController = ActionController()
 	private val mapper = PersistentStateMapper()
 
-	private val isDarkMode: Boolean
+	val isDarkMode: Boolean
 		get() = Scene2DSkin.defaultSkin == darkSkin
 	val isFinishedObservable = Observable(false)
 	var isFinished by isFinishedObservable
@@ -42,7 +42,7 @@ class CommitSudokuScreen(
 	// UI
 	private val toolbar = Toolbar(this, constraintsChecker)
 	val grid = SudokuGrid(this, constraintsChecker, actionController)
-	val panel = SidePanel(this, actionController, isDarkMode)
+	val panel = SidePanel(this, actionController)
 	val messageDialog = MessageDialog()
 	val syncDialog = SyncDialog(this, mapper)
 
